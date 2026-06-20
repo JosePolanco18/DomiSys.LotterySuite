@@ -1,0 +1,74 @@
+<!-- Tabs -->
+<ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-8 fs-6">
+  <li class="nav-item">
+    <a class="nav-link" [class.active]="activeTab === 'todos'" (click)="activeTab = 'todos'" role="button">
+      <i class="fas fa-globe me-2"></i>Todos los Resultados
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [class.active]="activeTab === 'mis-sorteos'" (click)="activeTab = 'mis-sorteos'" role="button">
+      <i class="fas fa-star me-2"></i>Mis Sorteos
+    </a>
+  </li>
+</ul>
+
+<!-- Tab: Todos los Resultados (scraping en vivo) -->
+<div *ngIf="activeTab === 'todos'">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h4 class="text-gray-800 fw-bold mb-1">Resultados del Dia</h4>
+      <span class="text-gray-500 fw-semibold fs-7">Datos en vivo desde loteriadominicanas.com</span>
+    </div>
+    <button class="btn btn-sm btn-light-primary" (click)="cargarResultadosGenerales()" [disabled]="loadingGenerales">
+      <i class="fas fa-sync-alt me-1" [class.fa-spin]="loadingGenerales"></i> Actualizar
+    </button>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-4 col-lg-3" *ngFor="let r of resultadosGenerales">
+      <div class="card card-flush border h-100">
+        <div class="card-body text-center py-4">
+          <h6 class="text-gray-800 fw-bold fs-6 mb-3">{{ r.loteria }}</h6>
+          <div class="d-flex justify-content-center gap-2 mb-3">
+            <span class="badge badge-light-primary fs-4 fw-bold px-3 py-2">{{ r.primera | number:'2.0-0' }}</span>
+            <span class="badge badge-light-info fs-4 fw-bold px-3 py-2">{{ r.segunda | number:'2.0-0' }}</span>
+            <span class="badge badge-light-success fs-4 fw-bold px-3 py-2">{{ r.tercera | number:'2.0-0' }}</span>
+          </div>
+          <span class="text-gray-500 fs-7">{{ r.fecha }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="resultadosGenerales.length === 0 && !loadingGenerales" class="text-center text-gray-500 py-10">
+    <i class="fas fa-satellite-dish fs-3x text-gray-300 mb-4 d-block"></i>
+    <p class="fw-semibold fs-6">No se pudieron obtener resultados</p>
+  </div>
+
+  <div *ngIf="loadingGenerales" class="text-center py-10">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3 text-gray-500 fw-semibold">Consultando resultados...</p>
+  </div>
+</div>
+
+<!-- Tab: Mis Sorteos (resultados registrados) -->
+<div *ngIf="activeTab === 'mis-sorteos'">
+  <div id="page-content">
+    <div class="card card-flush">
+      <app-toolbar
+        [config]="toolbarConfig"
+        [loading]="loading"
+        (searchChange)="onToolbarSearch($event)"
+        (searchEnter)="performSearch()">
+      </app-toolbar>
+
+      <app-table
+        [config]="tableConfig"
+        [loading]="loading"
+        (page)="handlePageChange($event)"
+        (sort)="handleSort($event)"
+        (lazyLoad)="handleLazyLoad($event)">
+      </app-table>
+    </div>
+  </div>
+</div>

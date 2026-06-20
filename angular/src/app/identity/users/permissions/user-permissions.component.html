@@ -1,0 +1,41 @@
+<div class="user-permissions-dialog">
+  <div class="dialog-content">
+    <!-- Descripción -->
+    <div class="alert alert-info mb-4">
+      <i class="pi pi-info-circle me-2"></i>
+      Configure los permisos específicos para este usuario. Los permisos otorgados aquí tienen prioridad sobre los permisos de rol.
+    </div>
+
+    <!-- Componente de árbol de permisos -->
+    <app-permission-tree
+      [permissionsData]="permissionsData"
+      [loading]="loading"
+      (permissionsChanged)="onPermissionsChanged($event)"
+    ></app-permission-tree>
+  </div>
+
+  <!-- Footer con botones -->
+  <div class="dialog-footer mt-4 pt-3 border-top">
+    <div class="d-flex justify-content-end gap-2">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="close(false)"
+        [disabled]="saving"
+      >
+        <i class="pi pi-times me-2"></i>
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="save()"
+        [disabled]="loading || saving"
+      >
+        <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+        <i *ngIf="!saving" class="pi pi-check me-2"></i>
+        {{ saving ? 'Guardando...' : 'Guardar permisos' }}
+      </button>
+    </div>
+  </div>
+</div>

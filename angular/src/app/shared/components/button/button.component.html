@@ -1,0 +1,27 @@
+<button 
+  [type]="type"
+  [style]="style"
+  [class]="buttonClasses"
+  [disabled]="disabled || loading"
+  (click)="onClick()">
+  
+  <span *ngIf="loading" class="app-button__spinner">
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  </span>
+  
+  <span class="app-button__content" [class.app-button__content--hidden]="loading">
+    
+    <i *ngIf="icon && iconPosition === 'left'" 
+       [class]="'pi ' + icon" 
+       class="app-button__icon app-button__icon--left">
+    </i>
+    
+    <span *ngIf="label" class="app-button__label">{{ label }}</span>
+    
+    <i *ngIf="icon && iconPosition === 'right'" 
+       [class]="'pi ' + icon" 
+       class="app-button__icon app-button__icon--right">
+    </i>
+    
+  </span>
+</button>

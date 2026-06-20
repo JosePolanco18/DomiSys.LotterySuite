@@ -1,0 +1,32 @@
+<!-- footer.component.html - VERSIÓN SIMPLIFICADA -->
+
+<!-- Botones de acciones dinámicas - SIEMPRE VISIBLE cuando hay acciones -->
+<div *ngIf="isActionsVisible && hasActions" class="footer-actions-bar">
+  <div class="footer-actions-content">
+    <app-button
+      *ngFor="let action of actions"
+      [label]="action.label"
+      [icon]="action.loading ? 'pi-spin pi-spinner' : action.icon"
+      [variant]="action.variant || 'primary'"
+      [outline]="action.outline"
+      [size]="'sm'"
+      [disabled]="action.disabled || action.loading"
+      (buttonClick)="executeAction(action)">
+    </app-button>
+  </div>
+</div>
+
+<!-- Footer original de Metronic - Solo cuando NO hay acciones -->
+<div *ngIf="!isActionsVisible || !hasActions" class="footer-original">
+  <ng-container *ngIf="appFooterContainerCSSClass">
+    <!--begin::Footer container-->
+    <div class="app-container" [ngClass]="appFooterContainerCSSClass">
+      <ng-container *ngTemplateOutlet="footerView"></ng-container>
+    </div>
+    <!--end::Footer container-->
+  </ng-container>
+
+  <ng-container *ngIf="!appFooterContainerCSSClass">
+    <ng-container *ngTemplateOutlet="footerView"></ng-container>
+  </ng-container>
+</div>

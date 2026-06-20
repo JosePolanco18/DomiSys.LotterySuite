@@ -1,0 +1,35 @@
+<app-form-toolbar [config]="formToolbarConfig"></app-form-toolbar>
+
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="form" class="row">
+      <div class="col-md-3">
+        <app-input label="Código" type="text" formControlName="codigo" placeholder="T-001" [required]="true"></app-input>
+      </div>
+      <div class="col-md-5">
+        <app-input label="Nombre" type="text" formControlName="nombre" placeholder="Terminal Centro" [required]="true"></app-input>
+      </div>
+      <div class="col-md-4">
+        <app-input label="Vendedor" type="text" formControlName="nombreVendedor" placeholder="Juan Pérez" [required]="true"></app-input>
+      </div>
+      <div class="col-md-3">
+        <app-input [label]="isEditMode ? 'Nuevo PIN (dejar vacío para no cambiar)' : 'PIN'" type="password" formControlName="pin" placeholder="****"></app-input>
+      </div>
+      <div class="col-md-3">
+        <app-input label="Comisión Venta (%)" type="number" formControlName="porcentajeComisionVenta" [step]="0.01" placeholder="Ej: 7.00" helperText="Vacío = usa el default global"></app-input>
+      </div>
+      <div class="col-md-3">
+        <app-input label="Comisión Verde (%)" type="number" formControlName="porcentajeComisionVerde" [step]="0.01" placeholder="Ej: 5.00" helperText="Vacío = usa el default global"></app-input>
+      </div>
+      <div class="col-md-3">
+        <app-input label="Teléfono" type="text" formControlName="telefono"></app-input>
+      </div>
+      <div class="col-md-6">
+        <app-input label="Ubicación" type="text" formControlName="ubicacion"></app-input>
+      </div>
+      <div class="col-md-6">
+        <app-input label="Notas" type="textarea" formControlName="notas" [rows]="2"></app-input>
+      </div>
+    </form>
+  </div>
+</div>

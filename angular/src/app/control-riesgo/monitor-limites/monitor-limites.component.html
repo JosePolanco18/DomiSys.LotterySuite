@@ -1,0 +1,84 @@
+<app-form-toolbar [config]="formToolbarConfig"></app-form-toolbar>
+
+<div class="card card-flush mb-5">
+  <div class="card-header border-0 pt-6">
+    <div class="card-title">
+      <span class="text-gray-800 fw-bold fs-5">Filtros</span>
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <form [formGroup]="filterForm" class="row align-items-end g-4">
+      <div class="col-md-3">
+        <app-select label="Loteria" formControlName="loteriaId" [service]="loteriaService" bindValue="id" bindLabel="nombre" placeholder="Seleccione..."></app-select>
+      </div>
+      <div class="col-md-3">
+        <app-select label="Sorteo" formControlName="sorteoId" [service]="sorteoService" dependentOn="loteriaId" dependentMethod="getPorLoteria" bindValue="id" bindLabel="nombre" placeholder="Seleccione..."></app-select>
+      </div>
+      <div class="col-md-3">
+        <app-input label="Fecha" type="date" formControlName="fecha"></app-input>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary w-100 mb-5" (click)="consultar()" [disabled]="isLoading || !filterForm.get('sorteoId')?.value">
+          <i class="fas fa-search me-1"></i> Consultar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card card-flush" *ngIf="acumulados.length > 0">
+  <div class="card-header border-0 pt-6">
+    <div class="card-title">
+      <span class="text-gray-800 fw-bold fs-5">Resultados</span>
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <div class="table-responsive">
+      <table class="table table-row-dashed table-row-gray-300 gy-4 gs-4 align-middle">
+        <thead>
+          <tr class="text-gray-500 fw-semibold fs-7 text-uppercase">
+            <th>Numero</th>
+            <th class="text-end">Vendido</th>
+            <th class="text-end">Limite</th>
+            <th class="text-end">Disponible</th>
+            <th class="text-end">Aguante</th>
+            <th class="text-end">Excedente</th>
+            <th class="w-200px">Uso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of acumulados" [class.bg-light-danger]="item.excedenteAguante > 0">
+            <td class="fw-bold fs-4 text-gray-800">{{ item.numero | number:'2.0-0' }}</td>
+            <td class="text-end text-gray-800 fw-bold">{{ item.montoAcumulado | number:'1.2-2' }}</td>
+            <td class="text-end text-gray-600">{{ item.limiteVentaMaximo | number:'1.2-2' }}</td>
+            <td class="text-end fw-bold" [class.text-danger]="item.disponible <= 0" [class.text-success]="item.disponible > 0">
+              {{ item.disponible | number:'1.2-2' }}
+            </td>
+            <td class="text-end text-gray-600">{{ item.limiteAguante | number:'1.2-2' }}</td>
+            <td class="text-end">
+              <span *ngIf="item.excedenteAguante > 0" class="badge badge-light-danger fw-bold">
+                {{ item.excedenteAguante | number:'1.2-2' }}
+              </span>
+              <span *ngIf="item.excedenteAguante <= 0" class="text-gray-500">-</span>
+            </td>
+            <td>
+              <div class="progress h-20px bg-light rounded">
+                <div class="progress-bar" [class]="getBarClass(item)" role="progressbar"
+                     [style.width.%]="getPorcentajeUso(item)">
+                  <span class="fw-bold fs-7">{{ getPorcentajeUso(item) | number:'1.0-0' }}%</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="card card-flush" *ngIf="acumulados.length === 0 && !isLoading && filterForm.get('sorteoId')?.value">
+  <div class="card-body text-center text-gray-500 py-10">
+    <i class="fas fa-chart-bar fs-3x text-gray-300 mb-4 d-block"></i>
+    <p class="fw-semibold fs-6">No hay datos de ventas para esta consulta</p>
+  </div>
+</div>

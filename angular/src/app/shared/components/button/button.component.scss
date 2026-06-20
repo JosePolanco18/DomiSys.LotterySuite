@@ -1,0 +1,529 @@
+// ===================================
+// Button Component - Metronic 9 Styled
+// ===================================
+
+.app-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-family: var(--bs-font-sans-serif);
+  cursor: pointer;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  white-space: nowrap;
+  text-decoration: none;
+  outline: none;
+  user-select: none;
+  vertical-align: middle;
+  border-radius: var(--bs-border-radius);
+  
+  &:focus {
+    outline: none;
+  }
+  
+  // ===================================
+  // TAMAÑOS
+  // ===================================
+  
+  &--sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 1.075rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    gap: 0.375rem;
+  
+    .app-button__icon {
+      font-size: 1.075rem;
+    }
+  }
+  
+  &--md {
+    padding: 0.6875rem 1.25rem;
+    font-size: 1.075rem;
+    line-height: 1.5;
+    border-radius: 0.475rem;
+    gap: 0.5rem;
+  
+    .app-button__icon {
+      font-size: 1.075rem;
+    }
+  }
+  
+  &--lg {
+    padding: 1rem 1.5rem;
+    font-size: 1.075rem;
+    line-height: 1.5;
+    border-radius: 0.475rem;
+    gap: 0.625rem;
+  
+    .app-button__icon {
+      font-size: 1.075rem;
+    }
+  }
+  
+  // ===================================
+  // VARIANTES
+  // ===================================
+  
+  &--primary {
+    color: #ffffff;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+  
+    &:hover:not(.app-button--disabled) {
+      color: #ffffff;
+      background-color: #4066d5;
+      border-color: #4066d5;
+    }
+  
+    &:focus:not(.app-button--disabled) {
+      color: #ffffff;
+      background-color: #4066d5;
+      border-color: #4066d5;
+      box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+    }
+  
+    &:active:not(.app-button--disabled) {
+      color: #ffffff;
+      background-color: #365ec7;
+      border-color: #365ec7;
+    }
+  }
+  
+  &--secondary {
+    color: #5078ff;
+    background-color: #f1f5ff;
+    border-color: #f1f5ff;
+  
+    &:hover:not(.app-button--disabled) {
+      color: #5078ff;
+      background-color: #e9f0ff;
+      border-color: #e9f0ff;
+    }
+  
+    &:focus:not(.app-button--disabled) {
+      color: #5078ff;
+      background-color: #e9f0ff;
+      border-color: #e9f0ff;
+      box-shadow: 0 0 0 0.25rem rgba(80, 120, 255, 0.25);
+    }
+  
+    &:active:not(.app-button--disabled) {
+      color: #5078ff;
+      background-color: #d1e3ff;
+      border-color: #d1e3ff;
+    }
+  }
+  
+  &--ghost {
+    color: #7e8299;
+    background-color: transparent;
+    border-color: transparent;
+  
+    &:hover:not(.app-button--disabled) {
+      color: #5078ff;
+      background-color: #f1f5ff;
+      border-color: #f1f5ff;
+    }
+  
+    &:focus:not(.app-button--disabled) {
+      color: #5078ff;
+      background-color: #f1f5ff;
+      border-color: #f1f5ff;
+      box-shadow: 0 0 0 0.25rem rgba(80, 120, 255, 0.25);
+    }
+  
+    &:active:not(.app-button--disabled) {
+      color: #5078ff;
+      background-color: #e9f0ff;
+      border-color: #e9f0ff;
+    }
+  }
+  
+  &--info {
+    color: var(--bs-info-inverse);
+    background-color: var(--bs-info);
+    border-color: var(--bs-info);
+  
+    &:hover:not(.app-button--disabled) {
+      color: var(--bs-info-inverse);
+      background-color: #521fbe;
+      border-color: #521fbe;
+    }
+  
+    &:focus:not(.app-button--disabled) {
+      color: var(--bs-info-inverse);
+      background-color: #521fbe;
+      border-color: #521fbe;
+      box-shadow: 0 0 0 0.25rem rgba(var(--bs-info-rgb), 0.25);
+    }
+  
+    &:active:not(.app-button--disabled) {
+      color: var(--bs-info-inverse);
+      background-color: var(--bs-info-active);
+      border-color: var(--bs-info-active);
+    }
+  }
+  
+  &--success {
+    color: #ffffff;
+    background-color: #50cd89;
+    border-color: #50cd89;
+  
+    &:hover:not(.app-button--disabled) {
+      color: #ffffff;
+      background-color: #47b881;
+      border-color: #47b881;
+    }
+  
+    &:focus:not(.app-button--disabled) {
+      color: #ffffff;
+      background-color: #47b881;
+      border-color: #47b881;
+      box-shadow: 0 0 0 0.25rem rgba(80, 205, 137, 0.25);
+    }
+  
+    &:active:not(.app-button--disabled) {
+      color: #ffffff;
+      background-color: #3ea373;
+      border-color: #3ea373;
+    }
+  }
+  
+  &--danger {
+    color: var(--bs-danger-inverse);
+    background-color: var(--bs-danger);
+    border-color: var(--bs-danger);
+  
+    &:hover:not(.app-button--disabled) {
+      color: var(--bs-danger-inverse);
+      background-color: #d31c48;
+      border-color: #d31c48;
+    }
+  
+    &:focus:not(.app-button--disabled) {
+      color: var(--bs-danger-inverse);
+      background-color: #d31c48;
+      border-color: #d31c48;
+      box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25);
+    }
+  
+    &:active:not(.app-button--disabled) {
+      color: var(--bs-danger-inverse);
+      background-color: var(--bs-danger-active);
+      border-color: var(--bs-danger-active);
+    }
+  }
+  
+  // ===================================
+  // VARIANTES OUTLINE
+  // ===================================
+  
+  &--outline {
+    &.app-button--primary {
+      color: var(--bs-primary);
+      background-color: transparent;
+      border-color: var(--bs-primary);
+    
+      &:hover:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: var(--bs-primary);
+        border-color: var(--bs-primary);
+      }
+    
+      &:focus:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: var(--bs-primary);
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+      }
+    
+      &:active:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #365ec7;
+        border-color: #365ec7;
+      }
+    }
+
+    &.app-button--secondary {
+      color: #5078ff;
+      background-color: transparent;
+      border-color: #5078ff;
+    
+      &:hover:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #5078ff;
+        border-color: #5078ff;
+      }
+    
+      &:focus:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #5078ff;
+        border-color: #5078ff;
+        box-shadow: 0 0 0 0.25rem rgba(80, 120, 255, 0.25);
+      }
+    
+      &:active:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #4066d5;
+        border-color: #4066d5;
+      }
+    }
+
+    &.app-button--success {
+      color: #50cd89;
+      background-color: transparent;
+      border-color: #50cd89;
+    
+      &:hover:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #50cd89;
+        border-color: #50cd89;
+      }
+    
+      &:focus:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #50cd89;
+        border-color: #50cd89;
+        box-shadow: 0 0 0 0.25rem rgba(80, 205, 137, 0.25);
+      }
+    
+      &:active:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #47b881;
+        border-color: #47b881;
+      }
+    }
+
+    &.app-button--danger {
+      color: var(--bs-danger);
+      background-color: transparent;
+      border-color: var(--bs-danger);
+    
+      &:hover:not(.app-button--disabled) {
+        color: var(--bs-danger-inverse);
+        background-color: var(--bs-danger);
+        border-color: var(--bs-danger);
+      }
+    
+      &:focus:not(.app-button--disabled) {
+        color: var(--bs-danger-inverse);
+        background-color: var(--bs-danger);
+        border-color: var(--bs-danger);
+        box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25);
+      }
+    
+      &:active:not(.app-button--disabled) {
+        color: var(--bs-danger-inverse);
+        background-color: var(--bs-danger-active);
+        border-color: var(--bs-danger-active);
+      }
+    }
+
+    &.app-button--info {
+      color: var(--bs-info);
+      background-color: transparent;
+      border-color: var(--bs-info);
+    
+      &:hover:not(.app-button--disabled) {
+        color: var(--bs-info-inverse);
+        background-color: var(--bs-info);
+        border-color: var(--bs-info);
+      }
+    
+      &:focus:not(.app-button--disabled) {
+        color: var(--bs-info-inverse);
+        background-color: var(--bs-info);
+        border-color: var(--bs-info);
+        box-shadow: 0 0 0 0.25rem rgba(var(--bs-info-rgb), 0.25);
+      }
+    
+      &:active:not(.app-button--disabled) {
+        color: var(--bs-info-inverse);
+        background-color: var(--bs-info-active);
+        border-color: var(--bs-info-active);
+      }
+    }
+  }
+  
+  // ===================================
+  // ESTADOS
+  // ===================================
+  
+  &--disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  &--loading {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  &--full-width {
+    width: 100%;
+    display: flex;
+  }
+  
+  &--icon-only {
+    aspect-ratio: 1;
+    
+    &.app-button--sm {
+      padding: 0.5rem;
+    }
+    
+    &.app-button--md {
+      padding: 0.6875rem;
+    }
+    
+    &.app-button--lg {
+      padding: 1rem;
+    }
+  }
+  
+  // ===================================
+  // CONTENIDO
+  // ===================================
+  
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: inherit;
+    transition: opacity 0.15s ease-in-out;
+  
+    &--hidden {
+      opacity: 0;
+    }
+  }
+  
+  &__label {
+    line-height: 1;
+  }
+  
+  &__icon {
+    line-height: 1;
+    
+    &--left {
+      margin-right: 0;
+    }
+    
+    &--right {
+      margin-left: 0;
+    }
+  }
+  
+  &__spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    .spinner-border-sm {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
+  }
+}
+
+// ===================================
+// DARK MODE STYLES
+// ===================================
+
+html[data-bs-theme="dark"] {
+  .app-button {
+    
+    &--secondary {
+      color: #5078ff;
+      background-color: rgba(80, 120, 255, 0.15);
+      border-color: rgba(80, 120, 255, 0.15);
+    
+      &:hover:not(.app-button--disabled) {
+        color: #5078ff;
+        background-color: rgba(80, 120, 255, 0.25);
+        border-color: rgba(80, 120, 255, 0.25);
+      }
+    
+      &:focus:not(.app-button--disabled) {
+        color: #5078ff;
+        background-color: rgba(80, 120, 255, 0.25);
+        border-color: rgba(80, 120, 255, 0.25);
+        box-shadow: 0 0 0 0.25rem rgba(80, 120, 255, 0.25);
+      }
+    
+      &:active:not(.app-button--disabled) {
+        color: #5078ff;
+        background-color: rgba(80, 120, 255, 0.35);
+        border-color: rgba(80, 120, 255, 0.35);
+      }
+    }
+    
+    &--success {
+      color: #ffffff;
+      background-color: #50cd89;
+      border-color: #50cd89;
+    
+      &:hover:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #47b881;
+        border-color: #47b881;
+      }
+    
+      &:focus:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #47b881;
+        border-color: #47b881;
+        box-shadow: 0 0 0 0.25rem rgba(80, 205, 137, 0.25);
+      }
+    
+      &:active:not(.app-button--disabled) {
+        color: #ffffff;
+        background-color: #3ea373;
+        border-color: #3ea373;
+      }
+    }
+    
+    &--ghost {
+      color: #a1a5b7;
+    
+      &:hover:not(.app-button--disabled) {
+        color: #5078ff;
+        background-color: rgba(80, 120, 255, 0.15);
+        border-color: rgba(80, 120, 255, 0.15);
+      }
+    
+      &:focus:not(.app-button--disabled) {
+        color: #5078ff;
+        background-color: rgba(80, 120, 255, 0.15);
+        border-color: rgba(80, 120, 255, 0.15);
+        box-shadow: 0 0 0 0.25rem rgba(80, 120, 255, 0.25);
+      }
+    
+      &:active:not(.app-button--disabled) {
+        color: #5078ff;
+        background-color: rgba(80, 120, 255, 0.25);
+        border-color: rgba(80, 120, 255, 0.25);
+      }
+    }
+  }
+}
+
+// ===================================
+// RESPONSIVE
+// ===================================
+
+@media (max-width: 575.98px) {
+  .app-button {
+    &--md {
+      padding: 0.5rem 1rem;
+      font-size: 1.075rem;
+    }
+
+    &--lg {
+      padding: 0.75rem 1.25rem;
+      font-size: 1.075rem;
+    }
+  }
+}

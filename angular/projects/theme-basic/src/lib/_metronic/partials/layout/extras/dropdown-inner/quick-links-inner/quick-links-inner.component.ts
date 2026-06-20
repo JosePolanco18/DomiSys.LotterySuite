@@ -1,0 +1,16 @@
+import { Component, HostBinding } from '@angular/core';
+import { KeeniconComponent } from '../../../../../shared/keenicon/keenicon.component';
+import { RouterLink } from '@angular/router';
+
+@Component({
+    selector: 'app-quick-links-inner',
+    templateUrl: './quick-links-inner.component.html',
+    imports: [KeeniconComponent, RouterLink]
+})
+export class QuickLinksInnerComponent {
+  @HostBinding('class') class =
+    'menu menu-sub menu-sub-dropdown menu-column w-250px w-lg-325px';
+  @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
+
+  constructor() {}
+}

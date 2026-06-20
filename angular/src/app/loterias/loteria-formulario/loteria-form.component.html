@@ -1,0 +1,197 @@
+<app-form-toolbar [config]="formToolbarConfig"></app-form-toolbar>
+
+<div class="card card-flush mb-5">
+  <div class="card-header border-0 pt-6">
+    <div class="card-title">
+      <span class="text-gray-800 fw-bold fs-5">Datos de la Loteria</span>
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <form [formGroup]="form" class="row">
+      <div class="col-md-6">
+        <app-input label="Nombre" type="text" formControlName="nombre" placeholder="Ej: Loteria Nacional" [required]="true"></app-input>
+      </div>
+      <div class="col-md-3">
+        <app-input label="Codigo Corto" type="text" formControlName="codigoCorto" placeholder="Ej: LN" [required]="true"></app-input>
+      </div>
+      <div class="col-md-3">
+        <app-input label="Orden" type="number" formControlName="orden" [required]="true"></app-input>
+      </div>
+      <div class="col-md-9">
+        <app-input label="URL del Logo" type="text" formControlName="logoUrl" placeholder="https://..."></app-input>
+      </div>
+      <div class="col-md-3 d-flex align-items-center">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" formControlName="activa" id="activaSwitch">
+          <label class="form-check-label fw-semibold text-gray-800" for="activaSwitch">Activa</label>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Sorteos - solo en modo edicion -->
+<div class="card card-flush" *ngIf="isEditMode">
+  <div class="card-header border-0 pt-6">
+    <div class="card-title">
+      <span class="text-gray-800 fw-bold fs-5">Sorteos</span>
+    </div>
+    <div class="card-toolbar">
+      <button type="button" class="btn btn-sm btn-primary" (click)="nuevoSorteo()" *ngIf="!showSorteoForm">
+        <i class="fas fa-plus me-1"></i> Nuevo Sorteo
+      </button>
+    </div>
+  </div>
+
+  <div class="card-body pt-2">
+    <!-- Formulario de sorteo (inline) -->
+    <div *ngIf="showSorteoForm" class="card bg-light-primary mb-5">
+      <div class="card-body py-5 px-6">
+        <h6 class="text-gray-800 fw-bold fs-5 mb-5">{{ editingSorteoId ? 'Editar' : 'Nuevo' }} Sorteo</h6>
+        <form [formGroup]="sorteoForm" class="row g-4">
+          <div class="col-md-4">
+            <app-input label="Nombre del Sorteo" type="text" formControlName="nombre" placeholder="Ej: Nocturno" [required]="true"></app-input>
+          </div>
+          <div class="col-md-2">
+            <app-input label="Apertura Ventas" type="text" formControlName="horaAperturaVentas" placeholder="14:00:00" [required]="true" helperText="HH:mm:ss"></app-input>
+          </div>
+          <div class="col-md-2">
+            <app-input label="Cierre Ventas" type="text" formControlName="horaCierreVentas" placeholder="20:50:00" [required]="true" helperText="HH:mm:ss"></app-input>
+          </div>
+          <div class="col-md-2">
+            <app-input label="Hora Sorteo" type="text" formControlName="horaSorteo" placeholder="20:55:00" [required]="true" helperText="HH:mm:ss"></app-input>
+          </div>
+          <div class="col-md-2">
+            <app-input label="Min. Espera Scraping" type="number" formControlName="minutosEsperaScraping" [min]="0" [required]="true"></app-input>
+          </div>
+
+          <div class="col-md-8">
+            <label class="form-label fw-semibold text-gray-800 fs-6 mb-2">Dias Activos</label>
+            <div class="d-flex gap-3 flex-wrap">
+              <div *ngFor="let dia of diasSemana" class="form-check">
+                <input class="form-check-input" type="checkbox" [formControlName]="'dia' + dia.key" [id]="'dia' + dia.key">
+                <label class="form-check-label text-gray-600" [for]="'dia' + dia.key">{{ dia.label }}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2 d-flex align-items-end">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" formControlName="activo" id="sorteoActivo">
+              <label class="form-check-label fw-semibold text-gray-800" for="sorteoActivo">Activo</label>
+            </div>
+          </div>
+
+          <div class="col-md-2 d-flex align-items-end gap-2">
+            <button type="button" class="btn btn-sm btn-success" (click)="guardarSorteo()" [disabled]="!sorteoForm.valid">
+              <i class="fas fa-check me-1"></i> Guardar
+            </button>
+            <button type="button" class="btn btn-sm btn-light" (click)="cancelarSorteo()">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Formulario de pagos por sorteo (inline) -->
+    <div *ngIf="showPagosForm" class="card bg-light-warning mb-5">
+      <div class="card-body py-5 px-6">
+        <h6 class="text-gray-800 fw-bold fs-5 mb-5">Configurar Pagos: {{ editingPagosSorteoNombre }}</h6>
+        <form [formGroup]="pagosForm" class="row g-4">
+          <div class="col-12">
+            <span class="text-gray-600 fw-semibold fs-7">Quiniela (pago por peso apostado)</span>
+          </div>
+          <div class="col-md-4">
+            <app-input label="1ra Posicion" type="number" formControlName="quinielaPrimera" [required]="true"></app-input>
+          </div>
+          <div class="col-md-4">
+            <app-input label="2da Posicion" type="number" formControlName="quinielaSegunda" [required]="true"></app-input>
+          </div>
+          <div class="col-md-4">
+            <app-input label="3ra Posicion" type="number" formControlName="quinielaTercera" [required]="true"></app-input>
+          </div>
+
+          <div class="col-12 mt-4">
+            <span class="text-gray-600 fw-semibold fs-7">Pale (pago por peso apostado)</span>
+          </div>
+          <div class="col-md-6">
+            <app-input label="1ra-2da / 1ra-3ra" type="number" formControlName="palePrimeraSegunda" [required]="true"></app-input>
+          </div>
+          <div class="col-md-6">
+            <app-input label="2da-3ra" type="number" formControlName="paleSegundaTercera" [required]="true"></app-input>
+          </div>
+
+          <div class="col-12 mt-4">
+            <span class="text-gray-600 fw-semibold fs-7">Tripleta y Super Pale</span>
+          </div>
+          <div class="col-md-6">
+            <app-input label="Tripleta" type="number" formControlName="tripleta" [required]="true"></app-input>
+          </div>
+          <div class="col-md-6">
+            <app-input label="Super Pale" type="number" formControlName="superPale" [required]="true"></app-input>
+          </div>
+
+          <div class="col-12 d-flex gap-2 mt-4">
+            <button type="button" class="btn btn-sm btn-success" (click)="guardarPagos()" [disabled]="!pagosForm.valid">
+              <i class="fas fa-check me-1"></i> Guardar Pagos
+            </button>
+            <button type="button" class="btn btn-sm btn-light" (click)="cancelarPagos()">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lista de sorteos -->
+    <div class="table-responsive" *ngIf="sorteos.length > 0">
+      <table class="table table-row-dashed table-row-gray-300 gy-4 gs-4 align-middle">
+        <thead>
+          <tr class="text-gray-500 fw-semibold fs-7 text-uppercase">
+            <th>Nombre</th>
+            <th>Apertura</th>
+            <th>Cierre</th>
+            <th>Sorteo</th>
+            <th>Dias</th>
+            <th>Scraping</th>
+            <th>Estado</th>
+            <th class="text-end w-120px">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sorteo of sorteos">
+            <td class="text-gray-800 fw-bold">{{ sorteo.nombre }}</td>
+            <td class="text-gray-600">{{ formatTime(sorteo.horaAperturaVentas) }}</td>
+            <td class="text-gray-600">{{ formatTime(sorteo.horaCierreVentas) }}</td>
+            <td class="text-gray-600">{{ formatTime(sorteo.horaSorteo) }}</td>
+            <td class="text-gray-600 fs-7">{{ sorteo.diasActivos }}</td>
+            <td class="text-gray-600">{{ sorteo.minutosEsperaScraping }} min</td>
+            <td>
+              <span class="badge" [class.badge-light-success]="sorteo.activo" [class.badge-light-secondary]="!sorteo.activo">
+                {{ sorteo.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-icon btn-light-success me-2" (click)="configurarPagos(sorteo)" title="Configurar Pagos">
+                <i class="fas fa-dollar-sign"></i>
+              </button>
+              <button class="btn btn-sm btn-icon btn-light-primary me-2" (click)="editarSorteo(sorteo)" title="Editar">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <button class="btn btn-sm btn-icon btn-light-danger" (click)="eliminarSorteo(sorteo)" title="Eliminar">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="sorteos.length === 0 && !showSorteoForm" class="text-center text-gray-500 py-10">
+      <i class="fas fa-clock fs-2x text-gray-300 mb-3 d-block"></i>
+      <p class="fw-semibold">No hay sorteos configurados. Agregue uno para comenzar.</p>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!isEditMode" class="alert alert-info d-flex align-items-center mt-5">
+  <i class="fas fa-info-circle fs-4 text-info me-3"></i>
+  <span class="text-gray-800 fw-semibold">Guarde la loteria primero para poder agregar sorteos.</span>
+</div>

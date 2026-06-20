@@ -1,0 +1,45 @@
+/* footer.component.scss - SOLUCIÓN SIMPLE PARA MÓVIL */
+
+.footer-actions-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid var(--bs-border-color);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+    padding: 12px 0;
+    
+    .footer-actions-content {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px;
+      flex-wrap: wrap; // CLAVE: Permite que se envuelvan a la siguiente línea
+    }
+  }
+  
+  // En móvil: centrar y reducir espacios
+  @media (max-width: 768px) {
+    .footer-actions-bar {
+      padding: 8px 0;
+      
+      .footer-actions-content {
+        justify-content: center; // Centrar en móvil
+        padding: 0 10px;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+    }
+  }
+  
+  // En pantallas muy pequeñas: botones más compactos
+  @media (max-width: 576px) {
+    .footer-actions-bar {
+      .footer-actions-content {
+        gap: 6px;
+        padding: 0 8px;
+      }
+    }
+  }

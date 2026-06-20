@@ -1,0 +1,200 @@
+// ===================================
+// Toolbar Component - Metronic 9 Styled
+// ===================================
+
+body app-toolbar {
+  margin: 0 !important;
+  display: block !important;
+  position: sticky;
+  top: 80px;
+  z-index: 10;
+  background-color: #ffffff !important;
+
+  &.scrolled {
+    // Fondo sólido modo oscuro
+    html[data-bs-theme='dark'] & {
+      background-color: #1e1e2d !important;
+    }
+  }
+
+  .card {
+    background: var(--kt-card-bg) !important;
+    border: 1px solid var(--bs-card-border-color) !important;
+    border-bottom: none !important;
+    box-shadow: 0 0 20px 0 rgba(76, 87, 125, 0.05) !important;
+    margin: 0 !important;
+    border-top-left-radius: 0.475rem !important;
+    border-top-right-radius: 0.475rem !important;
+  }
+
+  .card-header {
+    display: flex !important;
+    flex-direction: column !important;
+    border-bottom: none !important;
+    background: var(--kt-card-bg) !important;
+    padding: 1.5rem 2rem !important;
+  }
+
+  .card-title {
+    margin-bottom: 0 !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .card-toolbar {
+    flex-shrink: 0 !important;
+    
+    app-button {
+      &:last-child {
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  .form-control {
+    // border: 1px solid #e1e3ea !important;
+    transition: all 0.15s ease-in-out !important;
+
+    &:focus {
+      box-shadow: 0 0 0 0.25rem rgba(var(--kt-primary-rgb), 0.15) !important;
+      outline: none !important;
+    }
+
+    &::placeholder {
+      color: var(--kt-gray-500) !important;
+    }
+  }
+
+  .ki-magnifier {
+    color: var(--kt-gray-500) !important;
+    z-index: 2 !important;
+  }
+
+  // Responsive Design
+  @media (max-width: 991.98px) {
+    .card-header {
+      padding: 1.25rem 1.5rem !important;
+      
+      > div:first-child {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 1rem !important;
+      }
+
+      .card-toolbar {
+        justify-content: flex-end !important;
+
+        .d-flex {
+          gap: 0.5rem !important;
+          flex-wrap: wrap !important;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .card-header {
+      padding: 1rem !important;
+      
+      > div:first-child {
+        align-items: stretch !important;
+      }
+
+      .card-toolbar {
+        .d-flex {
+          justify-content: stretch !important;
+
+          app-button {
+            flex: 1 !important;
+            margin-right: 0 !important;
+
+            &:not(:last-child) {
+              margin-right: 0.5rem !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// ===================================
+// DARK MODE STYLES
+// ===================================
+
+html[data-bs-theme="dark"] body app-toolbar {
+  .card {
+    border: 1px solid var(--bs-card-border-color) !important;
+    border-bottom: none !important;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .form-control {
+    border: 1px solid #2b2b40 !important;
+
+    &:focus {
+      border-color: var(--kt-primary) !important;
+      box-shadow: 0 0 0 0.25rem rgba(var(--kt-primary-rgb), 0.15) !important;
+      outline: none !important;
+    }
+  }
+}
+
+// ===================================
+// TRANSICIONES SUAVES
+// ===================================
+
+body app-toolbar {
+  .card-header {
+    .form-control,
+    .ki-magnifier {
+      transition: all 0.15s ease-in-out !important;
+    }
+  }
+}
+
+html[data-bs-theme="dark"] body app-toolbar { 
+  margin: 0 !important;
+  display: block !important;
+  position: sticky;
+  top: 70px;
+  z-index: 10;
+  background-color: #15171c !important;
+}
+
+// ===================================
+// TOOLBAR - BOTONES EN COLUMNA EN MÓVIL
+// ===================================
+
+@media (max-width: 991.98px) {
+  body app-toolbar {
+    .card-header {
+      // Primera fila: título y botones en columna
+      > div:first-child {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 1rem !important;
+      }
+
+      .card-toolbar {
+        width: 100% !important;
+        
+        .d-flex {
+          flex-direction: column !important; // Los botones en columna
+          width: 100% !important;
+          gap: 0.5rem !important;
+
+          app-button {
+            width: 100% !important;
+            margin-right: 0 !important;
+
+            button {
+              width: 100% !important;
+              justify-content: center !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

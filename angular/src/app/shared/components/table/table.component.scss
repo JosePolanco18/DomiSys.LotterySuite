@@ -1,0 +1,396 @@
+:host ::ng-deep {
+  app-table {
+    .p-datatable {
+      background: var(--kt-card-bg) !important;
+      border-radius: 0.625rem;
+      border: none;
+
+      .p-datatable-wrapper {
+        background: var(--kt-card-bg) !important;
+      }
+
+      .p-datatable-thead > tr > th {
+        background: var(--kt-card-bg) !important;
+        border: none !important;
+        color: var(--kt-gray-700) !important;
+        font-weight: 500;
+        font-size: 0.975rem;
+        padding-top: 1.25rem;
+        padding-bottom: 1.25rem;
+      }
+
+      .p-datatable-tbody > tr {
+        background: var(--kt-card-bg) !important;
+        border: none !important;
+
+        &:hover {
+          background-color: var(--kt-gray-100) !important;
+        }
+
+        td {
+          border: none !important;
+          padding-top: 1rem;
+          padding-bottom: 1rem;
+          font-size: 0.95rem;
+          background: var(--kt-card-bg) !important;
+        }
+
+        &.row-separator,
+        &.row-separator > td {
+          background: var(--kt-card-bg) !important;
+        }
+
+        // Clases para estilos de fila
+        &.row-bold {
+          font-weight: bold !important;
+          
+          td {
+            font-weight: bold !important;
+          }
+        }
+
+        &.row-italic {
+          font-style: italic !important;
+          
+          td {
+            font-style: italic !important;
+          }
+        }
+
+        &.row-cancelled {
+          background-color: rgba(248, 113, 113, 0.1) !important;
+          
+          td {
+            background-color: rgba(248, 113, 113, 0.1) !important;
+          }
+          
+          &:hover {
+            background-color: rgba(248, 113, 113, 0.2) !important;
+            
+            td {
+              background-color: rgba(248, 113, 113, 0.2) !important;
+            }
+          }
+        }
+
+        &.row-disabled {
+          background-color: rgba(156, 163, 175, 0.1) !important;
+          opacity: 0.6;
+          
+          td {
+            background-color: rgba(156, 163, 175, 0.1) !important;
+          }
+          
+          &:hover {
+            background-color: rgba(156, 163, 175, 0.2) !important;
+            
+            td {
+              background-color: rgba(156, 163, 175, 0.2) !important;
+            }
+          }
+        }
+
+        &.row-warning {
+          background-color: rgba(245, 158, 11, 0.1) !important;
+          
+          td {
+            background-color: rgba(245, 158, 11, 0.1) !important;
+          }
+          
+          &:hover {
+            background-color: rgba(245, 158, 11, 0.2) !important;
+            
+            td {
+              background-color: rgba(245, 158, 11, 0.2) !important;
+            }
+          }
+        }
+
+        &.row-success {
+          background-color: rgba(34, 197, 94, 0.1) !important;
+          
+          td {
+            background-color: rgba(34, 197, 94, 0.1) !important;
+          }
+          
+          &:hover {
+            background-color: rgba(34, 197, 94, 0.2) !important;
+            
+            td {
+              background-color: rgba(34, 197, 94, 0.2) !important;
+            }
+          }
+        }
+
+        &.row-priority {
+          background-color: rgba(99, 102, 241, 0.1) !important;
+          border-left: 4px solid #6366f1 !important;
+          
+          td {
+            background-color: rgba(99, 102, 241, 0.1) !important;
+            
+            &:first-child {
+              border-left: none !important;
+            }
+          }
+          
+          &:hover {
+            background-color: rgba(99, 102, 241, 0.2) !important;
+            
+            td {
+              background-color: rgba(99, 102, 241, 0.2) !important;
+            }
+          }
+        }
+
+        &.row-strikethrough {
+          text-decoration: line-through !important;
+          
+          td {
+            text-decoration: line-through !important;
+          }
+        }
+
+        &.row-text-danger {
+          color: #dc3545 !important;
+          
+          td {
+            color: #dc3545 !important;
+          }
+        }
+
+        &.row-text-success {
+          color: #28a745 !important;
+          
+          td {
+            color: #28a745 !important;
+          }
+        }
+
+        &.row-text-warning {
+          color: #ffc107 !important;
+          
+          td {
+            color: #ffc107 !important;
+          }
+        }
+
+        &.row-text-muted {
+          color: #6c757d !important;
+          
+          td {
+            color: #6c757d !important;
+          }
+        }
+      }
+
+      .p-paginator {
+        background: var(--kt-card-bg) !important;
+        border: none !important;
+
+        .p-paginator-page,
+        .p-paginator-next,
+        .p-paginator-prev,
+        .p-paginator-first,
+        .p-paginator-last {
+          background-color: var(--kt-card-bg) !important;
+          border: none !important;
+          color: var(--kt-gray-600) !important;
+
+          &:hover {
+            background-color: var(--kt-gray-100) !important;
+          }
+
+          &.p-highlight {
+            background-color: var(--kt-primary-light) !important;
+            color: var(--kt-primary) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+body app-table { 
+  .p-datatable-tbody > tr > td {
+    border-bottom: 1px dotted #e2e8f0 !important;
+  }
+
+  .p-datatable-thead > tr > th {
+    border-bottom: 1px dotted #e2e8f0 !important;
+  }
+
+  .btn-table-actions {
+    color: #5078ff !important;
+    background-color: #f1f5ff !important;
+    border-color: #f1f5ff !important;
+    font-weight: 600 !important;
+    font-size: 1.075rem !important;
+    border-radius: 0.25rem !important;
+  
+    &:hover {
+      background-color: #e9f0ff !important;
+    }
+  
+    &:focus {
+      background-color: #e9f0ff !important;
+    }
+  
+    i, span {
+      color: #5078ff !important;
+    }
+  }
+}
+
+html[data-bs-theme="dark"] body app-table {
+  .p-datatable,
+  .p-datatable-wrapper,
+  .p-datatable-thead > tr > th,
+  .p-datatable-tbody > tr,
+  .p-datatable-tbody > tr > td,
+  .p-datatable-tbody > tr.row-separator,
+  .p-datatable-tbody > tr.row-separator > td,
+  .p-paginator {
+    background: transparent !important;
+  }
+
+  .p-datatable-table,
+  .p-datatable-tbody > tr > td {
+    border-bottom: 1px dotted #505050 !important;
+  }
+
+  .p-datatable-table,
+  .p-datatable-thead > tr > th {
+    border-bottom: 1px dotted #505050 !important;
+  }
+
+  .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .btn-table-actions {
+    color: #5078ff !important;
+    background-color: rgba(80, 120, 255, 0.15) !important;
+    border-color: rgba(80, 120, 255, 0.15) !important;
+ 
+    &:hover {
+      background-color: rgba(80, 120, 255, 0.25) !important;
+    }
+ 
+    &:focus {
+      background-color: rgba(80, 120, 255, 0.25) !important;
+    }
+ 
+    i, span {
+      color: #5078ff !important;
+    }
+  }
+
+  .p-paginator {
+    .p-paginator-page,
+    .p-paginator-next,
+    .p-paginator-prev,
+    .p-paginator-first,
+    .p-paginator-last {
+      background-color: transparent !important;
+      color: var(--kt-gray-500) !important;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+      }
+
+      &.p-highlight {
+        background-color: var(--kt-primary-light) !important;
+        color: var(--kt-primary) !important;
+      }
+    }
+  }
+
+  // Estilos para modo oscuro
+  .p-datatable-tbody > tr {
+    &.row-cancelled {
+      background-color: rgba(248, 113, 113, 0.15) !important;
+      
+      td {
+        background-color: rgba(248, 113, 113, 0.15) !important;
+      }
+      
+      &:hover {
+        background-color: rgba(248, 113, 113, 0.25) !important;
+        
+        td {
+          background-color: rgba(248, 113, 113, 0.25) !important;
+        }
+      }
+    }
+
+    &.row-disabled {
+      background-color: rgba(156, 163, 175, 0.15) !important;
+      
+      td {
+        background-color: rgba(156, 163, 175, 0.15) !important;
+      }
+      
+      &:hover {
+        background-color: rgba(156, 163, 175, 0.25) !important;
+        
+        td {
+          background-color: rgba(156, 163, 175, 0.25) !important;
+        }
+      }
+    }
+
+    &.row-warning {
+      background-color: rgba(245, 158, 11, 0.15) !important;
+      
+      td {
+        background-color: rgba(245, 158, 11, 0.15) !important;
+      }
+      
+      &:hover {
+        background-color: rgba(245, 158, 11, 0.25) !important;
+        
+        td {
+          background-color: rgba(245, 158, 11, 0.25) !important;
+        }
+      }
+    }
+
+    &.row-success {
+      background-color: rgba(34, 197, 94, 0.15) !important;
+      
+      td {
+        background-color: rgba(34, 197, 94, 0.15) !important;
+      }
+      
+      &:hover {
+        background-color: rgba(34, 197, 94, 0.25) !important;
+        
+        td {
+          background-color: rgba(34, 197, 94, 0.25) !important;
+        }
+      }
+    }
+
+    &.row-priority {
+      background-color: rgba(99, 102, 241, 0.15) !important;
+      
+      td {
+        background-color: rgba(99, 102, 241, 0.15) !important;
+      }
+      
+      &:hover {
+        background-color: rgba(99, 102, 241, 0.25) !important;
+        
+        td {
+          background-color: rgba(99, 102, 241, 0.25) !important;
+        }
+      }
+    }
+  }
+}
+
+.badge-secondary {
+    color: #fff;
+    background-color: #17a2b8;
+}

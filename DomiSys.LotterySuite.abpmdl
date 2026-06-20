@@ -1,0 +1,97 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.BasicTheme": {
+      "version": "9.2.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.2.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.2.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.2.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.2.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.2.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.2.0",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "DomiSys.LotterySuite.Application": {
+      "path": "src/DomiSys.LotterySuite.Application/DomiSys.LotterySuite.Application.abppkg",
+      "folder": "src"
+    },
+    "DomiSys.LotterySuite.Application.Tests": {
+      "path": "test/DomiSys.LotterySuite.Application.Tests/DomiSys.LotterySuite.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "DomiSys.LotterySuite.Domain.Shared": {
+      "path": "src/DomiSys.LotterySuite.Domain.Shared/DomiSys.LotterySuite.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "DomiSys.LotterySuite.Application.Contracts": {
+      "path": "src/DomiSys.LotterySuite.Application.Contracts/DomiSys.LotterySuite.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "DomiSys.LotterySuite.HttpApi": {
+      "path": "src/DomiSys.LotterySuite.HttpApi/DomiSys.LotterySuite.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "DomiSys.LotterySuite.HttpApi.Client": {
+      "path": "src/DomiSys.LotterySuite.HttpApi.Client/DomiSys.LotterySuite.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "DomiSys.LotterySuite.EntityFrameworkCore.Tests": {
+      "path": "test/DomiSys.LotterySuite.EntityFrameworkCore.Tests/DomiSys.LotterySuite.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "DomiSys.LotterySuite.EntityFrameworkCore": {
+      "path": "src/DomiSys.LotterySuite.EntityFrameworkCore/DomiSys.LotterySuite.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "DomiSys.LotterySuite.TestBase": {
+      "path": "test/DomiSys.LotterySuite.TestBase/DomiSys.LotterySuite.TestBase.abppkg",
+      "folder": "test"
+    },
+    "DomiSys.LotterySuite.Domain.Tests": {
+      "path": "test/DomiSys.LotterySuite.Domain.Tests/DomiSys.LotterySuite.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "DomiSys.LotterySuite.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/DomiSys.LotterySuite.HttpApi.Client.ConsoleTestApp/DomiSys.LotterySuite.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "DomiSys.LotterySuite.DbMigrator": {
+      "path": "src/DomiSys.LotterySuite.DbMigrator/DomiSys.LotterySuite.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "DomiSys.LotterySuite.HttpApi.Host": {
+      "path": "src/DomiSys.LotterySuite.HttpApi.Host/DomiSys.LotterySuite.HttpApi.Host.abppkg",
+      "folder": "src"
+    },
+    "DomiSys.LotterySuite.Domain": {
+      "path": "src/DomiSys.LotterySuite.Domain/DomiSys.LotterySuite.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}

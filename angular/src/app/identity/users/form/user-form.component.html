@@ -1,0 +1,151 @@
+<div class="container-fluid">
+  <app-form-toolbar [config]="formToolbarConfig"></app-form-toolbar>
+
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <p-tabView>
+          <!-- Tab 1: Información de Usuario -->
+          <p-tabPanel header="Información de Usuario" leftIcon="pi pi-user">
+            <div class="row g-3 mt-2">
+              <!-- Nombre de usuario -->
+              <div class="col-md-6">
+                <app-input
+                  formControlName="userName"
+                  label="Nombre de usuario"
+                  placeholder="Ingrese el nombre de usuario"
+                  [maxLength]="256"
+                  [errorMessage]="getErrorMessage('userName')"
+                ></app-input>
+              </div>
+
+              <!-- Email -->
+              <div class="col-md-6">
+                <app-input
+                  formControlName="email"
+                  label="Dirección e-mail"
+                  type="email"
+                  placeholder="usuario@ejemplo.com"
+                  [maxLength]="256"
+                  [errorMessage]="getErrorMessage('email')"
+                ></app-input>
+              </div>
+
+              <!-- Contraseña (solo en modo creación) -->
+              <div class="col-md-6" *ngIf="!isEditMode">
+                <app-input
+                  formControlName="password"
+                  label="Contraseña"
+                  type="password"
+                  placeholder="Ingrese la contraseña"
+                  [errorMessage]="getErrorMessage('password')"
+                ></app-input>
+                <small class="text-muted">Mínimo 6 caracteres</small>
+              </div>
+
+              <!-- Nombre -->
+              <div class="col-md-6">
+                <app-input
+                  formControlName="name"
+                  label="Nombre"
+                  placeholder="Ingrese el nombre"
+                  [maxLength]="64"
+                  [errorMessage]="getErrorMessage('name')"
+                ></app-input>
+              </div>
+
+              <!-- Apellido -->
+              <div class="col-md-6">
+                <app-input
+                  formControlName="surname"
+                  label="Apellido"
+                  placeholder="Ingrese el apellido"
+                  [maxLength]="64"
+                  [errorMessage]="getErrorMessage('surname')"
+                ></app-input>
+              </div>
+
+              <!-- Número de teléfono -->
+              <div class="col-md-6">
+                <app-input
+                  formControlName="phoneNumber"
+                  label="Número de teléfono"
+                  placeholder="Ingrese el teléfono"
+                  [maxLength]="16"
+                  [errorMessage]="getErrorMessage('phoneNumber')"
+                ></app-input>
+              </div>
+
+              <!-- Checkboxes -->
+              <div class="col-12">
+                <div class="d-flex gap-4">
+                  <div class="form-check">
+                    <p-checkbox
+                      formControlName="isActive"
+                      [binary]="true"
+                      inputId="isActive"
+                    ></p-checkbox>
+                    <label for="isActive" class="form-check-label ms-2">
+                      Activo
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <p-checkbox
+                      formControlName="lockoutEnabled"
+                      [binary]="true"
+                      inputId="lockoutEnabled"
+                    ></p-checkbox>
+                    <label for="lockoutEnabled" class="form-check-label ms-2">
+                      Bloqueo de cuenta
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+
+          <!-- Tab 2: Roles -->
+          <p-tabPanel header="Roles" leftIcon="pi pi-shield">
+            <div class="row g-3 mt-2">
+              <div class="col-12">
+                <label class="form-label fw-bold">Roles asignados</label>
+                <p-multiSelect
+                  formControlName="roleNames"
+                  [options]="roleOptions"
+                  optionLabel="name"
+                  optionValue="name"
+                  placeholder="Seleccione los roles"
+                  [filter]="true"
+                  filterPlaceHolder="Buscar roles..."
+                  [showToggleAll]="true"
+                  [loading]="loadingRoles"
+                  display="chip"
+                  styleClass="w-100"
+                >
+                  <ng-template let-role pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                      <i class="pi pi-shield"></i>
+                      <span>{{ role.name }}</span>
+                    </div>
+                  </ng-template>
+                </p-multiSelect>
+                <small class="text-muted d-block mt-2">
+                  Los roles determinan los permisos del usuario en el sistema
+                </small>
+              </div>
+
+              <!-- Información adicional -->
+              <div class="col-12" *ngIf="roleNames?.value?.length > 0">
+                <div class="alert alert-info">
+                  <i class="pi pi-info-circle me-2"></i>
+                  <strong>{{ roleNames.value.length }}</strong> rol(es) asignado(s) a este usuario
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+      </form>
+    </div>
+  </div>
+</div>

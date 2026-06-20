@@ -1,0 +1,139 @@
+<app-form-toolbar [config]="formToolbarConfig"></app-form-toolbar>
+
+<div class="row g-5">
+  <!-- Panel izquierdo: entrada de jugadas -->
+  <div class="col-lg-5">
+    <!-- Terminal y Sorteo -->
+    <div class="card card-flush mb-5">
+      <div class="card-header border-0 pt-6">
+        <div class="card-title">
+          <span class="text-gray-800 fw-bold fs-5">Seleccion</span>
+        </div>
+      </div>
+      <div class="card-body pt-0">
+        <form [formGroup]="terminalForm">
+          <app-select label="Terminal" formControlName="terminalId" [service]="terminalSvc" bindValue="id" bindLabel="nombre" placeholder="Seleccione terminal..." [required]="true"></app-select>
+          <app-select label="Loteria" formControlName="loteriaId" [service]="loteriaSvc" bindValue="id" bindLabel="nombre" placeholder="Seleccione loteria..." [required]="true"></app-select>
+          <app-select label="Sorteo" formControlName="sorteoId" [staticItems]="sorteoItems" bindValue="id" bindLabel="nombre" placeholder="Seleccione sorteo..." [required]="true" [disabled]="!terminalForm.get('loteriaId')?.value"></app-select>
+        </form>
+      </div>
+    </div>
+
+    <!-- Agregar jugada -->
+    <div class="card card-flush mb-5">
+      <div class="card-header border-0 pt-6">
+        <div class="card-title">
+          <span class="text-gray-800 fw-bold fs-5">Nueva Jugada</span>
+        </div>
+      </div>
+      <div class="card-body pt-0">
+        <form [formGroup]="jugadaForm">
+          <div class="row">
+            <div class="col-12">
+              <app-select label="Tipo" formControlName="tipoJugada" [staticItems]="tiposJugada" bindValue="id" bindLabel="nombre" [clearable]="false"></app-select>
+            </div>
+            <div class="col-12" *ngIf="jugadaForm.get('tipoJugada')?.value === 4">
+              <app-select label="Segundo Sorteo (otra loteria)" formControlName="segundoSorteoId" [staticItems]="todosSorteos" bindValue="id" bindLabel="nombre" placeholder="Ej: Loteria Nacional - Quiniela..." [required]="true"></app-select>
+            </div>
+            <div class="col-7">
+              <app-input label="Jugada" type="text" formControlName="jugada" [placeholder]="jugadaPlaceholder" [maxLength]="jugadaMaxLength" [required]="true" [helperText]="tipoSeleccionado?.nombre + ': ' + tipoSeleccionado?.digitos + ' digitos'"></app-input>
+            </div>
+            <div class="col-5">
+              <app-input label="Monto (RD$)" type="currency" formControlName="monto" currency="DOP" [required]="true" [min]="1"></app-input>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary w-100 mt-3" (click)="agregarJugada()" [disabled]="!jugadaForm.valid || !terminalForm.get('sorteoId')?.value">
+            <i class="fas fa-plus me-2"></i> Agregar Jugada
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel derecho: lista de jugadas y ticket -->
+  <div class="col-lg-7">
+    <!-- Jugadas agregadas -->
+    <div class="card card-flush mb-5">
+      <div class="card-header border-0 pt-6">
+        <div class="card-title">
+          <span class="text-gray-800 fw-bold fs-5">Jugadas ({{ jugadas.length }})</span>
+        </div>
+        <div class="card-toolbar">
+          <span class="fs-2x fw-bold text-primary">Total: RD$ {{ totalMonto | number:'1.2-2' }}</span>
+        </div>
+      </div>
+      <div class="card-body pt-0">
+        <div class="table-responsive" *ngIf="jugadas.length > 0">
+          <table class="table table-row-dashed table-row-gray-300 gy-4 gs-4 align-middle mb-0">
+            <thead>
+              <tr class="text-gray-500 fw-semibold fs-7 text-uppercase">
+                <th>Sorteo</th>
+                <th>Tipo</th>
+                <th class="text-center">Jugada</th>
+                <th class="text-end">Monto</th>
+                <th class="text-end w-40px"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let j of jugadas; let i = index">
+                <td class="text-gray-600 fs-7">{{ j.nombreSorteo }}</td>
+                <td><span class="badge badge-light-info">{{ j.tipoLabel }}</span></td>
+                <td class="text-center text-gray-800 fw-bold fs-5">{{ j.jugadaDisplay }}</td>
+                <td class="text-end text-gray-800 fw-bold">{{ j.monto | number:'1.2-2' }}</td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-icon btn-light-danger" (click)="eliminarJugada(i)">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="jugadas.length === 0" class="text-center text-gray-500 py-10">
+          <i class="fas fa-ticket-alt fs-2x text-gray-300 mb-3 d-block"></i>
+          <p class="fw-semibold mb-0">Agregue jugadas para crear el ticket</p>
+        </div>
+      </div>
+      <div class="card-footer py-4" *ngIf="jugadas.length > 0">
+        <button class="btn btn-success btn-lg w-100" (click)="procesarTicket()" [disabled]="isProcessing">
+          <i class="fas fa-check-circle me-2"></i>
+          {{ isProcessing ? 'Procesando...' : 'Procesar Ticket — RD$ ' + (totalMonto | number:'1.2-2') }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Ticket generado -->
+    <div class="card border-success" *ngIf="ticketGenerado">
+      <div class="card-header bg-success">
+        <div class="card-title">
+          <i class="fas fa-check-circle me-2 text-white"></i>
+          <span class="text-white fw-bold fs-5">Ticket Generado</span>
+        </div>
+      </div>
+      <div class="card-body px-6 py-5">
+        <div class="text-center mb-5">
+          <h3 class="text-gray-800 fw-bold mb-1">{{ ticketGenerado.codigoTicket }}</h3>
+          <span class="text-gray-500 fs-7">{{ ticketGenerado.fechaCreacion | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+        </div>
+        <div class="separator mb-5"></div>
+        <div *ngFor="let d of ticketGenerado.detalles" class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <span class="badge badge-light-info me-2">{{ d.tipoJugada === 1 ? 'Q' : d.tipoJugada === 2 ? 'P' : d.tipoJugada === 3 ? 'T' : 'SP' }}</span>
+            <span class="text-gray-800 fw-bold">
+              {{ d.primerNumero | number:'2.0-0' }}
+              <span *ngIf="d.segundoNumero !== null && d.segundoNumero !== undefined">-{{ d.segundoNumero | number:'2.0-0' }}</span>
+              <span *ngIf="d.tercerNumero !== null && d.tercerNumero !== undefined">-{{ d.tercerNumero | number:'2.0-0' }}</span>
+            </span>
+            <span class="text-gray-500 fs-7 ms-2">{{ d.nombreLoteria }} {{ d.nombreSorteo }}</span>
+          </div>
+          <span class="text-gray-800 fw-bold">RD$ {{ d.monto | number:'1.2-2' }}</span>
+        </div>
+        <div class="separator mb-5"></div>
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="text-gray-800 fw-bold fs-4">Total:</span>
+          <span class="text-success fw-bold fs-2x">RD$ {{ ticketGenerado.montoTotal | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

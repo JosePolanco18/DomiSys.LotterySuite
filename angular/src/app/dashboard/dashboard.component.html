@@ -1,0 +1,189 @@
+<!-- KPI Cards -->
+<div class="row g-5 mb-5">
+  <div class="col-md-3">
+    <div class="card card-flush">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="symbol symbol-50px me-5">
+            <span class="symbol-label bg-light-primary">
+              <i class="fas fa-dollar-sign text-primary fs-2"></i>
+            </span>
+          </div>
+          <div class="flex-grow-1">
+            <span class="text-gray-500 fw-semibold fs-6">Ventas Hoy</span>
+            <div class="text-gray-800 fw-bold fs-2x">RD$ {{ data?.ventasHoy | number:'1.2-2' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-flush">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="symbol symbol-50px me-5">
+            <span class="symbol-label bg-light-danger">
+              <i class="fas fa-hand-holding-usd text-danger fs-2"></i>
+            </span>
+          </div>
+          <div class="flex-grow-1">
+            <span class="text-gray-500 fw-semibold fs-6">Premios Pagados</span>
+            <div class="text-gray-800 fw-bold fs-2x">RD$ {{ data?.premiosPagadosHoy | number:'1.2-2' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-flush">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="symbol symbol-50px me-5">
+            <span class="symbol-label" [class.bg-light-success]="enVerde" [class.bg-light-danger]="!enVerde">
+              <i class="fas fs-2"
+                 [class.fa-arrow-up]="enVerde" [class.fa-arrow-down]="!enVerde"
+                 [class.text-success]="enVerde" [class.text-danger]="!enVerde"></i>
+            </span>
+          </div>
+          <div class="flex-grow-1">
+            <span class="text-gray-500 fw-semibold fs-6">Balance</span>
+            <div class="fw-bold fs-2x" [class.text-success]="enVerde" [class.text-danger]="!enVerde">
+              RD$ {{ balanceHoy | number:'1.2-2' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-flush">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="symbol symbol-50px me-5">
+            <span class="symbol-label bg-light-info">
+              <i class="fas fa-ticket-alt text-info fs-2"></i>
+            </span>
+          </div>
+          <div class="flex-grow-1">
+            <span class="text-gray-500 fw-semibold fs-6">Tickets / Terminales</span>
+            <div class="text-gray-800 fw-bold fs-2x">{{ data?.ticketsHoy || 0 }} <span class="text-gray-500 fw-semibold fs-6">/ {{ data?.terminalesActivas || 0 }}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-5 mb-5">
+  <!-- Ventas por Terminal -->
+  <div class="col-lg-6">
+    <div class="card card-flush">
+      <div class="card-header border-0 pt-6">
+        <div class="card-title">
+          <i class="fas fa-mobile-alt me-2 text-primary"></i>
+          <span class="text-gray-800 fw-bold fs-5">Ventas por Terminal &mdash; Hoy</span>
+        </div>
+      </div>
+      <div class="card-body pt-0">
+        <div class="table-responsive" *ngIf="data?.ventasPorTerminal?.length">
+          <table class="table table-row-dashed table-row-gray-300 gy-5 gs-5 align-middle">
+            <thead>
+              <tr class="text-gray-500 fw-semibold fs-7 text-uppercase">
+                <th>Terminal</th>
+                <th>Vendedor</th>
+                <th class="text-end">Tickets</th>
+                <th class="text-end">Monto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of data!.ventasPorTerminal">
+                <td class="text-gray-800 fw-bold">{{ v.nombreTerminal }}</td>
+                <td class="text-gray-600">{{ v.nombreVendedor }}</td>
+                <td class="text-end text-gray-800 fw-semibold">{{ v.cantidadTickets }}</td>
+                <td class="text-end text-gray-800 fw-bold">RD$ {{ v.montoVendido | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="!data?.ventasPorTerminal?.length" class="text-center text-gray-500 py-10">
+          <i class="fas fa-mobile-alt fs-2x text-gray-300 mb-3 d-block"></i>
+          Sin ventas hoy
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Numeros mas vendidos -->
+  <div class="col-lg-6">
+    <div class="card card-flush">
+      <div class="card-header border-0 pt-6">
+        <div class="card-title">
+          <i class="fas fa-fire me-2 text-warning"></i>
+          <span class="text-gray-800 fw-bold fs-5">Numeros mas Vendidos &mdash; Hoy</span>
+        </div>
+        <div class="card-toolbar">
+          <a routerLink="/control-riesgo/monitor" class="btn btn-sm btn-light-primary">Ver monitor</a>
+        </div>
+      </div>
+      <div class="card-body pt-0">
+        <div *ngIf="data?.numerosMasVendidos?.length" class="d-flex flex-wrap gap-3">
+          <div *ngFor="let n of data!.numerosMasVendidos" class="d-flex flex-column align-items-center border rounded py-2 px-3" style="min-width: 70px">
+            <span class="badge badge-light-primary fs-4 fw-bold px-3 py-2 mb-1">{{ n.numero | number:'2.0-0' }}</span>
+            <span class="text-gray-600 fw-semibold fs-8">{{ n.montoTotal | number:'1.0-0' }}</span>
+          </div>
+        </div>
+        <div *ngIf="!data?.numerosMasVendidos?.length" class="text-center text-gray-500 py-10">
+          <i class="fas fa-chart-bar fs-2x text-gray-300 mb-3 d-block"></i>
+          Sin datos
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ultimos Resultados -->
+<div class="row g-5">
+  <div class="col-12">
+    <div class="card card-flush">
+      <div class="card-header border-0 pt-6">
+        <div class="card-title">
+          <i class="fas fa-trophy me-2 text-success"></i>
+          <span class="text-gray-800 fw-bold fs-5">Ultimos Resultados</span>
+        </div>
+        <div class="card-toolbar">
+          <a routerLink="/loterias/resultados" class="btn btn-sm btn-light-primary">Ver todos</a>
+        </div>
+      </div>
+      <div class="card-body pt-0">
+        <div class="table-responsive" *ngIf="data?.ultimosResultados?.length">
+          <table class="table table-row-dashed table-row-gray-300 gy-5 gs-5 align-middle">
+            <thead>
+              <tr class="text-gray-500 fw-semibold fs-7 text-uppercase">
+                <th>Loteria</th>
+                <th>Sorteo</th>
+                <th>Fecha</th>
+                <th class="text-center">1ra</th>
+                <th class="text-center">2da</th>
+                <th class="text-center">3ra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of data!.ultimosResultados">
+                <td class="text-gray-800 fw-bold">{{ r.nombreLoteria }}</td>
+                <td class="text-gray-600">{{ r.nombreSorteo }}</td>
+                <td class="text-gray-600">{{ r.fecha | date:'dd/MM/yyyy' }}</td>
+                <td class="text-center"><span class="badge badge-light-primary fs-6 fw-bold px-3 py-2">{{ r.primera | number:'2.0-0' }}</span></td>
+                <td class="text-center"><span class="badge badge-light-info fs-6 fw-bold px-3 py-2">{{ r.segunda | number:'2.0-0' }}</span></td>
+                <td class="text-center"><span class="badge badge-light-success fs-6 fw-bold px-3 py-2">{{ r.tercera | number:'2.0-0' }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="!data?.ultimosResultados?.length" class="text-center text-gray-500 py-10">
+          <i class="fas fa-trophy fs-2x text-gray-300 mb-3 d-block"></i>
+          Sin resultados registrados
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

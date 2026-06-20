@@ -1,0 +1,57 @@
+<div class="card" style="border-bottom: none; border-bottom-right-radius: 0%; border-bottom-left-radius: 0%;">
+  <div class="card-header border-0 pt-6 pb-6">
+    <!-- Contenedor principal con título y botones -->
+    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
+      <div *ngIf="config.title" class="card-title">
+        <h3 class="card-title align-items-start flex-column">
+          <span class="card-label fw-bolder fs-2 mb-1">
+            {{ config.title }}
+          </span>
+          <span *ngIf="config.subTitle" class="text-muted mt-1 fw-bold fs-7">
+            {{ config.subTitle }}
+          </span>
+        </h3>
+      </div>
+      
+      <!-- Toolbar de botones alineado con el título (excluyendo botón de búsqueda) -->
+      <div class="card-toolbar">
+        <div class="d-flex justify-content-end align-items-center" data-kt-customer-table-toolbar="base">
+          <app-button
+            *ngFor="let button of visibleButtonsExcludingSearch"
+            [label]="button.label"
+            [icon]="button.icon"
+            [outline]="button.outline || false"
+            [variant]="button.variant || 'secondary'"
+            [size]="button.size || 'md'"
+            [disabled]="button.disabled || loading"
+            (buttonClick)="onButtonClick(button)"
+            class="me-3">
+          </app-button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Search input con botón integrado -->
+    <div *ngIf="config.showSearch" class="d-flex align-items-center position-relative mt-10">
+      <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4" style="z-index: 10;"></i>
+      <input 
+        type="text" 
+        [placeholder]="searchPlaceholder"
+        [(ngModel)]="searchValue"
+        (ngModelChange)="onSearchChange($event)"
+        (keydown)="onSearchKeydown($event)"
+        class="form-control form-control-solid ps-14 pe-20 w-100"
+        style="border-top-right-radius: 0; border-bottom-right-radius: 0;"
+      />
+      <button 
+        type="button"
+        class="btn btn-outline btn-outline-primary btn-active-light-primary d-flex align-items-center justify-content-center"
+        style="border-top-left-radius: 0; border-bottom-left-radius: 0; min-width: 100px; height: calc(1.5em + 1.3rem + 2px);"
+        [disabled]="loading"
+        (click)="onSearchClick()">
+        <i class="ki-outline ki-magnifier fs-4 me-2"></i>
+        <span>Buscar</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<app-form-toolbar [config]="formToolbarConfig"></app-form-toolbar>
+
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="form" class="row">
+      <div class="col-md-4">
+        <app-select label="Lotería" formControlName="loteriaId" [service]="loteriaService" bindValue="id" bindLabel="nombre" placeholder="Seleccione..." [required]="true"></app-select>
+      </div>
+      <div class="col-md-4">
+        <app-select label="Sorteo" formControlName="sorteoId" [service]="sorteoService" dependentOn="loteriaId" dependentMethod="getPorLoteria" bindValue="id" bindLabel="nombre" placeholder="Seleccione..." [required]="true"></app-select>
+      </div>
+      <div class="col-md-4">
+        <app-input label="Fecha" type="date" formControlName="fecha" [required]="true"></app-input>
+      </div>
+
+      <div class="col-12"><hr></div>
+
+      <div class="col-md-4">
+        <app-input label="1ra (Primera)" type="number" formControlName="primera" [min]="0" [max]="99" placeholder="00" [required]="true"></app-input>
+      </div>
+      <div class="col-md-4">
+        <app-input label="2da (Segunda)" type="number" formControlName="segunda" [min]="0" [max]="99" placeholder="00" [required]="true"></app-input>
+      </div>
+      <div class="col-md-4">
+        <app-input label="3ra (Tercera)" type="number" formControlName="tercera" [min]="0" [max]="99" placeholder="00" [required]="true"></app-input>
+      </div>
+    </form>
+  </div>
+</div>

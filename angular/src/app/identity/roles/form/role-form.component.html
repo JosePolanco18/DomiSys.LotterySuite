@@ -1,0 +1,115 @@
+<div class="container-fluid">
+  <app-form-toolbar [config]="formToolbarConfig"></app-form-toolbar>
+
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <p-tabView>
+          <!-- Tab 1: Información del Rol -->
+          <p-tabPanel header="Información del Rol" leftIcon="pi pi-info-circle">
+            <div class="row g-3 mt-2">
+              <!-- Nombre del rol -->
+              <div class="col-md-8">
+                <app-input
+                  formControlName="name"
+                  label="Nombre del rol"
+                  placeholder="Ingrese el nombre del rol"
+                  [maxLength]="256"
+                  [errorMessage]="getErrorMessage('name')"
+                ></app-input>
+                <small class="text-muted">
+                  El nombre del rol debe ser único en el sistema
+                </small>
+              </div>
+
+              <!-- Checkboxes -->
+              <div class="col-12">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="card border">
+                      <div class="card-body">
+                        <div class="form-check">
+                          <p-checkbox
+                            formControlName="isDefault"
+                            [binary]="true"
+                            inputId="isDefault"
+                          ></p-checkbox>
+                          <label for="isDefault" class="form-check-label ms-2 fw-bold">
+                            Rol por defecto
+                          </label>
+                        </div>
+                        <small class="text-muted d-block mt-2">
+                          Este rol se asignará automáticamente a nuevos usuarios
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="card border">
+                      <div class="card-body">
+                        <div class="form-check">
+                          <p-checkbox
+                            formControlName="isPublic"
+                            [binary]="true"
+                            inputId="isPublic"
+                          ></p-checkbox>
+                          <label for="isPublic" class="form-check-label ms-2 fw-bold">
+                            Rol público
+                          </label>
+                        </div>
+                        <small class="text-muted d-block mt-2">
+                          Los roles públicos son visibles para todos los usuarios
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+
+          <!-- Tab 2: Permisos (disponible en creación y edición) -->
+          <p-tabPanel header="Permisos" leftIcon="pi pi-shield">
+            <div class="row g-3 mt-2">
+              <div class="col-12">
+                <!-- Mensaje informativo -->
+                <div class="alert alert-info">
+                  <i class="pi pi-info-circle me-2"></i>
+                  <span *ngIf="!isEditMode">
+                    Ingrese el nombre del rol arriba para cargar los permisos disponibles
+                  </span>
+                  <span *ngIf="isEditMode">
+                    Configure los permisos que tendrán los usuarios asignados a este rol
+                  </span>
+                </div>
+
+                <!-- Árbol de permisos -->
+                <app-permission-tree
+                  *ngIf="permissionsData"
+                  [permissionsData]="permissionsData"
+                  [loading]="loadingPermissions"
+                  (permissionsChanged)="onPermissionsChanged($event)"
+                ></app-permission-tree>
+
+                <!-- Mensaje cuando no hay datos de permisos -->
+                <div class="alert alert-warning" *ngIf="!permissionsData && !loadingPermissions && !isEditMode">
+                  <i class="pi pi-info-circle me-2"></i>
+                  Complete el nombre del rol en la pestaña anterior para cargar los permisos disponibles
+                </div>
+
+                <!-- Información de permisos seleccionados -->
+                <div class="mt-3" *ngIf="selectedPermissions.length > 0">
+                  <div class="alert alert-success">
+                    <i class="pi pi-check-circle me-2"></i>
+                    <strong>{{ selectedPermissions.length }}</strong> permiso(s) configurado(s) para este rol
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+      </form>
+    </div>
+  </div>
+</div>

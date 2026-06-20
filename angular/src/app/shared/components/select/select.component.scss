@@ -1,0 +1,288 @@
+// Importar estilos base de ng-select
+@import '~@ng-select/ng-select/themes/default.theme.css';
+
+// Estilos simples y funcionales para Metronic
+:host {
+  ::ng-deep {
+    // Label igual que Metronic
+    .form-label {
+      color: #181c32;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      
+      &.required::after {
+        content: "*";
+        color: #f1416c;
+        margin-left: 0.25rem;
+      }
+    }
+
+    .ng-select .ng-select-container .ng-value-container .ng-input>input { 
+        padding-top: 6px !important;
+    }
+
+    .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value { 
+        font-size: 1.1rem !important;
+        color: var(--bs-gray-700) !important;
+    }
+
+    .ng-select .ng-select-container:hover { 
+        box-shadow: none !important;
+    }
+
+    .ng-select .ng-select-container {
+        height: calc(2.1rem + 1rem + 2px);
+    }
+    
+    .ng-dropdown-panel .ng-option.ng-option-selected {
+        background-color: #c6ebff !important;
+    }
+
+    .ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+        border: none !important;
+    }
+
+    .required-asterisk {
+      color: #f1416c;
+      transition: color 0.3s ease;
+      font-weight: bold;
+      
+      &.valid {
+        color: #50cd89; // Verde cuando es válido
+      }
+    }
+
+
+    // Container principal - simple y efectivo
+    .ng-select {
+      .ng-select-container {
+        background-color: var(--bs-gray-100);
+        border: 1px solid var(--bs-gray-100);
+        border-radius: 0.475rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #5e6278;
+
+        // SIN efectos especiales
+  
+      }
+
+      // Estado focused
+      &.ng-select-focused .ng-select-container {
+        background-color: var(--bs-gray-200);
+        box-shadow: none;
+      }
+
+      // Placeholder - usar el comportamiento por defecto de ng-select
+      .ng-placeholder {
+        color: #a1a5b7;
+        font-size: 1.1rem;
+        font-weight: 400;
+      }
+
+      // Valor seleccionado - usar el comportamiento por defecto
+      .ng-value-container {
+        .ng-value {
+          font-size: 1.1rem;
+          font-weight: 500;
+          color: #5e6278;
+          
+          .ng-value-label {
+            font-size: 1.1rem;
+            font-weight: 500;
+          }
+        }
+      }
+
+      // Input de búsqueda - usar el comportamiento por defecto
+      .ng-input input {
+        color: #5e6278;
+        font-size: 1.1rem;
+        font-weight: 500;
+        
+        &::placeholder {
+          color: #a1a5b7;
+          font-size: 1.1rem;
+          font-weight: 400;
+        }
+      }
+
+      // Iconos
+      .ng-arrow-wrapper .ng-arrow {
+        border-color: #a1a5b7 transparent transparent;
+      }
+
+      .ng-clear-wrapper .ng-clear {
+        color: #a1a5b7;
+        font-size: 18px;
+        
+        &:hover {
+          color: #f1416c;
+        }
+      }
+
+      // Estado disabled
+      &.ng-select-disabled .ng-select-container {
+        background-color: #f5f8fa;
+        color: #a1a5b7;
+      }
+
+      // ===== ESTADOS DE VALIDACIÓN =====
+      
+      // Estado inválido/error
+      &.is-invalid .ng-select-container {
+        border-color: #f1416c !important;
+        // SIN background color para error
+        
+        &:hover {
+          border-color: #f1416c !important;
+        }
+      }
+
+      &.is-invalid.ng-select-focused .ng-select-container {
+        border-color: #f1416c !important;
+        // SIN background color para error
+        box-shadow:none !important;
+      }
+
+      // Estado válido/éxito (opcional)
+      &.is-valid .ng-select-container {
+        border-color: #50cd89 !important;
+        background-color: #f8fff9 !important;
+        
+        &:hover {
+          border-color: #50cd89 !important;
+        }
+      }
+
+      &.is-valid.ng-select-focused .ng-select-container {
+        border-color: #50cd89 !important;
+        background-color: #f8fff9 !important;
+        box-shadow: 0 0 0 0.2rem rgba(80, 205, 137, 0.25) !important;
+      }
+    }
+
+    // Dropdown
+    .ng-dropdown-panel {
+      background: var(--bs-gray-100);
+      border: 1px solid #e1e3ea;
+      border-radius: 0.475rem;
+      box-shadow: 0 0.5rem 1.5rem 0.5rem rgba(0, 0, 0, 0.075);
+
+      .ng-option {
+        color: #5e6278;
+        font-size: 1.1rem;
+        font-weight: 500;
+
+        &.ng-option-highlighted {
+          background-color: #f5f8fa;
+        }
+
+        &.ng-option-selected {
+          background-color: #009ef7;
+          color: #ffffff;
+        }
+      }
+    }
+
+    // ===== MENSAJES DE VALIDACIÓN =====
+    
+    // Los mensajes ahora usan clases de Bootstrap directamente
+    // text-danger fs-7 fw-bold
+    
+    // Asegurar que el texto de validación sea bold
+    .text-danger.fw-bold {
+      font-weight: 600 !important;
+    }
+  }
+}
+
+// ===== DARK MODE =====
+[data-bs-theme="dark"] {
+  :host ::ng-deep {
+    .form-label {
+      color: #ffffff;
+    }
+
+    .ng-select .ng-select-container {
+      background-color: var(--bs-gray-100);
+      border: 1px solid transparent !important;
+      color: #ffffff;
+    }
+
+    .ng-select.ng-select-focused .ng-select-container {
+      background-color: var(--bs-gray-200);
+    }
+
+    .ng-dropdown-panel .ng-dropdown-panel-items .ng-option { 
+        background: #1e1e2d;
+    }
+
+    .ng-dropdown-panel .ng-option.ng-option-selected { 
+        background-color: #272d31 !important;
+    }
+
+    .ng-select .ng-placeholder,
+    .ng-select .ng-input input {
+      color: #ffffff;
+      
+      &::placeholder {
+        color: #6c757d;
+      }
+    }
+
+    .ng-dropdown-panel {
+      background: #1e1e2d;
+      border-color: #2b2b40;
+
+      .ng-option {
+        color: #ffffff;
+
+        &.ng-option-highlighted {
+          background-color: #2b2b40;
+        }
+      }
+    }
+
+    // ===== VALIDACIÓN EN DARK MODE =====
+    
+    // Estado inválido en dark mode
+    .ng-select.is-invalid .ng-select-container {
+      border-color: #f1416c !important;
+      border-width: 1px !important;
+      border-style: solid !important;
+      // SIN background color para error en dark mode
+      
+      &:hover {
+        border-color: #f1416c !important;
+      }
+    }
+
+    .ng-select.is-invalid.ng-select-focused .ng-select-container {
+      border-color: #f1416c !important;
+      border-width: 1px !important;
+      border-style: solid !important;
+      box-shadow: none;
+    }
+
+    // Estado válido en dark mode
+    .ng-select.is-valid .ng-select-container {
+      border-color: #50cd89 !important;
+      background-color: rgba(80, 205, 137, 0.1) !important;
+      
+      &:hover {
+        border-color: #50cd89 !important;
+      }
+    }
+
+    .ng-select.is-valid.ng-select-focused .ng-select-container {
+      border-color: #50cd89 !important;
+      background-color: rgba(80, 205, 137, 0.1) !important;
+      box-shadow: 0 0 0 0.2rem rgba(80, 205, 137, 0.25) !important;
+    }
+
+    // Mensajes en dark mode - usar clases Bootstrap
+    // text-danger fs-7 fw-bold (funcionan igual en dark mode)
+  }
+}

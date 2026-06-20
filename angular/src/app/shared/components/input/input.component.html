@@ -1,0 +1,244 @@
+<!-- src/app/shared/components/input/input.component.html -->
+<div [class]="containerClasses">
+  <!-- Input Container -->
+  <div class="app-input__container">
+    <!-- Label -->
+    <label *ngIf="label" [for]="id" class="form-label fw-bold fs-6 mb-2">
+      {{ label }}
+      <span
+        *ngIf="(required || isRequired) && !readonly"
+        class="ms-1"
+        [class.text-danger]="!isValid"
+        [class.text-success]="isValid"
+        >*</span
+      >
+
+      <!-- Readonly Indicator -->
+      <span
+        *ngIf="readonly"
+        class="ms-2 readonly-icon"
+        ngbPopover="Campo de solo lectura"
+        style="cursor: pointer"
+        triggers="mouseenter:mouseleave"
+        placement="right"
+      >
+        <i class="fa fa-lock text-muted"></i>
+      </span>
+    </label>
+
+    <!-- Input Field Wrapper -->
+    <div class="app-input__wrapper" [class.position-relative]="readonly">
+      <!-- Text Input (default) -->
+      <input
+        *ngIf="
+          type === 'text' ||
+          type === 'email' ||
+          type === 'tel' ||
+          type === 'url' ||
+          type === 'search'
+        "
+        [id]="id"
+        [type]="type"
+        [class]="inputClasses"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        [attr.maxlength]="maxLength"
+        [attr.minlength]="minLength"
+        [pattern]="pattern"
+        [autocomplete]="autocomplete"
+        [value]="value"
+        (input)="onValueChange($event.target.value)"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+        autocomplete="off"
+        spellcheck="false"
+      />
+
+      <!-- Password Input -->
+      <p-password
+        *ngIf="type === 'password'"
+        [id]="id"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        (onFocus)="onFocus()"
+        (onBlur)="onBlur()"
+        [feedback]="false"
+        [toggleMask]="true"
+        [styleClass]="primeNgWrapperClasses"
+        [inputStyleClass]="inputClasses"
+      >
+      </p-password>
+
+      <!-- Number Input -->
+      <p-inputNumber
+        *ngIf="type === 'number'"
+        [id]="id"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        [min]="min"
+        [max]="max"
+        [step]="step"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        (onFocus)="onFocus()"
+        (onBlur)="onBlur()"
+        [styleClass]="primeNgWrapperClasses"
+        [inputStyleClass]="inputClasses"
+        [showButtons]="false"
+        mode="decimal"
+        [useGrouping]="false"
+        [allowEmpty]="true"
+      >
+      </p-inputNumber>
+
+      <!-- Currency Input -->
+      <p-inputNumber
+        *ngIf="type === 'currency'"
+        [id]="id"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        [min]="min"
+        [max]="max"
+        [step]="step"
+        mode="decimal"
+        [prefix]="value && value !== '' && value !== null && value > 0 && currency === 'DOP' ? 'RD$ ' : ''"
+        [suffix]="currency !== 'DOP' && currency !== 'USD' ? ' ' + currency : ''"
+        [minFractionDigits]="0"
+        [maxFractionDigits]="maxFractionDigits"
+        [ngModel]="value === '' || value === null || value === 0 ? null : value"
+        (ngModelChange)="onValueChange($event)"
+        (onFocus)="onFocus()"
+        (onBlur)="onBlur()"
+        [styleClass]="primeNgWrapperClasses"
+        [inputStyleClass]="inputClasses"
+        [showButtons]="false"
+        [useGrouping]="true"
+        [allowEmpty]="true">
+      </p-inputNumber>
+
+      <!-- Mask Input -->
+      <p-inputMask
+        *ngIf="type === 'mask'"
+        [id]="id"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        [mask]="mask"
+        [slotChar]="slotChar"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        (onFocus)="onFocus()"
+        (onBlur)="onBlur()"
+        [styleClass]="primeNgWrapperClasses"
+        [inputStyleClass]="inputClasses"
+      >
+      </p-inputMask>
+
+      <!-- Date Input - ngx-bootstrap -->
+      <!-- Date Input - SOLUCIÓN DEFINITIVA para readonly -->
+      <div *ngIf="type === 'date'" class="input-group">
+        <!-- Input normal SIN datepicker cuando está readonly -->
+        <input
+          *ngIf="readonly"
+          [id]="id"
+          type="text"
+          [class]="inputClasses"
+          style="
+            border-top-right-radius: 5px !important;
+            border-bottom-right-radius: 5px !important;
+          "
+          [placeholder]="placeholder"
+          [disabled]="disabled"
+          [readonly]="true"
+          [value]="formatDateForDisplay(value)"
+          (focus)="onFocus()"
+          (blur)="onBlur()"
+          autocomplete="off"
+        />
+
+        <!-- Input CON datepicker cuando NO está readonly -->
+        <input
+          *ngIf="!readonly"
+          [id]="id + '_datepicker'"
+          type="text"
+          [class]="inputClasses"
+          [placeholder]="placeholder"
+          [disabled]="disabled"
+          bsDatepicker
+          [bsConfig]="bsDatepickerConfig"
+          [(ngModel)]="value"
+          (bsValueChange)="onBsDateSelect($event)"
+          (onShown)="onDatepickerShow()"
+          (onHidden)="onDatepickerHide()"
+          (focus)="onFocus()"
+          (blur)="onBlur()"
+          autocomplete="off"
+        />
+
+        <button
+          *ngIf="showIcon && !readonly && !disabled"
+          class="btn btn-icon btn-light"
+          type="button"
+          (click)="openDatepicker($event)"
+          [attr.aria-label]="'Abrir calendario'"
+        >
+          <i class="fa fa-calendar" aria-hidden="true"></i>
+        </button>
+        <button
+          *ngIf="showClearButton && value && !disabled && !readonly"
+          class="btn btn-icon btn-light"
+          type="button"
+          (click)="clearDate()"
+          [attr.aria-label]="'Limpiar fecha'"
+        >
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Textarea -->
+      <textarea
+        *ngIf="type === 'textarea'"
+        [id]="id"
+        [class]="textareaClasses"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        [maxlength]="maxLength"
+        [rows]="rows"
+        [cols]="cols"
+        [value]="value"
+        (input)="onValueChange($event.target.value)"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+      >
+      </textarea>
+    </div>
+
+    <!-- Helper Text and Character Count -->
+    <div
+      class="d-flex justify-content-between align-items-start mt-2"
+      *ngIf="helperText || errorMessage || showCharacterCount"
+    >
+      <!-- Helper Text -->
+      <div class="form-text text-muted" *ngIf="helperText && !errorMessage">
+        {{ helperText }}
+      </div>
+
+      <!-- Error Message -->
+      <div class="text-danger fs-7 fw-bold" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Character Count -->
+      <div class="form-text text-muted ms-auto" *ngIf="showCharacterCount">
+        {{ characterCount }}
+      </div>
+    </div>
+  </div>
+</div>

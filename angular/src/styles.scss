@@ -1,0 +1,189 @@
+/* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+@import "assets/styles/portal";
+
+/* Solo overrides adicionales aquí - Metronic se carga desde metronic-wrapper.scss */
+
+
+.was-validated .form-control:invalid, .form-control.is-invalid {
+  border-color: var(--bs-form-invalid-border-color) !important;
+}
+
+.was-validated .form-control:invalid:focus, .form-control.is-invalid:focus { 
+  box-shadow: none !important;
+}
+
+.card-toolbar {
+  border-top-left-radius: 0% !important;
+  border-top-right-radius: 0% !important;
+  border-top: none !important;
+}
+
+abp-validation-error {
+  display: none;
+}
+
+/* Toast containers */
+.toast,
+.toast-container .toast,
+ngb-toast,
+ngb-toast .toast {
+  /* Iconos generales en toast */
+  i, 
+  .icon,
+  [class*="ki-"],
+  [class*="fa-"],
+  [class*="bi-"],
+  svg {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+/* Toast específicos por tipo */
+.toast.toast-success,
+.toast-success,
+.bg-success .toast,
+.alert-success {
+  i, 
+  .icon,
+  [class*="ki-"],
+  [class*="fa-"],
+  [class*="bi-"],
+  svg {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+.toast.toast-error,
+.toast-error,
+.bg-danger .toast,
+.alert-danger {
+  i, 
+  .icon,
+  [class*="ki-"],
+  [class*="fa-"],
+  [class*="bi-"],
+  svg {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+.toast.toast-warning,
+.toast-warning,
+.bg-warning .toast,
+.alert-warning {
+  i, 
+  .icon,
+  [class*="ki-"],
+  [class*="fa-"],
+  [class*="bi-"],
+  svg {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+.toast.toast-info,
+.toast-info,
+.bg-info .toast,
+.alert-info {
+  i, 
+  .icon,
+  [class*="ki-"],
+  [class*="fa-"],
+  [class*="bi-"],
+  svg {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+/* ABP specific toast selectors */
+.abp-toast,
+.abp-toast-container,
+.abp-confirm,
+p-toast,
+p-toastitem {
+  i, 
+  .icon,
+  [class*="ki-"],
+  [class*="fa-"],
+  [class*="bi-"],
+  svg {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+/* PrimeNG Toast (si usas PrimeNG) */
+.p-toast .p-toast-message {
+  i, 
+  .icon,
+  [class*="ki-"],
+  [class*="fa-"],
+  [class*="bi-"],
+  svg {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+/* Bootstrap Toast */
+.toast-header,
+.toast-body {
+  i, 
+  .icon,
+  [class*="ki-"],
+  [class*="fa-"],
+  [class*="bi-"],
+  svg {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+
+
+
+
+// En tu .scss del componente
+.stepper-aside {
+  // Solo sticky en desktop (xl y arriba)
+  @media (min-width: 1200px) {
+    position: sticky !important;
+    top: 172px !important;
+    height: fit-content !important;
+    align-self: flex-start !important;
+  }
+  
+  // En móvil y tablet, comportamiento normal
+  @media (max-width: 1199.98px) {
+    position: static !important;
+    height: auto !important;
+    align-self: auto !important;
+  }
+}
+
+.form-check-label {
+  color: var(--bs-gray-800) !important;
+}
+
+.denomination-badge {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  min-width: 100px !important;
+  text-align: center !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+}
+
+.mb-16 {
+  margin-bottom: 16px !important;
+}

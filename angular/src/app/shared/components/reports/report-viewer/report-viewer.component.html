@@ -1,0 +1,77 @@
+<!-- report-viewer.component.html -->
+<div class="modern-report-viewer">
+  
+    <!-- Header con título y botones de exportación -->
+    <div class="report-header" *ngIf="showExportButtons">
+      <div class="report-title-section">
+        <h2 class="report-title">{{ title }}</h2>
+      </div>
+      
+      <div class="export-buttons">
+        <app-button
+          *ngIf="exportOptions.showPrint"
+          variant="primary"
+          label="Imprimir"
+          icon="pi-print"
+          size="md"
+          (buttonClick)="onPrint()">
+        </app-button>
+        
+        <app-button
+          *ngIf="exportOptions.showExcel"
+          variant="success"
+          label="Exportar a excel"
+          icon="pi-file-excel"
+          size="md"
+          (buttonClick)="onExportExcel()">
+        </app-button>
+      </div>
+    </div>
+  
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="loading-content">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Generando reporte...</span>
+        </div>
+        <p class="loading-text">Generando reporte...</p>
+      </div>
+    </div>
+  
+    <!-- Report content -->
+    <div *ngIf="!loading && reportHtml" class="report-content-container">
+      
+      <!-- Filtros aplicados dentro del contenido -->
+      <div *ngIf="hasFilters" class="applied-filters-inside">
+        <div class="filters-header">
+          <i class="ki-outline ki-filter fs-5 text-primary"></i>
+          <span class="filters-title">Filtros aplicados</span>
+        </div>
+        <div class="filters-content">
+          <span class="filters-text">{{ filtersText }}</span>
+        </div>
+      </div>
+      
+      <!-- Contenido principal del reporte -->
+      <div class="report-data-section">
+        <div 
+          class="report-content"
+          [innerHTML]="reportHtml"
+          #reportContent>
+        </div>
+      </div>
+  
+    </div>
+  
+    <!-- No data state -->
+    <div 
+      *ngIf="!loading && !reportHtml" 
+      class="no-data-container">
+      <div class="no-data-content">
+        <i class="ki-outline ki-file-deleted text-muted mb-4" style="font-size: 4rem;"></i>
+        <h5 class="text-muted mb-2">Sin datos para mostrar</h5>
+        <p class="text-muted">No hay datos disponibles con los filtros seleccionados.</p>
+      </div>
+    </div>
+  
+  </div>

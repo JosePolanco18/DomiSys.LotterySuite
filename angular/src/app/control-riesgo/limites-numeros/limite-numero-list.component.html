@@ -1,0 +1,18 @@
+<div id="page-content">
+  <div class="modern-card">
+    <app-toolbar
+      [config]="toolbarConfig"
+      [loading]="loading"
+      (searchChange)="onToolbarSearch($event)"
+      (searchEnter)="performSearch()">
+    </app-toolbar>
+
+    <app-table
+      [config]="tableConfig"
+      [loading]="loading"
+      (page)="handlePageChange($event)"
+      (sort)="handleSort($event)"
+      (lazyLoad)="handleLazyLoad($event)">
+    </app-table>
+  </div>
+</div>

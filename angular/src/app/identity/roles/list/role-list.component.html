@@ -1,0 +1,14 @@
+<div class="container-fluid">
+  <app-toolbar
+    [config]="toolbarConfig"
+    (onSearch)="onToolbarSearch($event)"
+  ></app-toolbar>
+
+  <app-table
+    [config]="tableConfig"
+    (onPageChange)="handlePageChange($event)"
+    (onSort)="handleSort($event)"
+    (onLazyLoad)="handleLazyLoad($event)"
+    (onRowSelect)="handleRowSelect($event)"
+  ></app-table>
+</div>

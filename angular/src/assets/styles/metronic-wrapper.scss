@@ -1,0 +1,35 @@
+/* Wrapper para cargar Metronic exactamente como el demo original */
+
+// Orden exacto del demo
+@import "../../../projects/theme-basic/src/assets/sass/style.scss";
+@import "../../../projects/theme-basic/src/assets/sass/plugins.scss";
+@import "../../../projects/theme-basic/src/assets/sass/style.angular.scss";
+
+// Iconos Keen
+@import "../../../projects/theme-basic/src/assets/plugins/keenicons/duotone/style.css";
+@import "../../../projects/theme-basic/src/assets/plugins/keenicons/outline/style.css";
+@import "../../../projects/theme-basic/src/assets/plugins/keenicons/solid/style.css";
+
+
+// Definir las variables CSS faltantes para el header shadow
+:root {
+  --bs-app-header-base-box-shadow: 0px 1px 9px -3px rgba(82, 63, 105, 0.05);
+  --bs-app-header-minimize-box-shadow: 0px 1px 9px -3px rgba(82, 63, 105, 0.05);
+  --bs-app-header-minimize-box-shadow-dark: 0px 1px 9px -3px rgba(0, 0, 0, 0.3);
+  --bs-app-header-base-bg-color: var(--bs-app-header-minimize-bg-color);
+
+}
+
+// Fondo de página para que los shadows se vean mejor
+body[data-kt-name="metronic"] {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  
+  
+  // Aplicar las variables correctas en modo oscuro
+  &[data-bs-theme="dark"] {
+    --bs-app-header-base-box-shadow: var(--bs-app-header-minimize-box-shadow-dark);
+    --bs-app-header-minimize-box-shadow: var(--bs-app-header-minimize-box-shadow-dark);
+  }
+}

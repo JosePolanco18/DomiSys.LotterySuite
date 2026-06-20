@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Financial Suite</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+  </head>
+  
+  <body id="kt_app_body" class="app-default" data-kt-name="metronic">
+    
+    <script>
+      if (document.documentElement) {
+        var defaultThemeMode = "light";
+        var lsKey = "kt_theme_mode_value";
+        var themeMode = localStorage.getItem(lsKey);
+        
+        if (!themeMode) {
+          if (defaultThemeMode === "system") {
+            themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          } else {
+            themeMode = defaultThemeMode;
+          }
+        }
+        document.documentElement.setAttribute("data-bs-theme", themeMode);
+      }
+    </script>
+    <app-root></app-root>
+  </body>
+</html>

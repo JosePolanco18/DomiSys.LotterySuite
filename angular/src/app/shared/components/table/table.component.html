@@ -1,0 +1,127 @@
+<div style="border-top: none; border-top-left-radius: 0%; border-top-right-radius: 0%; padding-left: 27px; padding-right: 27px;" class="card">
+  <p-table 
+    #dt
+    [value]="tableConfig.data" 
+    [loading]="loading"
+    [paginator]="tableConfig.paginator"
+    [rows]="tableConfig.rows"
+    [totalRecords]="tableConfig.totalRecords"
+    [lazy]="tableConfig.lazy"
+    [globalFilterFields]="tableConfig.globalFilterFields"
+    [filterDelay]="300"
+    [showGridlines]="false"
+    [selectionMode]="tableConfig.selectionMode"
+    [(selection)]="selectedItems"
+    (onRowSelect)="handleRowSelect($event)"
+    (onRowUnselect)="handleRowUnselect($event)"
+    (onSort)="handleSort($event)"
+    (onFilter)="handleFilter($event)"
+    (onPage)="handlePage($event)"
+    (onLazyLoad)="handleLazyLoad($event)"
+    class="table-rounded table-row-dashed table-row-gray-300 gy-7 gs-7 custom-table"
+    dataKey="id"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [showCurrentPageReport]="true"
+  >
+    <!-- Loading Template -->
+    <ng-template pTemplate="loading">
+      <div class="d-flex flex-column align-items-center justify-content-center py-20">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <div class="text-gray-600 fw-semibold fs-6 mt-5">Cargando datos...</div>
+      </div>
+    </ng-template>
+
+    <!-- Empty Template -->
+    <ng-template pTemplate="empty">
+      <div class="d-flex flex-column align-items-center justify-content-center py-20">
+        <i class="ki-outline ki-information-5 fs-3x text-gray-500 mb-5"></i>
+        <div class="text-gray-600 fw-semibold fs-6">{{ tableConfig.emptyMessage }}</div>
+      </div>
+    </ng-template>
+
+    <!-- Header Template -->
+    <ng-template pTemplate="header">
+      <tr class="fs-6 text-gray-800 border-bottom-2 border-gray-200">
+        <th *ngFor="let col of tableConfig.columns" 
+            [pSortableColumn]="col.sortable ? (col.sortField || col.field || null) : null"
+            [style.width]="col.width"
+            [class]="'min-w-100px ' + (col.styleClass || '')"
+            class="text-start">
+          
+          <div class="d-flex align-items-center">
+            <span class="text-gray-600 fw-semibold text-uppercase fs-7">{{ col.header }}</span>
+            <p-sortIcon *ngIf="col.sortable" [field]="col.sortField || col.field || null" class="ms-2"></p-sortIcon>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <!-- Body Template -->
+    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+      <tr [class.bg-light-primary]="selectedItems.includes(rowData)" 
+          [class]="'odd:bg-light-subtle ' + getRowStyleClass(rowData)"
+          [style.backgroundColor]="getRowBackgroundColor(rowData)"
+          [ngStyle]="getRowInlineStyles(rowData)">
+        <td *ngFor="let col of tableConfig.columns"  [class]="col.styleClass || ''" class="text-start">
+          
+          <!-- Text Content -->
+          <ng-container *ngIf="col.type === 'text' || !col.type">
+            <div class="text-gray-800 fs-6">
+              {{ formatCellValue(rowData[col.field], col) }}
+            </div>
+          </ng-container>
+
+          <!-- Badge Content -->
+          <ng-container *ngIf="col.type === 'badge'">
+            <span 
+                [class]="'badge badge-' + ((rowData[col.badgeClass] && rowData[col.badgeClass] !== '') 
+                ? rowData[col.badgeClass] + ' fw-bold fs-5 px-2 py-1'
+                : getBadgeColor(rowData[col.field]) + ' fw-bold fs-5 px-2 py-1')">
+              {{ rowData[col.field] }}
+            </span>
+          </ng-container>
+
+          <!-- Date Content -->
+          <ng-container *ngIf="col.type === 'date'">
+            <div class="text-gray-800 fs-6">
+              {{ rowData[col.field] | date:'dd/MM/yyyy, h:mm a' }}
+            </div>
+          </ng-container>
+
+          <!-- Actions Content -->
+          <ng-container *ngIf="col.type === 'actions'">
+            <div class="actions-container">
+              <p-menu #menu [style.color]="'#5078ff'" [style.background-color]="'#f1f5ff'" [model]="menuItems" [popup]="true" appendTo="body"></p-menu>
+              <button
+                pButton 
+                type="button" 
+                class="btn-table-actions"
+                (click)="setSelectedRowData(rowData); menu.toggle($event)">
+                <i class="ki-outline ki-setting-2 fs-6 me-1"></i>
+                <span class="fs-6">Acciones</span>
+                <i class="ki-outline ki-down fs-7 ms-1"></i>
+              </button>
+            </div>
+          </ng-container>
+
+          <!-- Custom Content -->
+          <ng-container *ngIf="col.type === 'custom'">
+            <ng-container 
+              *ngTemplateOutlet="customColumnTemplate; context: { $implicit: rowData, column: col, rowIndex: rowIndex }"
+            ></ng-container>
+          </ng-container>
+
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Paginator Left Template -->
+    <ng-template pTemplate="paginatorleft">
+      <div class="d-flex align-items-center text-gray-700 fw-bold fs-6">
+        <span>Total: {{ tableConfig.totalRecords || tableConfig.data.length }} registros</span>
+      </div>
+    </ng-template>
+
+  </p-table>
+</div>

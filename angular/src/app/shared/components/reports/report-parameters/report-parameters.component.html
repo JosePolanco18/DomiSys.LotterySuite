@@ -1,0 +1,120 @@
+<!-- Form Toolbar integrado -->
+<app-form-toolbar
+  [config]="formToolbarConfig"
+  [formValid]="form.valid"
+  [loading]="loading"
+  [showDirtyTag]="false"
+  [isDirty]="form.dirty">
+</app-form-toolbar>
+
+<!-- Contenido del formulario -->
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="form" novalidate>
+      <div class="row">
+        <!-- Campos dinámicos -->
+        <div 
+          *ngFor="let field of config.fields" 
+          [class]="getFieldColumnClass(field)">
+          
+          <!-- Text Input -->
+          <app-input
+            *ngIf="field.type === 'text'"
+            [label]="field.label"
+            [placeholder]="field.placeholder || ''"
+            [required]="field.required || false"
+            [formControlName]="field.name">
+          </app-input>
+
+          <app-input
+            *ngIf="field.type === 'currency'"
+            type="currency"
+            [label]="field.label"
+            [required]="field.required || false"
+            placeholder="RD$ 0.00"
+            [formControlName]="field.name"
+            currency="DOP"
+            locale="es-DO"
+            [minFractionDigits]="0"
+            [maxFractionDigits]="2">
+          </app-input>
+
+          <app-input
+            *ngIf="field.type === 'number'"
+            type="number"
+            [label]="field.label"
+            placeholder="0"
+            [formControlName]="field.name">
+          </app-input>
+
+
+          <!-- Date Input -->
+          <app-input
+            *ngIf="field.type === 'date'"
+            type="date"
+            [label]="field.label"
+            [placeholder]="field.placeholder || ''"
+            [required]="field.required || false"
+            [formControlName]="field.name">
+          </app-input>
+
+          <!-- Date Range -->
+          <div *ngIf="field.type === 'dateRange'">
+            <label class="form-label fw-bold fs-6 mb-2">{{ field.label }}</label>
+            <div class="row">
+              <div class="col-6">
+                <app-input
+                  type="date"
+                  placeholder="Fecha desde"
+                  label="Desde"
+                  [required]="field.required || false"
+                  [formControlName]="field.name + 'From'">
+                </app-input>
+              </div>
+              <div class="col-6">
+                <app-input
+                  type="date"
+                  placeholder="Fecha hasta"
+                  label="Hasta"
+                  [required]="field.required || false"
+                  [formControlName]="field.name + 'To'">
+                </app-input>
+              </div>
+            </div>
+          </div>
+
+          <!-- Select -->
+          <app-select
+            *ngIf="field.type === 'select'"
+            [label]="field.label"
+            [placeholder]="field.placeholder || 'Seleccione una opción'"
+            [required]="field.required || false"
+            [service]="field.service"
+            [showCode]="true"
+            [multiple]="field.multiple || false"
+            [bindCode]="field.bindCode || 'identifier' || 'value'"
+            [bindValue]="field.bindValue || 'id'"
+            [bindLabel]="field.bindLabel || 'name'"
+            [staticItems]="field.options || []"
+            [formControlName]="field.name">
+          </app-select>
+
+          <!-- Checkbox -->
+          <div *ngIf="field.type === 'checkbox'" class="mb-5">
+            <div class="form-check form-switch">
+              <input 
+                class="form-check-input" 
+                type="checkbox" 
+                [id]="field.name"
+                [formControlName]="field.name">
+              <label class="form-check-label fw-bold text-gray-700" [for]="field.name">
+                {{ field.label }}
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

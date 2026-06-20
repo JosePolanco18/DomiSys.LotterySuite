@@ -1,0 +1,114 @@
+<div class="permission-tree-container">
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center py-5">
+    <p-progressSpinner
+      styleClass="w-4rem h-4rem"
+      strokeWidth="4"
+      animationDuration="1s"
+    ></p-progressSpinner>
+    <p class="mt-3 text-muted">Cargando permisos...</p>
+  </div>
+
+  <!-- Contenido principal -->
+  <div *ngIf="!loading">
+    <!-- Toolbar con acciones -->
+    <div class="permission-toolbar mb-3">
+      <div class="row g-3 align-items-center">
+        <!-- Búsqueda -->
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="pi pi-search text-muted"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control border-start-0 ps-0"
+              placeholder="Buscar permisos..."
+              [(ngModel)]="searchText"
+              (ngModelChange)="filterTree()"
+            />
+          </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="col-md-6 text-end">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary me-2"
+            (click)="expandAll()"
+            title="Expandir todos"
+          >
+            <i class="pi pi-plus-circle me-1"></i>
+            Expandir todos
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            (click)="collapseAll()"
+            title="Colapsar todos"
+          >
+            <i class="pi pi-minus-circle me-1"></i>
+            Colapsar todos
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- "Conceder todos los permisos" Toggle -->
+    <div class="grant-all-section mb-3 p-3 bg-light rounded">
+      <div class="form-check">
+        <p-checkbox
+          [(ngModel)]="grantAllPermissions"
+          (onChange)="onGrantAllChange()"
+          [binary]="true"
+          inputId="grantAll"
+        ></p-checkbox>
+        <label for="grantAll" class="form-check-label ms-2 fw-bold text-primary">
+          Conceder todos los permisos
+        </label>
+        <small class="d-block text-muted ms-4 mt-1">
+          Selecciona o deselecciona todos los permisos de una vez
+        </small>
+      </div>
+    </div>
+
+    <!-- Árbol de permisos -->
+    <div class="permission-tree-wrapper" *ngIf="filteredTree.length > 0">
+      <p-tree
+        [value]="filteredTree"
+        [(selection)]="selectedNodes"
+        selectionMode="checkbox"
+        [propagateSelectionDown]="true"
+        [propagateSelectionUp]="true"
+        (onNodeSelect)="onNodeSelect($event)"
+        (onNodeUnselect)="onNodeUnselect($event)"
+        [metaKeySelection]="false"
+        styleClass="w-100 permission-tree"
+      >
+        <ng-template let-node pTemplate="default">
+          <div class="permission-node">
+            <span class="permission-label">{{ node.label }}</span>
+            <span class="permission-badge" *ngIf="node.children && node.children.length > 0">
+              {{ node.children.length }}
+            </span>
+          </div>
+        </ng-template>
+      </p-tree>
+    </div>
+
+    <!-- Mensaje cuando no hay resultados -->
+    <div *ngIf="filteredTree.length === 0 && searchText" class="text-center py-5">
+      <i class="pi pi-search" style="font-size: 3rem; color: #dee2e6;"></i>
+      <p class="mt-3 text-muted">
+        No se encontraron permisos que coincidan con "<strong>{{ searchText }}</strong>"
+      </p>
+    </div>
+
+    <!-- Mensaje cuando no hay permisos -->
+    <div *ngIf="permissionTree.length === 0 && !searchText" class="text-center py-5">
+      <i class="pi pi-shield" style="font-size: 3rem; color: #dee2e6;"></i>
+      <p class="mt-3 text-muted">No hay permisos disponibles</p>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<ng-container *ngIf="currentUser$ | async as currentUser">
+  <div class="menu-item px-3">
+    <div class="menu-content d-flex align-items-center px-3">
+      <div class="symbol symbol-50px me-5">
+        <div class="symbol-label fs-2 fw-bold text-primary bg-light-primary">
+          {{ currentUser.name?.charAt(0) || currentUser.userName?.charAt(0) || 'U' }}
+        </div>
+      </div>
+
+      <div class="d-flex flex-column">
+        <div class="fw-bolder d-flex align-items-center fs-5">
+          {{ currentUser.name || currentUser.userName }}
+        </div>
+        <a class="fw-bold text-muted text-hover-primary fs-7 cursor-pointer">
+          {{ currentUser.email }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="separator my-2"></div>
+
+  <div class="menu-item px-5">
+    <a routerLink="/account/manage" class="menu-link px-5">
+      <i class="bi bi-person fs-4 me-2"></i>
+      Mi Perfil
+    </a>
+  </div>
+
+  <div class="menu-item px-5">
+    <a routerLink="/account/manage" class="menu-link px-5">
+      <i class="bi bi-shield-lock fs-4 me-2"></i>
+      Cambiar Contraseña
+    </a>
+  </div>
+
+  <div class="separator my-2"></div>
+
+  <div class="menu-item px-5">
+    <a (click)="logout()" class="menu-link px-5 cursor-pointer">
+      <i class="bi bi-box-arrow-right fs-4 me-2"></i>
+      Cerrar Sesión
+    </a>
+  </div>
+</ng-container>

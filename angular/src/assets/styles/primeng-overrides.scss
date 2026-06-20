@@ -1,0 +1,778 @@
+html[data-bs-theme='dark'] {
+  .p-menu {
+    background: #1e1e2d !important;
+    border: 1px solid #2b2b40 !important;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3) !important;
+
+    .p-menu-item-label {
+      color: #ffffff !important;
+    }
+
+    .p-menu-item:not(.p-disabled) .p-menu-item-content:hover {
+      color: white !important;
+      background: #334155 !important;
+    }
+
+    .p-menuitem-link {
+      color: #ffffff !important;
+    }
+  }
+}
+
+:root {
+  --p-inputtext-focus-border-color: var(--bs-gray-200) !important; /* Mismo que Metronic focus */
+  --p-inputtext-focus-ring-shadow: 0 0 0 0.25rem rgba(0, 158, 247, 0.15) !important;
+  --p-inputtext-focus-ring-color: transparent !important;
+  --p-inputtext-focus-ring-width: 0 !important;
+  --p-inputtext-focus-ring-style: none !important;
+  --p-inputtext-focus-ring-offset: 0 !important;
+  --p-inputtext-border-color: var(--bs-gray-100) !important; /* Mismo que Metronic normal */
+  --p-inputtext-background: var(--bs-gray-100) !important; /* Mismo que Metronic normal */
+  --p-inputtext-color: var(--bs-gray-700) !important;
+  --p-inputtext-hover-border-color: var(--bs-gray-100) !important;
+  --p-inputtext-disabled-background: var(--bs-gray-100) !important;
+  --p-inputtext-disabled-color: var(--bs-gray-500) !important;
+}
+
+/* Dark mode variables - usando variables Bootstrap dark exactas */
+html[data-bs-theme='dark'] {
+  --p-inputtext-background: var(--bs-gray-800) !important; /* form-control-solid dark background */
+  --p-inputtext-color: var(--bs-gray-300) !important;
+  --p-inputtext-border-color: var(--bs-gray-800) !important; /* mismo que background */
+  --p-inputtext-focus-border-color: var(--bs-gray-700) !important; /* focus border */
+  --p-inputtext-hover-border-color: var(--bs-gray-800) !important;
+  --p-inputtext-disabled-background: var(--bs-gray-900) !important;
+  --p-inputtext-disabled-color: var(--bs-gray-600) !important;
+}
+
+.p-password .p-password-input,
+app-input .p-password .p-password-input {
+  height: 3.5rem !important;
+  min-height: 3.5rem !important;
+  line-height: 1.5 !important;
+  padding: 1rem 1rem !important;
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--bs-gray-100) !important;
+  background: var(--bs-gray-100) !important;
+  border-radius: 0.475rem !important;
+  color: var(--bs-gray-700) !important;
+  transition: color 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.p-password .p-password-input:enabled:focus,
+.p-password .p-password-input:focus,
+.p-password .p-password-input:focus-visible,
+app-input .p-password .p-password-input:enabled:focus,
+app-input .p-password .p-password-input:focus,
+app-input .p-password .p-password-input:focus-visible {
+  border-color: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  background: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  box-shadow: none !important; /* SIN BOX-SHADOW PARA ELIMINAR BORDE AZUL */
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+  outline-color: transparent !important;
+  outline-offset: 0 !important;
+}
+
+.p-password .p-password-input:enabled:hover:not(:focus),
+app-input .p-password .p-password-input:enabled:hover:not(:focus) {
+  border-color: var(--bs-gray-100) !important;
+  background: var(--bs-gray-100) !important;
+}
+
+.p-password .p-password-input::placeholder,
+app-input .p-password .p-password-input::placeholder {
+  color: var(--bs-gray-500) !important;
+}
+
+/* Input Number Component - Variables Bootstrap */
+.p-inputnumber .p-inputnumber-input,
+app-input .p-inputnumber .p-inputnumber-input {
+  height: 3.5rem !important;
+  min-height: 3.5rem !important;
+  line-height: 1.5 !important;
+  padding: 1rem 1rem !important;
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--bs-gray-100) !important;
+  background: var(--bs-gray-100) !important;
+  border-radius: 0.475rem !important;
+  color: var(--bs-gray-700) !important;
+  transition: color 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.p-inputnumber .p-inputnumber-input:enabled:focus,
+.p-inputnumber .p-inputnumber-input:focus,
+.p-inputnumber .p-inputnumber-input:focus-visible,
+app-input .p-inputnumber .p-inputnumber-input:enabled:focus,
+app-input .p-inputnumber .p-inputnumber-input:focus,
+app-input .p-inputnumber .p-inputnumber-input:focus-visible {
+  border-color: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  background: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  box-shadow: none !important; /* SIN BOX-SHADOW PARA ELIMINAR BORDE AZUL */
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+  outline-color: transparent !important;
+  outline-offset: 0 !important;
+}
+
+.p-inputnumber .p-inputnumber-input:enabled:hover:not(:focus),
+app-input .p-inputnumber .p-inputnumber-input:enabled:hover:not(:focus) {
+  border-color: var(--bs-gray-100) !important;
+  background: var(--bs-gray-100) !important;
+}
+
+.p-inputnumber .p-inputnumber-input::placeholder,
+app-input .p-inputnumber .p-inputnumber-input::placeholder {
+  color: var(--bs-gray-500) !important;
+}
+
+/* Input Mask Component - Variables Bootstrap */
+.p-inputmask,
+app-input .p-inputmask {
+  height: 3.5rem !important;
+  min-height: 3.5rem !important;
+  line-height: 1.5 !important;
+  padding: 1rem 1rem !important;
+  font-size: 1.1rem !important;
+  /* Aumentado de 0.875rem a 0.925rem */
+  font-weight: 500 !important;
+  border: 1px solid var(--bs-gray-100) !important;
+  background: var(--bs-gray-100) !important;
+  border-radius: 0.475rem !important;
+  color: var(--bs-gray-700) !important;
+  transition: color 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.p-inputmask:enabled:focus,
+.p-inputmask:focus,
+.p-inputmask:focus-visible,
+app-input .p-inputmask:enabled:focus,
+app-input .p-inputmask:focus,
+app-input .p-inputmask:focus-visible {
+  border-color: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  background: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  box-shadow: none !important; /* SIN BOX-SHADOW PARA ELIMINAR BORDE AZUL */
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+  outline-color: transparent !important;
+  outline-offset: 0 !important;
+}
+
+.p-inputmask:enabled:hover:not(:focus),
+app-input .p-inputmask:enabled:hover:not(:focus) {
+  border-color: var(--bs-gray-100) !important;
+  background: var(--bs-gray-100) !important;
+}
+
+.p-inputmask::placeholder,
+app-input .p-inputmask::placeholder {
+  color: var(--bs-gray-500) !important;
+}
+
+/* Calendar Component - Variables Bootstrap */
+.p-calendar .p-inputtext,
+app-input .p-calendar .p-inputtext {
+  height: 2.75rem !important;
+  min-height: 2.75rem !important;
+  line-height: 1.5 !important;
+  padding: 0.775rem 1rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--bs-gray-100) !important; /* Variable Bootstrap */
+  background: var(--bs-gray-100) !important; /* Variable Bootstrap */
+  border-radius: 0.475rem 0 0 0.475rem !important;
+  border-right: none !important;
+  color: var(--bs-gray-700) !important; /* Variable Bootstrap */
+  transition: color 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.p-calendar .p-inputtext:enabled:focus,
+.p-calendar .p-inputtext:focus,
+.p-calendar .p-inputtext:focus-visible,
+app-input .p-calendar .p-inputtext:enabled:focus,
+app-input .p-calendar .p-inputtext:focus,
+app-input .p-calendar .p-inputtext:focus-visible {
+  border-color: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  background: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  box-shadow: none !important; /* SIN BOX-SHADOW PARA ELIMINAR BORDE AZUL */
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+  outline-color: transparent !important;
+  outline-offset: 0 !important;
+  border-right: none !important;
+}
+
+.p-calendar .p-inputtext:enabled:hover:not(:focus),
+app-input .p-calendar .p-inputtext:enabled:hover:not(:focus) {
+  border-color: var(--bs-gray-100) !important;
+  background: var(--bs-gray-100) !important;
+  border-right: none !important;
+}
+
+.p-calendar .p-inputtext::placeholder,
+app-input .p-calendar .p-inputtext::placeholder {
+  color: var(--bs-gray-500) !important;
+}
+
+.p-calendar .p-datepicker-trigger,
+app-input .p-calendar .p-datepicker-trigger {
+  height: 2.75rem !important;
+  min-height: 2.75rem !important;
+  width: 2.75rem !important;
+  border: 1px solid var(--bs-gray-100) !important; /* Variable Bootstrap */
+  background: var(--bs-gray-100) !important; /* Variable Bootstrap */
+  border-radius: 0 0.475rem 0.475rem 0 !important;
+  border-left: none !important;
+  color: var(--bs-gray-500) !important;
+  transition: color 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.p-calendar .p-datepicker-trigger:focus,
+.p-calendar .p-datepicker-trigger:focus-visible,
+app-input .p-calendar .p-datepicker-trigger:focus,
+app-input .p-calendar .p-datepicker-trigger:focus-visible {
+  border-color: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  background: var(--bs-gray-200) !important; /* Variable Bootstrap focus */
+  box-shadow: none !important; /* SIN BOX-SHADOW PARA ELIMINAR BORDE AZUL */
+  outline: none !important;
+  border-left: none !important;
+}
+
+.p-calendar .p-datepicker-trigger:hover:not(:disabled),
+app-input .p-calendar .p-datepicker-trigger:hover:not(:disabled) {
+  border-color: var(--bs-gray-100) !important;
+  background: var(--bs-gray-100) !important;
+  color: var(--bs-gray-600) !important;
+  border-left: none !important;
+}
+
+/* Hide input number buttons */
+.p-inputnumber .p-inputnumber-button-group,
+.p-inputnumber .p-inputnumber-button-up,
+.p-inputnumber .p-inputnumber-button-down {
+  display: none !important;
+}
+
+/* Calendar dropdown width */
+
+/* ===================================
+  // TAMAÑOS ESPECÍFICOS - ESTILO SOLID
+  // ===================================*/
+
+/* Small size - solid style */
+.form-control-sm .p-password-input,
+.p-password.form-control-sm .p-password-input {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+  background: #f5f8fa !important;
+}
+
+.form-control-sm .p-inputnumber-input,
+.p-inputnumber.form-control-sm .p-inputnumber-input {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+  background: #f5f8fa !important;
+}
+
+.p-inputmask.form-control-sm {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+  background: #f5f8fa !important;
+}
+
+.form-control-sm .p-inputtext,
+.p-calendar.form-control-sm .p-inputtext {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+  background: #f5f8fa !important;
+}
+
+.form-control-sm .p-datepicker-trigger,
+.p-calendar.form-control-sm .p-datepicker-trigger {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  width: 2.25rem !important;
+  background: #f5f8fa !important;
+}
+
+/* Large size - solid style */
+.form-control-lg .p-password-input,
+.p-password.form-control-lg .p-password-input {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  padding: 1rem 1.25rem !important;
+  font-size: 1.1rem !important;
+
+  background: #f5f8fa !important;
+}
+
+.form-control-lg .p-inputnumber-input,
+.p-inputnumber.form-control-lg .p-inputnumber-input {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  padding: 1rem 1.25rem !important;
+  font-size: 1.1rem !important;
+
+  background: #f5f8fa !important;
+}
+
+.p-inputmask.form-control-lg {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  padding: 1rem 1.25rem !important;
+  font-size: 1.1rem !important;
+
+  background: #f5f8fa !important;
+}
+
+.form-control-lg .p-inputtext,
+.p-calendar.form-control-lg .p-inputtext {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  padding: 1rem 1.25rem !important;
+  font-size: 1.1rem !important;
+
+  background: #f5f8fa !important;
+}
+
+.form-control-lg .p-datepicker-trigger,
+.p-calendar.form-control-lg .p-datepicker-trigger {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  width: 3rem !important;
+  background: #f5f8fa !important;
+}
+
+html[data-bs-theme='dark'] .p-password .p-password-input,
+html[data-bs-theme='dark'] .p-inputnumber .p-inputnumber-input,
+html[data-bs-theme='dark'] .p-inputmask,
+html[data-bs-theme='dark'] .p-calendar .p-inputtext,
+html[data-bs-theme='dark'] .p-calendar .p-datepicker-trigger {
+  background: #1b1b29 !important; /* form-control-solid dark */
+  color: #fafafb !important;
+  border-color: #2b2b40 !important;
+  box-shadow: none !important;
+}
+
+html[data-bs-theme='dark'] .p-password .p-password-input::placeholder,
+html[data-bs-theme='dark'] .p-inputnumber .p-inputnumber-input::placeholder,
+html[data-bs-theme='dark'] .p-inputmask::placeholder,
+html[data-bs-theme='dark'] .p-calendar .p-inputtext::placeholder {
+  color: #6c7293 !important;
+}
+
+html[data-bs-theme='dark'] .p-password .p-password-input:enabled:focus,
+html[data-bs-theme='dark'] .p-inputnumber .p-inputnumber-input:enabled:focus,
+html[data-bs-theme='dark'] .p-inputmask:enabled:focus,
+html[data-bs-theme='dark'] .p-calendar .p-inputtext:enabled:focus,
+html[data-bs-theme='dark'] .p-calendar .p-datepicker-trigger:focus {
+  background: #1b1b29 !important; /* mantener solid background en dark focus */
+  border-color: #009ef7 !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 158, 247, 0.15) !important;
+}
+
+html[data-bs-theme='dark'] .p-password .p-password-input:enabled:hover:not(:focus),
+html[data-bs-theme='dark'] .p-inputnumber .p-inputnumber-input:enabled:hover:not(:focus),
+html[data-bs-theme='dark'] .p-inputmask:enabled:hover:not(:focus),
+html[data-bs-theme='dark'] .p-calendar .p-inputtext:enabled:hover:not(:focus),
+html[data-bs-theme='dark'] .p-calendar .p-datepicker-trigger:hover:not(:disabled) {
+  background: #1b1b29 !important;
+  border-color: #474761 !important;
+}
+
+html[data-bs-theme='dark'] .p-calendar .p-datepicker-trigger {
+  color: #6c7293 !important;
+}
+
+html[data-bs-theme='dark'] .p-calendar .p-datepicker-trigger:hover:not(:disabled) {
+  color: #7c8db5 !important;
+}
+
+.is-invalid .p-password-input,
+.p-password.is-invalid .p-password-input,
+app-input.has-error .p-password .p-password-input,
+.is-invalid .p-inputnumber-input,
+.p-inputnumber.is-invalid .p-inputnumber-input,
+app-input.has-error .p-inputnumber .p-inputnumber-input,
+.p-inputmask.is-invalid,
+app-input.has-error .p-inputmask,
+.is-invalid .p-inputtext,
+.p-calendar.is-invalid .p-inputtext,
+app-input.has-error .p-calendar .p-inputtext {
+  border-color: #f1416c !important;
+  background: #f5f8fa !important; /* mantener solid background en error */
+}
+
+.is-invalid .p-datepicker-trigger,
+.p-calendar.is-invalid .p-datepicker-trigger,
+app-input.has-error .p-calendar .p-datepicker-trigger {
+  border-color: #f1416c !important;
+  background: #f5f8fa !important;
+}
+
+/* Error states en focus */
+.is-invalid .p-password-input:enabled:focus,
+.p-password.is-invalid .p-password-input:enabled:focus,
+app-input.has-error .p-password .p-password-input:enabled:focus,
+.is-invalid .p-inputnumber-input:enabled:focus,
+.p-inputnumber.is-invalid .p-inputnumber-input:enabled:focus,
+app-input.has-error .p-inputnumber .p-inputnumber-input:enabled:focus,
+.p-inputmask.is-invalid:enabled:focus,
+app-input.has-error .p-inputmask:enabled:focus,
+.is-invalid .p-inputtext:enabled:focus,
+.p-calendar.is-invalid .p-inputtext:enabled:focus,
+app-input.has-error .p-calendar .p-inputtext:enabled:focus {
+  border: 1px solid;
+  border-color: #f1416c !important;
+  background: #f5f8fa !important;
+  box-shadow: none !important;
+}
+
+.is-invalid .p-datepicker-trigger:focus,
+.p-calendar.is-invalid .p-datepicker-trigger:focus,
+app-input.has-error .p-calendar .p-datepicker-trigger:focus {
+  border: 1px solid;
+  border-color: #f1416c !important;
+  background: #f5f8fa !important;
+  box-shadow: none !important;
+}
+
+/* Icono rojo en calendar cuando hay error */
+.is-invalid .p-datepicker-trigger i,
+.p-calendar.is-invalid .p-datepicker-trigger i,
+app-input.has-error .p-calendar .p-datepicker-trigger i,
+.is-invalid .p-datepicker-trigger .p-icon,
+.p-calendar.is-invalid .p-datepicker-trigger .p-icon,
+app-input.has-error .p-calendar .p-datepicker-trigger .p-icon {
+  color: #f1416c !important;
+}
+
+/* Dark mode error states */
+html[data-bs-theme='dark'] .is-invalid .p-password-input,
+html[data-bs-theme='dark'] .p-password.is-invalid .p-password-input,
+html[data-bs-theme='dark'] app-input.has-error .p-password .p-password-input,
+html[data-bs-theme='dark'] .is-invalid .p-inputnumber-input,
+html[data-bs-theme='dark'] .p-inputnumber.is-invalid .p-inputnumber-input,
+html[data-bs-theme='dark'] app-input.has-error .p-inputnumber .p-inputnumber-input,
+html[data-bs-theme='dark'] .p-inputmask.is-invalid,
+html[data-bs-theme='dark'] app-input.has-error .p-inputmask,
+html[data-bs-theme='dark'] .is-invalid .p-inputtext,
+html[data-bs-theme='dark'] .p-calendar.is-invalid .p-inputtext,
+html[data-bs-theme='dark'] app-input.has-error .p-calendar .p-inputtext,
+html[data-bs-theme='dark'] .is-invalid .p-datepicker-trigger,
+html[data-bs-theme='dark'] .p-calendar.is-invalid .p-datepicker-trigger,
+html[data-bs-theme='dark'] app-input.has-error .p-calendar .p-datepicker-trigger {
+  border-color: #f1416c !important;
+  background: #1b1b29 !important; /* mantener solid dark background en error */
+}
+
+/* ===================================
+  // DISABLED STATES - ESTILO SOLID
+  // ===================================*/
+
+.p-password .p-password-input:disabled,
+.p-inputnumber .p-inputnumber-input:disabled,
+.p-inputmask:disabled,
+.p-calendar .p-inputtext:disabled,
+.p-calendar .p-datepicker-trigger:disabled {
+  background: #f5f8fa !important;
+  color: #a1a5b7 !important;
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+}
+
+/* Dark mode disabled states */
+html[data-bs-theme='dark'] .p-password .p-password-input:disabled,
+html[data-bs-theme='dark'] .p-inputnumber .p-inputnumber-input:disabled,
+html[data-bs-theme='dark'] .p-inputmask:disabled,
+html[data-bs-theme='dark'] .p-calendar .p-inputtext:disabled,
+html[data-bs-theme='dark'] .p-calendar .p-datepicker-trigger:disabled {
+  background: #15171c !important;
+  color: #6c7293 !important;
+}
+focus,
+.p-calendar .p-datepicker-trigger:focus-visible,
+app-input .p-calendar .p-datepicker-trigger:focus,
+app-input .p-calendar .p-datepicker-trigger:focus-visible {
+  border-color: #009ef7 !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 158, 247, 0.15) !important;
+  outline: none !important;
+  border-left: none !important;
+}
+
+.p-calendar .p-datepicker-trigger:hover:not(:disabled),
+app-input .p-calendar .p-datepicker-trigger:hover:not(:disabled) {
+  border-color: #b5b5c3 !important;
+  background: #ffffff !important;
+  color: #7e8299 !important;
+  border-left: none !important;
+}
+
+/* Hide input number buttons */
+.p-inputnumber .p-inputnumber-button-group,
+.p-inputnumber .p-inputnumber-button-up,
+.p-inputnumber .p-inputnumber-button-down {
+  display: none !important;
+}
+
+/* Calendar dropdown width */
+
+.form-control-sm .p-password-input,
+.p-password.form-control-sm .p-password-input {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+}
+
+.form-control-sm .p-inputnumber-input,
+.p-inputnumber.form-control-sm .p-inputnumber-input {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+}
+
+.p-inputmask.form-control-sm {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+}
+
+.form-control-sm .p-inputtext,
+.p-calendar.form-control-sm .p-inputtext {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+}
+
+.form-control-sm .p-datepicker-trigger,
+.p-calendar.form-control-sm .p-datepicker-trigger {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  width: 2.25rem !important;
+}
+
+/* Large size */
+.form-control-lg .p-password-input,
+.p-password.form-control-lg .p-password-input {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  padding: 1rem 1.25rem !important;
+  font-size: 1.1rem !important;
+}
+
+.form-control-lg .p-inputnumber-input,
+.p-inputnumber.form-control-lg .p-inputnumber-input {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  padding: 1rem 1.25rem !important;
+  font-size: 1.1rem !important;
+}
+
+.p-inputmask.form-control-lg {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  padding: 1rem 1.25rem !important;
+  font-size: 1.1rem !important;
+}
+
+.form-control-lg .p-inputtext,
+.p-calendar.form-control-lg .p-inputtext {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  padding: 1rem 1.25rem !important;
+  font-size: 1.1rem !important;
+}
+
+.form-control-lg .p-datepicker-trigger,
+.p-calendar.form-control-lg .p-datepicker-trigger {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  width: 3rem !important;
+}
+
+.p-datepicker-input {
+  height: 3.25rem !important;
+  min-height: 3.25rem !important;
+  width: 3rem !important;
+}
+
+.p-inputtext:enabled:focus {
+  box-shadow: none !important;
+}
+
+.p-datepicker-dropdown {
+  background: var(--bs-gray-100) !important;
+  border: none !important;
+}
+
+.p-tab-active {
+  border-color: var(--bs-primary) !important;
+  color: var(--bs-primary) !important;
+}
+
+.p-tablist-active-bar {
+    background: var(--bs-primary) !important;
+}
+
+
+/* Arreglo para que p-calendar tome todo el ancho */
+/* src/app/shared/components/input/input.component.scss */
+/* ===================================
+// Input Component - Solo estilos básicos (sin PrimeNG)
+// Los estilos de PrimeNG están en styles.scss global
+// ===================================*/
+
+// Label required styling
+.form-label.required::after {
+  content: ' *';
+  color: var(--kt-danger);
+}
+
+// Textarea auto-resize
+textarea.form-control[rows] {
+  min-height: calc(1.5em * 3 + 1rem + 2px);
+}
+
+// Character count positioning
+.has-character-count {
+  .form-text {
+    margin-top: 0.25rem;
+  }
+}
+
+.p-inputtext {
+  font-size: 1.1rem !important;
+}
+
+.is-invalid .p-datepicker-dropdown {
+  border: 1px solid #f1416c !important;
+  border-left: none !important;
+}
+
+/* DARK STYLES */
+
+html[data-bs-theme='dark'] .p-password .p-password-input,
+html[data-bs-theme='dark'] .p-inputnumber .p-inputnumber-input,
+html[data-bs-theme='dark'] .p-inputmask,
+html[data-bs-theme='dark'] .p-datepicker .p-inputtext,
+html[data-bs-theme='dark'] .p-calendar .p-inputtext,
+html[data-bs-theme='dark'] .p-calendar .p-datepicker-trigger {
+  background: #1b1c22 !important;
+  color: #fafafb !important;
+  border: none !important;
+  border-color: #2b2b40 !important;
+  box-shadow: none !important;
+  font-size: 1.1rem !important;
+}
+
+html[data-bs-theme='dark'] .p-password .p-password-input:enabled:focus,
+html[data-bs-theme='dark'] .p-inputnumber .p-inputnumber-input:enabled:focus,
+html[data-bs-theme='dark'] .p-inputmask:enabled:focus,
+html[data-bs-theme='dark'] .p-calendar .p-inputtext:enabled:focus,
+html[data-bs-theme='dark'] .p-calendar .p-datepicker-trigger:focus {
+  background: #26272f !important;
+  border-color: none !important;
+  box-shadow: none !important;
+}
+
+html[data-bs-theme='dark'] .p-password .p-password-input:enabled:hover:not(:focus),
+html[data-bs-theme='dark'] .p-inputnumber .p-inputnumber-input:enabled:hover:not(:focus),
+html[data-bs-theme='dark'] .p-inputmask:enabled:hover:not(:focus),
+html[data-bs-theme='dark'] .p-calendar .p-inputtext:enabled:hover:not(:focus),
+html[data-bs-theme='dark'] .p-calendar .p-datepicker-trigger:hover:not(:disabled) {
+  background: #1b1c22 !important;
+  border: none !important;
+  border-color: none !important;
+}
+
+html[data-bs-theme='dark'] .p-datepicker-panel {
+  background: #1b1c22 !important;
+}
+
+html[data-bs-theme='dark'] .p-datepicker-header {
+  background: #1b1c22 !important;
+}
+
+html[data-bs-theme='dark'] .p-datepicker-day {
+  color: white !important;
+}
+
+html[data-bs-theme='dark'] .p-datepicker-today > .p-datepicker-day {
+  background: #57616e !important;
+}
+
+html[data-bs-theme='dark']
+  .p-datepicker-month:not(.p-disabled):not(.p-datepicker-month-selected):hover {
+  background: #57616e !important;
+}
+
+html[data-bs-theme='dark'] .p-datepicker-select-month:enabled:hover {
+  background: #57616e !important;
+}
+
+html[data-bs-theme='dark'] .p-datepicker-select-year:enabled:hover {
+  background: #57616e !important;
+}
+
+html[data-bs-theme='dark']
+  .p-datepicker-year:not(.p-disabled):not(.p-datepicker-year-selected):hover {
+  background: #57616e !important;
+}
+
+html[data-bs-theme='dark']
+  .p-datepicker-month:not(.p-disabled):not(.p-datepicker-month-selected):hover {
+  background: #57616e !important;
+}
+html[data-bs-theme='dark']
+  .p-datepicker-day:not(.p-datepicker-day-selected):not(.p-disabled):hover {
+  background: #57616e !important;
+}
+
+html[data-bs-theme='dark'] .p-datepicker-weekday {
+  color: white !important;
+}
+html[data-bs-theme='dark'] .p-datepicker-select-month {
+  color: white !important;
+}
+html[data-bs-theme='dark'] .p-datepicker-select-year {
+  color: white !important;
+}
+html[data-bs-theme='dark'] .p-datepicker-year {
+  color: white !important;
+}
+html[data-bs-theme='dark'] .p-datepicker-month {
+  color: white !important;
+}
+
+html[data-bs-theme='dark'] .p-datepicker-panel {
+  border: none !important;
+}
+html[data-bs-theme='dark'] .p-datepicker-dropdown {
+  background: #1b1c22 !important;
+  border: none !important;
+  color: white !important;
+}

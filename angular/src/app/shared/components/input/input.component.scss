@@ -1,0 +1,393 @@
+/* src/app/shared/components/input/input.component.scss */
+/* ===================================
+// Input Component - Estilos básicos + ngx-bootstrap datepicker
+// ===================================*/
+
+// Label required styling
+.form-label.required::after {
+  content: " *";
+  color: var(--kt-danger);
+}
+
+// Textarea auto-resize
+textarea.form-control[rows] {
+  min-height: calc(1.5em * 3 + 1rem + 2px);
+}
+
+// Character count positioning
+.has-character-count {
+  .form-text {
+    margin-top: 0.25rem;
+  }
+}
+
+.readonly-icon {
+  font-size: 0.875rem;
+  opacity: 0.7;
+  
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// Personalización del popover de ng-bootstrap
+::ng-deep .readonly-popover {
+  .popover-body {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+}
+
+/* ===================================
+// ngx-bootstrap Datepicker Integration
+// ===================================*/
+
+// Input group para el datepicker
+.app-input__wrapper {
+  .input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+    
+    .form-control {
+      cursor: pointer;
+      flex: 1 1 auto;
+      width: 1%;
+      min-width: 0;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      
+      // Quitar borders y shadows en focus
+      &:focus {
+        z-index: 3;
+        border-color: #e4e6ea; // Mantener el color original
+        box-shadow: none; // Quitar shadow
+        outline: none; // Quitar outline
+      }
+      
+      &.is-invalid {
+        border-color: var(--kt-danger);
+        
+        &:focus {
+          border-color: var(--kt-danger);
+          box-shadow: none; // Quitar shadow
+          outline: none; // Quitar outline
+        }
+      }
+      
+      // Para campos readonly
+      &[readonly] {
+        cursor: default;
+      }
+    }
+    
+    .btn {
+      position: relative;
+      z-index: 2;
+      flex: 0 0 auto;
+      border: 1px solid #e4e6ea;
+      border-left: 0;
+      background: #f5f8fa; // Mismo color de fondo que el input
+      color: var(--kt-gray-600);
+      transition: all 0.15s ease-in-out;
+      border-radius: 0;
+      padding: 0.375rem 0.75rem;
+      min-height: calc(1.5em + 0.75rem + 2px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      
+      &:hover:not(:disabled) {
+        background-color: #f5f8fa; // Mantener el mismo color
+        color: var(--kt-gray-700);
+        border-color: #e4e6ea;
+      }
+      
+      &:focus {
+        box-shadow: none;
+        outline: none;
+        background-color: #f5f8fa; // Mantener el mismo color
+        color: var(--kt-gray-700);
+        border-color: #e4e6ea;
+      }
+      
+      &:active {
+        background-color: #f5f8fa; // Mantener el mismo color
+        color: var(--kt-gray-700);
+      }
+      
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+        background-color: #f5f8fa;
+      }
+      
+      i {
+        font-size: 14px;
+      }
+      
+      // Primer botón (ícono calendario)
+      &:first-of-type {
+        border-top-right-radius: 0.375rem;
+        border-bottom-right-radius: 0.375rem;
+      }
+      
+      // Si hay múltiples botones
+      &:not(:first-of-type) {
+        border-left: 0;
+        border-radius: 0;
+      }
+      
+      // Último botón
+      &:last-child {
+        border-top-right-radius: 0.375rem;
+        border-bottom-right-radius: 0.375rem;
+      }
+      
+      // Si hay solo un botón
+      &:only-child {
+        border-top-right-radius: 0.375rem;
+        border-bottom-right-radius: 0.375rem;
+      }
+    }
+    
+    // Asegurar que no hay espacio entre elementos
+    > * {
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+  }
+  
+  // Para campos con errores
+  &.has-error {
+    .input-group {
+      .btn {
+        border-color: var(--kt-danger);
+        color: var(--kt-danger);
+        
+        &:hover:not(:disabled) {
+          background-color: rgba(var(--kt-danger-rgb), 0.1);
+          color: var(--kt-danger);
+        }
+      }
+    }
+  }
+  
+  // Para campos readonly
+  &.readonly-container {
+    .input-group {
+      .btn {
+        background-color: var(--kt-gray-100);
+        pointer-events: none;
+        opacity: 0.65;
+      }
+    }
+  }
+  
+  // Para campos disabled
+  &.disabled {
+    .input-group {
+      .btn {
+        opacity: 0.65;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+    }
+  }
+  
+  // Tamaños específicos
+  .form-control-sm + .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    min-height: calc(1.5em + 0.5rem + 2px);
+  }
+  
+  .form-control-lg + .btn {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    min-height: calc(1.5em + 1rem + 2px);
+  }
+}
+
+/* ===================================
+// Estilos globales para bs-datepicker (Tema Azul)
+// ===================================*/
+
+// Estilos que se aplicarán globalmente al datepicker
+:host ::ng-deep {
+  .bs-datepicker.theme-blue {
+    border-radius: 0.475rem !important;
+    border: 1px solid #007bff !important;
+    box-shadow: var(--kt-box-shadow-lg) !important;
+    font-family: inherit !important;
+    background: #ffffff !important;
+    
+    // Header del datepicker
+    .bs-datepicker-head {
+      background: #007bff !important; // Azul en el header
+      border-bottom: 1px solid #0056b3 !important;
+      padding: 0.75rem !important;
+      border-radius: 0.475rem 0.475rem 0 0 !important;
+      
+      .bs-datepicker-navigation-view {
+        .bs-datepicker-view-mode {
+          color: #ffffff !important; // Texto blanco en header
+          font-weight: 600 !important;
+          font-size: 0.875rem !important;
+        }
+        
+        button {
+          color: #ffffff !important; // Botones blancos en header
+          background: transparent !important;
+          border: none !important;
+          padding: 0.25rem 0.5rem !important;
+          border-radius: 0.25rem !important;
+          
+          &:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+          }
+        }
+      }
+    }
+    
+    // Cuerpo del datepicker
+    .bs-datepicker-body {
+      background: #ffffff !important;
+      padding: 0.75rem !important;
+      
+      // Días de la semana
+      .bs-datepicker-weekdays {
+        .bs-datepicker-weekday {
+          color: #007bff !important; // Azul para días de la semana
+          font-weight: 600 !important;
+          font-size: 0.75rem !important;
+          padding: 0.25rem !important;
+          text-transform: uppercase !important;
+        }
+      }
+      
+      // Días del mes
+      .bs-datepicker-month-view {
+        .bs-datepicker-days-view {
+          .bs-datepicker-date {
+            color: var(--kt-gray-700) !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0.25rem !important;
+            width: 2rem !important;
+            height: 2rem !important;
+            font-size: 0.875rem !important;
+            transition: all 0.15s ease-in-out !important;
+            
+            &:hover {
+              background: #e3f2fd !important; // Azul claro en hover
+              color: #007bff !important;
+            }
+            
+            // Día seleccionado
+            &.selected {
+              background: #007bff !important; // Azul para día seleccionado
+              color: #ffffff !important;
+              
+              &:hover {
+                background: #0056b3 !important; // Azul más oscuro en hover
+              }
+            }
+            
+            // Día actual
+            &.is-highlighted {
+              background: #e3f2fd !important; // Azul muy claro para día actual
+              color: #007bff !important;
+              font-weight: 600 !important;
+              border: 1px solid #007bff !important;
+            }
+            
+            // Días deshabilitados
+            &.disabled {
+              color: var(--kt-gray-400) !important;
+              background: transparent !important;
+              cursor: not-allowed !important;
+              
+              &:hover {
+                background: transparent !important;
+                color: var(--kt-gray-400) !important;
+              }
+            }
+            
+            // Días de otros meses
+            &.is-other-month {
+              color: var(--kt-gray-400) !important;
+              
+              &:hover {
+                background: #f8f9fa !important;
+                color: var(--kt-gray-600) !important;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    // Botones Today y Clear (si están habilitados)
+    .bs-datepicker-buttons {
+      border-top: 1px solid #dee2e6 !important;
+      padding: 0.5rem 0.75rem !important;
+      background: #f8f9fa !important;
+      border-radius: 0 0 0.475rem 0.475rem !important;
+      
+      .btn {
+        font-size: 0.75rem !important;
+        padding: 0.25rem 0.75rem !important;
+        border-radius: 0.25rem !important;
+        margin: 0 0.25rem !important;
+        
+        &.btn-success {
+          background: #007bff !important; // Azul para botón Today
+          border-color: #007bff !important;
+          color: #ffffff !important;
+          
+          &:hover {
+            background: #0056b3 !important;
+            border-color: #0056b3 !important;
+          }
+        }
+        
+        &.btn-secondary {
+          background: var(--kt-gray-300) !important;
+          border-color: var(--kt-gray-300) !important;
+          color: var(--kt-gray-700) !important;
+          
+          &:hover {
+            background: var(--kt-gray-400) !important;
+            border-color: var(--kt-gray-400) !important;
+            color: var(--kt-gray-800) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ===================================
+// Responsive adjustments
+// ===================================*/
+
+@media (max-width: 768px) {
+  :host ::ng-deep .bs-datepicker {
+    .bs-datepicker-body {
+      .bs-datepicker-month-view {
+        .bs-datepicker-days-view {
+          .bs-datepicker-date {
+            width: 2.5rem !important;
+            height: 2.5rem !important;
+            font-size: 1rem !important;
+          }
+        }
+      }
+    }
+  }
+}

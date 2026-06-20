@@ -1,0 +1,109 @@
+// Estilos específicos para el formulario de roles
+// Los estilos globales se manejan en el tema Metronic + PrimeNG Aura
+
+:host {
+  --p-checkbox-checked-background: #009ef7;
+  --p-checkbox-checked-border-color: #009ef7;
+  --p-checkbox-hover-border-color: #009ef7;
+}
+
+::ng-deep {
+  .p-tabview {
+    .p-tabview-nav {
+      background: transparent;
+      border-bottom: 2px solid #e9ecef;
+
+      .p-tabview-nav-link {
+        border: none;
+        background: transparent;
+        color: #6c757d;
+        font-weight: 500;
+        padding: 1rem 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: #f8f9fa;
+          color: #212529;
+        }
+      }
+
+      .p-highlight .p-tabview-nav-link {
+        border-bottom: 2px solid #009ef7;
+        color: #009ef7;
+      }
+    }
+
+    .p-tabview-panels {
+      background: transparent;
+      padding: 0;
+    }
+  }
+
+  .p-checkbox {
+    .p-checkbox-box {
+      border-radius: 4px;
+
+      &:hover {
+        border-color: #009ef7;
+      }
+
+      &.p-highlight {
+        background-color: #009ef7 !important;
+        border-color: #009ef7 !important;
+
+        .p-checkbox-icon {
+          color: white;
+        }
+      }
+    }
+  }
+
+  .p-checkbox-checked .p-checkbox-box {
+    background: #009ef7 !important;
+    border-color: #009ef7 !important;
+  }
+
+  .p-checkbox:not(.p-disabled) .p-checkbox-box.p-highlight:hover {
+    border-color: #009ef7 !important;
+    background: #009ef7 !important;
+  }
+}
+
+.form-check-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.card.border {
+  border-color: #e9ecef !important;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #009ef7 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 158, 247, 0.1);
+  }
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+  border-radius: 0.375rem;
+
+  i {
+    font-size: 1.25rem;
+    vertical-align: middle;
+  }
+}
+
+.alert-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+  border-radius: 0.375rem;
+
+  i {
+    font-size: 1.25rem;
+    vertical-align: middle;
+  }
+}

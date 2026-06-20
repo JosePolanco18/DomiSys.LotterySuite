@@ -1,0 +1,156 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.Account.Localization
+@model DomiSys.LotterySuite.Pages.Account.LoginModel
+@inject IHtmlLocalizer<AccountResource> L
+@{
+    Layout = "~/Pages/Shared/_LoginLayout.cshtml";
+}
+
+<div class="login-container">
+    <!-- Left Panel - Login Form -->
+    <div class="login-form-panel">
+        <div class="login-form-wrapper">
+            <!-- Header -->
+            <div class="login-header">
+                <h1 class="login-title">Iniciar Sesión</h1>
+                <p class="login-subtitle">Ingrese sus credenciales</p>
+            </div>
+
+            @if (Model.EnableLocalLogin)
+            {
+                <!-- Alerts Section -->
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @Model.ErrorMessage
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.WarningMessage))
+                {
+                    <div class="alert alert-warning" role="alert">
+                        @Model.WarningMessage
+                    </div>
+                }
+
+                <form method="post" id="loginForm">
+                    <!-- Validation Summary -->
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="validation-summary">
+                            <div class="validation-summary-title">
+                                Error de validación
+                            </div>
+                            <ul class="validation-summary-errors">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <!-- Username Field -->
+                    <div class="form-group">
+                        <label for="LoginInput_UserNameOrEmailAddress" class="form-label">
+                            Nombre de usuario
+                        </label>
+                        <input asp-for="LoginInput.UserNameOrEmailAddress"
+                               id="LoginInput_UserNameOrEmailAddress"
+                               class="form-control"
+                               type="text"
+                               autocomplete="username"
+                               data-val="true"
+                               data-val-required="Este campo es requerido"
+                               placeholder="Ingrese su usuario o correo" />
+                        <span asp-validation-for="LoginInput.UserNameOrEmailAddress" class="invalid-feedback"></span>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label for="LoginInput_Password" class="form-label">
+                            @L["Password"]
+                        </label>
+                        <input asp-for="LoginInput.Password"
+                               id="LoginInput_Password"
+                               class="form-control"
+                               type="password"
+                               autocomplete="current-password"
+                               data-val="true"
+                               data-val-required="Este campo es requerido"
+                               placeholder="Ingrese su contraseña" />
+                        <span asp-validation-for="LoginInput.Password" class="invalid-feedback"></span>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="form-check-wrapper">
+                        <label class="form-check">
+                            <input asp-for="LoginInput.RememberMe"
+                                   class="form-check-input"
+                                   type="checkbox" />
+                            <span class="form-check-label">
+                                @L["RememberMe"]
+                            </span>
+                        </label>
+
+                        <a href="~/Account/ForgotPassword?returnUrl=@Model.ReturnUrl&returnUrlHash=@Model.ReturnUrlHash"
+                           class="link-primary">
+                            @L["ForgotPassword"]
+                        </a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                            name="Action"
+                            value="Login"
+                            id="loginButton"
+                            class="btn btn-primary">
+                        <span class="btn-label">@L["Login"]</span>
+                    </button>
+                </form>
+            }
+
+            @if (Model.ExternalProviders?.Any() == true)
+            {
+                <!-- Separator -->
+                <div class="separator">
+                    <span class="separator-text">O iniciar sesión con</span>
+                </div>
+
+                <!-- External Providers -->
+                <form method="post">
+                    <div class="external-providers">
+                        @foreach (var provider in Model.ExternalProviders)
+                        {
+                            <button type="submit"
+                                    name="Action"
+                                    value="ExternalLogin"
+                                    asp-route-provider="@provider.AuthenticationScheme"
+                                    class="btn-external">
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+
+    <!-- Right Panel - Brand -->
+    <div class="login-brand-panel">
+        <div class="login-brand-content">
+            @if (!string.IsNullOrWhiteSpace(Model.LogoPath))
+            {
+                <div class="login-brand-logo">
+                    <img src="@Model.LogoPath" alt="@Model.CompanyName" class="company-logo" style="max-width: 400px; max-height: 350px; object-fit: contain;" />
+                </div>
+            }
+            <h2 class="login-brand-title">@Model.CompanyName</h2>
+            <p class="login-brand-subtitle">@Model.Slogan</p>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/login.js"></script>
+}

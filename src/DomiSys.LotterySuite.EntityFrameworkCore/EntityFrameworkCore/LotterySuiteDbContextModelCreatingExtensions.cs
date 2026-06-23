@@ -83,6 +83,7 @@ public static class LotterySuiteDbContextModelCreatingExtensions
             b.Property(x => x.QuinielaSegunda).HasPrecision(18, 2);
             b.Property(x => x.QuinielaTercera).HasPrecision(18, 2);
             b.Property(x => x.PalePrimeraSegunda).HasPrecision(18, 2);
+            b.Property(x => x.PalePrimeraTercera).HasPrecision(18, 2);
             b.Property(x => x.PaleSegundaTercera).HasPrecision(18, 2);
             b.Property(x => x.Tripleta).HasPrecision(18, 2);
             b.Property(x => x.SuperPale).HasPrecision(18, 2);
@@ -117,6 +118,8 @@ public static class LotterySuiteDbContextModelCreatingExtensions
             b.Property(x => x.Notas).HasMaxLength(500);
             b.Property(x => x.PorcentajeComisionVenta).HasPrecision(5, 2);
             b.Property(x => x.PorcentajeComisionVerde).HasPrecision(5, 2);
+            b.Property(x => x.LimiteVentaDiaria).HasPrecision(18, 2);
+            b.Property(x => x.LimiteCuadre).HasPrecision(18, 2);
 
             b.HasIndex(x => x.Codigo).IsUnique();
         });
@@ -224,6 +227,9 @@ public static class LotterySuiteDbContextModelCreatingExtensions
 
             b.Property(x => x.ComisionVentaPorDefecto).HasPrecision(5, 2);
             b.Property(x => x.ComisionVerdePorDefecto).HasPrecision(5, 2);
+            b.Property(x => x.NombreEmpresa).HasMaxLength(100);
+            b.Property(x => x.TelefonoEmpresa).HasMaxLength(30);
+            b.Property(x => x.PieTicket).HasMaxLength(200);
         });
 
         // ========== CUADRE ENTITIES ==========

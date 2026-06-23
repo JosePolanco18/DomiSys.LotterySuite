@@ -56,6 +56,7 @@ public class ConfiguracionPagoSorteoAppService : ApplicationService, IConfigurac
         config.QuinielaSegunda = input.QuinielaSegunda;
         config.QuinielaTercera = input.QuinielaTercera;
         config.PalePrimeraSegunda = input.PalePrimeraSegunda;
+        config.PalePrimeraTercera = input.PalePrimeraTercera;
         config.PaleSegundaTercera = input.PaleSegundaTercera;
         config.Tripleta = input.Tripleta;
         config.SuperPale = input.SuperPale;

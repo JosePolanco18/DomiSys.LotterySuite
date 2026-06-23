@@ -1,0 +1,106 @@
+<app-form-toolbar [config]="formToolbarConfig"></app-form-toolbar>
+
+<!-- Filtros -->
+<div class="card card-flush mb-5">
+  <div class="card-header border-0 pt-6">
+    <div class="card-title">
+      <span class="text-gray-800 fw-bold fs-5">Parametros del Reporte</span>
+    </div>
+  </div>
+  <div class="card-body pt-0">
+    <form [formGroup]="filterForm" class="row align-items-end g-4">
+      <div class="col-md-3">
+        <app-select
+          label="Loteria"
+          formControlName="loteriaId"
+          [service]="loteriaService"
+          bindValue="id"
+          bindLabel="nombre"
+          placeholder="Todas las loterias">
+        </app-select>
+      </div>
+      <div class="col-md-3">
+        <app-select
+          label="Sorteo"
+          formControlName="sorteoId"
+          [service]="sorteoService"
+          dependentOn="loteriaId"
+          dependentMethod="getPorLoteria"
+          bindValue="id"
+          bindLabel="nombre"
+          placeholder="Todos los sorteos">
+        </app-select>
+      </div>
+      <div class="col-md-3">
+        <app-input label="Fecha" type="date" formControlName="fecha"></app-input>
+      </div>
+      <div class="col-md-3">
+        <button
+          class="btn btn-primary w-100 mb-5"
+          (click)="generarReporte()"
+          [disabled]="isLoading || !filterForm.get('fecha')?.value">
+          <i class="fas fa-file-alt me-1"></i> Generar Reporte
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Summary cards -->
+<div class="row mb-5" *ngIf="reporteData">
+  <div class="col-md-4">
+    <div class="card card-flush bg-light-danger">
+      <div class="card-body py-5 text-center">
+        <span class="text-gray-600 fw-semibold fs-6 d-block mb-1">Total Excedente</span>
+        <span class="text-danger fw-bolder fs-2">{{ reporteData.totalExcedente | number:'1.2-2' }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-flush bg-light-warning">
+      <div class="card-body py-5 text-center">
+        <span class="text-gray-600 fw-semibold fs-6 d-block mb-1">Numeros con Excedente</span>
+        <span class="text-warning fw-bolder fs-2">{{ reporteData.cantidadNumeros }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-flush bg-light-info">
+      <div class="card-body py-5 text-center">
+        <span class="text-gray-600 fw-semibold fs-6 d-block mb-1">Fecha del Reporte</span>
+        <span class="text-info fw-bolder fs-2">{{ reporteData.fecha | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Report viewer -->
+<app-report-viewer
+  *ngIf="reporteData"
+  [title]="metadata.title"
+  [reportHtml]="reportHtml"
+  [appliedFilters]="appliedFilters"
+  [loading]="isLoading"
+  [exportOptions]="{ showPrint: true, showExcel: true }"
+  (printClick)="onPrint()"
+  (exportExcelClick)="onExportExcel()">
+</app-report-viewer>
+
+<!-- Loading state -->
+<div *ngIf="isLoading" class="card card-flush">
+  <div class="card-body text-center py-15">
+    <div class="spinner-border text-primary mb-3" role="status">
+      <span class="visually-hidden">Generando reporte...</span>
+    </div>
+    <p class="text-gray-600 fw-semibold">Generando reporte de excedentes...</p>
+  </div>
+</div>
+
+<!-- Empty state -->
+<div class="card card-flush" *ngIf="!reporteData && !isLoading">
+  <div class="card-body text-center text-gray-500 py-15">
+    <i class="fas fa-file-alt fs-3x text-gray-300 mb-4 d-block"></i>
+    <p class="fw-semibold fs-6">Seleccione los parametros y genere el reporte</p>
+    <p class="text-gray-400 fs-7">Los numeros que excedan su limite de aguante se mostraran aqui</p>
+  </div>
+</div>

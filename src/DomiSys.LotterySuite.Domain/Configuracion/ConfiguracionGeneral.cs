@@ -12,6 +12,11 @@ public class ConfiguracionGeneral : Entity<Guid>
     public int MinutosVentanaAnulacion { get; set; } = 5;
     public bool VendedorPuedeAnular { get; set; } = true;
 
+    // Datos para tickets impresos
+    public string NombreEmpresa { get; set; } = "DomiSys Lottery";
+    public string? TelefonoEmpresa { get; set; }
+    public string? PieTicket { get; set; } = "Conserve este ticket";
+
     protected ConfiguracionGeneral() { }
 
     public ConfiguracionGeneral(Guid id) : base(id) { }

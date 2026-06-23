@@ -216,6 +216,7 @@ export class LoteriaFormComponent extends BaseFormComponent<LoteriaDto, CrearAct
       quinielaSegunda: [40, Validators.required],
       quinielaTercera: [20, Validators.required],
       palePrimeraSegunda: [1000, Validators.required],
+      palePrimeraTercera: [800, Validators.required],
       paleSegundaTercera: [500, Validators.required],
       tripleta: [100000, Validators.required],
       superPale: [1000, Validators.required]
@@ -228,6 +229,7 @@ export class LoteriaFormComponent extends BaseFormComponent<LoteriaDto, CrearAct
         quinielaSegunda: config.quinielaSegunda,
         quinielaTercera: config.quinielaTercera,
         palePrimeraSegunda: config.palePrimeraSegunda,
+        palePrimeraTercera: config.palePrimeraTercera,
         paleSegundaTercera: config.paleSegundaTercera,
         tripleta: config.tripleta,
         superPale: config.superPale
@@ -249,6 +251,7 @@ export class LoteriaFormComponent extends BaseFormComponent<LoteriaDto, CrearAct
       quinielaSegunda: v.quinielaSegunda,
       quinielaTercera: v.quinielaTercera,
       palePrimeraSegunda: v.palePrimeraSegunda,
+      palePrimeraTercera: v.palePrimeraTercera,
       paleSegundaTercera: v.paleSegundaTercera,
       tripleta: v.tripleta,
       superPale: v.superPale

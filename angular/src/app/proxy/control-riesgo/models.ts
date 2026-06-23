@@ -25,6 +25,19 @@ export interface CrearActualizarLimiteNumeroDto {
   notas?: string;
 }
 
+export interface AplicarLimitesMasivosDto {
+  loteriaId?: string;
+  sorteoId?: string;
+  limiteVentaMaximo: number;
+  limiteAguante: number;
+}
+
+export interface ResultadoLimitesMasivosDto {
+  creados: number;
+  actualizados: number;
+  total: number;
+}
+
 export interface AcumuladoVentaNumeroDto {
   sorteoId?: string;
   nombreSorteo?: string;

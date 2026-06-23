@@ -108,11 +108,27 @@ function configureRoutes() {
       layout: eLayoutType.application,
     },
     {
+      path: '/control-riesgo/limites-masivos',
+      name: '::Asignacion Masiva',
+      parentName: '::Control de Riesgo',
+      iconClass: 'fas fa-layer-group',
+      order: 52,
+      layout: eLayoutType.application,
+    },
+    {
       path: '/control-riesgo/monitor',
       name: '::Monitor de Ventas',
       parentName: '::Control de Riesgo',
       iconClass: 'fas fa-chart-line',
-      order: 52,
+      order: 53,
+      layout: eLayoutType.application,
+    },
+    {
+      path: '/control-riesgo/reporte-excedentes',
+      name: '::Reporte Excedentes',
+      parentName: '::Control de Riesgo',
+      iconClass: 'fas fa-file-alt',
+      order: 54,
       layout: eLayoutType.application,
     },
 

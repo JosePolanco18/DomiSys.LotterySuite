@@ -28,3 +28,18 @@ public class GenerarCuadreDto
     public Guid TerminalId { get; set; }
     public string? Notas { get; set; }
 }
+
+public class ResumenTerminalDto
+{
+    public decimal VentasBrutas { get; set; }
+    public decimal TotalPremiosPagados { get; set; }
+    public int TotalTickets { get; set; }
+    public int TotalGanadores { get; set; }
+    public int TotalAnulados { get; set; }
+    public decimal PorcentajeComisionVenta { get; set; }
+    public decimal MontoComisionVenta { get; set; }
+    public decimal PorcentajeComisionVerde { get; set; }
+    public decimal MontoComisionVerde { get; set; }
+    public decimal BalanceNeto { get; set; }
+    public bool QuedoEnVerde { get; set; }
+}

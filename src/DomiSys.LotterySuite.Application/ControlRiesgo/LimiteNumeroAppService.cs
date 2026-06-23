@@ -122,6 +122,56 @@ public class LimiteNumeroAppService :
         return acumulados.Where(a => a.ExcedenteAguante > 0).ToList();
     }
 
+    public async Task<ResultadoLimitesMasivosDto> AsignarLimitesMasivosAsync(AplicarLimitesMasivosDto input)
+    {
+        var sorteoQueryable = await Repository.GetQueryableAsync();
+        var sorteoRepo = LazyServiceProvider.LazyGetRequiredService<IRepository<Sorteo, Guid>>();
+        var sorteos = await AsyncExecuter.ToListAsync(
+            (await sorteoRepo.GetQueryableAsync())
+                .Where(s => s.Activo)
+                .Where(s => !input.LoteriaId.HasValue || s.LoteriaId == input.LoteriaId.Value)
+                .Where(s => !input.SorteoId.HasValue || s.Id == input.SorteoId.Value));
+
+        var existentes = await AsyncExecuter.ToListAsync(
+            sorteoQueryable.Where(l => sorteos.Select(s => s.Id).Contains(l.SorteoId)));
+
+        int creados = 0, actualizados = 0;
+
+        foreach (var sorteo in sorteos)
+        {
+            for (int num = 0; num <= 99; num++)
+            {
+                var existente = existentes.FirstOrDefault(e => e.SorteoId == sorteo.Id && e.Numero == num);
+                if (existente != null)
+                {
+                    existente.LimiteVentaMaximo = input.LimiteVentaMaximo;
+                    existente.LimiteAguante = input.LimiteAguante;
+                    await Repository.UpdateAsync(existente, autoSave: true);
+                    actualizados++;
+                }
+                else
+                {
+                    await Repository.InsertAsync(new LimiteNumero(
+                        GuidGenerator.Create(),
+                        sorteo.LoteriaId,
+                        sorteo.Id,
+                        num,
+                        input.LimiteVentaMaximo,
+                        input.LimiteAguante
+                    ), autoSave: true);
+                    creados++;
+                }
+            }
+        }
+
+        return new ResultadoLimitesMasivosDto
+        {
+            Creados = creados,
+            Actualizados = actualizados,
+            Total = creados + actualizados
+        };
+    }
+
     private async Task<List<AcumuladoVentaNumeroDto>> ObtenerTodosAcumuladosDelDiaAsync(DateTime fecha)
     {
         var acumuladoQueryable = await _acumuladoRepository.GetQueryableAsync();

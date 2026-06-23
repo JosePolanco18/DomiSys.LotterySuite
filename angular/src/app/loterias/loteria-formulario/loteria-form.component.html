@@ -113,10 +113,13 @@
           <div class="col-12 mt-4">
             <span class="text-gray-600 fw-semibold fs-7">Pale (pago por peso apostado)</span>
           </div>
-          <div class="col-md-6">
-            <app-input label="1ra-2da / 1ra-3ra" type="number" formControlName="palePrimeraSegunda" [required]="true"></app-input>
+          <div class="col-md-4">
+            <app-input label="1ra-2da" type="number" formControlName="palePrimeraSegunda" [required]="true"></app-input>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <app-input label="1ra-3ra" type="number" formControlName="palePrimeraTercera" [required]="true"></app-input>
+          </div>
+          <div class="col-md-4">
             <app-input label="2da-3ra" type="number" formControlName="paleSegundaTercera" [required]="true"></app-input>
           </div>
 

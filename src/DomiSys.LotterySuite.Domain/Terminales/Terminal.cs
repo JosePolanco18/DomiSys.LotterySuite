@@ -19,6 +19,9 @@ public class Terminal : AuditedEntity<Guid>
     public string? Telefono { get; set; }
     public string? Notas { get; set; }
     public DateTime? UltimaActividad { get; set; }
+    public decimal? LimiteVentaDiaria { get; set; }
+    public decimal? LimiteCuadre { get; set; }
+    public bool PuedePagarGanadores { get; set; }
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 

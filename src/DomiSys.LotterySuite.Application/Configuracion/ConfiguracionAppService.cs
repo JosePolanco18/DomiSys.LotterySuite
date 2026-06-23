@@ -30,6 +30,9 @@ public class ConfiguracionAppService : ApplicationService, IConfiguracionAppServ
         config.ComisionVerdePorDefecto = input.ComisionVerdePorDefecto;
         config.MinutosVentanaAnulacion = input.MinutosVentanaAnulacion;
         config.VendedorPuedeAnular = input.VendedorPuedeAnular;
+        config.NombreEmpresa = input.NombreEmpresa;
+        config.TelefonoEmpresa = input.TelefonoEmpresa;
+        config.PieTicket = input.PieTicket;
         await _repository.UpdateAsync(config, autoSave: true);
         return MapToDto(config);
     }
@@ -56,7 +59,10 @@ public class ConfiguracionAppService : ApplicationService, IConfiguracionAppServ
             ComisionVentaPorDefecto = entity.ComisionVentaPorDefecto,
             ComisionVerdePorDefecto = entity.ComisionVerdePorDefecto,
             MinutosVentanaAnulacion = entity.MinutosVentanaAnulacion,
-            VendedorPuedeAnular = entity.VendedorPuedeAnular
+            VendedorPuedeAnular = entity.VendedorPuedeAnular,
+            NombreEmpresa = entity.NombreEmpresa,
+            TelefonoEmpresa = entity.TelefonoEmpresa,
+            PieTicket = entity.PieTicket
         };
     }
 }

@@ -87,6 +87,7 @@ export interface ConfiguracionPagoSorteoDto extends AuditedEntityDto<string> {
   quinielaSegunda: number;
   quinielaTercera: number;
   palePrimeraSegunda: number;
+  palePrimeraTercera: number;
   paleSegundaTercera: number;
   tripleta: number;
   superPale: number;
@@ -98,6 +99,7 @@ export interface CrearActualizarConfiguracionPagoSorteoDto {
   quinielaSegunda: number;
   quinielaTercera: number;
   palePrimeraSegunda: number;
+  palePrimeraTercera: number;
   paleSegundaTercera: number;
   tripleta: number;
   superPale: number;

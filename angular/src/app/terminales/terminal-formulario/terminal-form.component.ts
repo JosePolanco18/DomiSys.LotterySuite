@@ -47,7 +47,10 @@ export class TerminalFormComponent extends BaseFormComponent<TerminalDto, CrearA
       porcentajeComisionVerde: [null],
       ubicacion: [''],
       telefono: [''],
-      notas: ['']
+      notas: [''],
+      limiteVentaDiaria: [null],
+      limiteCuadre: [null],
+      puedePagarGanadores: [false]
     });
   }
 
@@ -64,7 +67,10 @@ export class TerminalFormComponent extends BaseFormComponent<TerminalDto, CrearA
       porcentajeComisionVerde: entity.porcentajeComisionVerde,
       ubicacion: entity.ubicacion,
       telefono: entity.telefono,
-      notas: entity.notas
+      notas: entity.notas,
+      limiteVentaDiaria: entity.limiteVentaDiaria,
+      limiteCuadre: entity.limiteCuadre,
+      puedePagarGanadores: entity.puedePagarGanadores
     };
   }
 

@@ -100,6 +100,7 @@ public class ConfiguracionPagoSorteoDto : AuditedEntityDto<Guid>
     public decimal QuinielaSegunda { get; set; }
     public decimal QuinielaTercera { get; set; }
     public decimal PalePrimeraSegunda { get; set; }
+    public decimal PalePrimeraTercera { get; set; }
     public decimal PaleSegundaTercera { get; set; }
     public decimal Tripleta { get; set; }
     public decimal SuperPale { get; set; }
@@ -112,6 +113,7 @@ public class CrearActualizarConfiguracionPagoSorteoDto
     public decimal QuinielaSegunda { get; set; } = 40;
     public decimal QuinielaTercera { get; set; } = 20;
     public decimal PalePrimeraSegunda { get; set; } = 1000;
+    public decimal PalePrimeraTercera { get; set; } = 800;
     public decimal PaleSegundaTercera { get; set; } = 500;
     public decimal Tripleta { get; set; } = 100000;
     public decimal SuperPale { get; set; } = 1000;

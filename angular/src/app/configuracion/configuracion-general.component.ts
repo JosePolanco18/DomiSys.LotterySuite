@@ -43,6 +43,19 @@ import { ConfiguracionService, ConfiguracionGeneralDto } from 'src/app/proxy/con
                 </div>
               </div>
               <div class="separator my-5"></div>
+              <h5 class="text-gray-600 fw-bold mb-4">Datos para Tickets</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <app-input label="Nombre de Empresa" type="text" formControlName="nombreEmpresa" [required]="true" placeholder="Ej: DomiSys Lottery"></app-input>
+                </div>
+                <div class="col-md-6">
+                  <app-input label="Telefono" type="text" formControlName="telefonoEmpresa" placeholder="Ej: 809-555-1234"></app-input>
+                </div>
+                <div class="col-md-12">
+                  <app-input label="Pie de Ticket" type="text" formControlName="pieTicket" placeholder="Ej: Conserve este ticket" helperText="Texto que aparece al final del ticket impreso"></app-input>
+                </div>
+              </div>
+              <div class="separator my-5"></div>
               <button class="btn btn-primary" (click)="guardar()" [disabled]="isSaving || !form.valid">
                 <i class="fas fa-save me-2"></i>{{ isSaving ? 'Guardando...' : 'Guardar' }}
               </button>
@@ -77,7 +90,10 @@ export class ConfiguracionGeneralComponent implements OnInit {
       comisionVentaPorDefecto: [7, [Validators.required, Validators.min(0), Validators.max(100)]],
       comisionVerdePorDefecto: [5, [Validators.required, Validators.min(0), Validators.max(100)]],
       minutosVentanaAnulacion: [5, [Validators.required, Validators.min(0)]],
-      vendedorPuedeAnular: [true]
+      vendedorPuedeAnular: [true],
+      nombreEmpresa: ['DomiSys Lottery', Validators.required],
+      telefonoEmpresa: [''],
+      pieTicket: ['Conserve este ticket']
     });
 
     this.configuracionService.obtener().subscribe(config => {

@@ -86,6 +86,9 @@ public class TerminalAppService :
         terminal.Ubicacion = input.Ubicacion;
         terminal.Telefono = input.Telefono;
         terminal.Notas = input.Notas;
+        terminal.LimiteVentaDiaria = input.LimiteVentaDiaria;
+        terminal.LimiteCuadre = input.LimiteCuadre;
+        terminal.PuedePagarGanadores = input.PuedePagarGanadores;
         return Task.FromResult(terminal);
     }
 
@@ -101,6 +104,9 @@ public class TerminalAppService :
         entity.Ubicacion = input.Ubicacion;
         entity.Telefono = input.Telefono;
         entity.Notas = input.Notas;
+        entity.LimiteVentaDiaria = input.LimiteVentaDiaria;
+        entity.LimiteCuadre = input.LimiteCuadre;
+        entity.PuedePagarGanadores = input.PuedePagarGanadores;
         await Task.CompletedTask;
     }
 }

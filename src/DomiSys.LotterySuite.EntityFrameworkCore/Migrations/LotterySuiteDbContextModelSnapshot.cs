@@ -40,6 +40,19 @@ namespace DomiSys.LotterySuite.Migrations
                     b.Property<int>("MinutosVentanaAnulacion")
                         .HasColumnType("integer");
 
+                    b.Property<string>("NombreEmpresa")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PieTicket")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("TelefonoEmpresa")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
                     b.Property<bool>("VendedorPuedeAnular")
                         .HasColumnType("boolean");
 
@@ -316,6 +329,10 @@ namespace DomiSys.LotterySuite.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
+                    b.Property<decimal>("PalePrimeraTercera")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
                     b.Property<decimal>("PaleSegundaTercera")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
@@ -542,6 +559,14 @@ namespace DomiSys.LotterySuite.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
+                    b.Property<decimal?>("LimiteCuadre")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<decimal?>("LimiteVentaDiaria")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -568,6 +593,9 @@ namespace DomiSys.LotterySuite.Migrations
                     b.Property<decimal?>("PorcentajeComisionVerde")
                         .HasPrecision(5, 2)
                         .HasColumnType("numeric(5,2)");
+
+                    b.Property<bool>("PuedePagarGanadores")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Telefono")
                         .HasMaxLength(20)

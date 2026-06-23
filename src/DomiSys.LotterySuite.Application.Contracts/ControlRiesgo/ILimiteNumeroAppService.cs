@@ -11,4 +11,5 @@ public interface ILimiteNumeroAppService : ICrudAppService<LimiteNumeroDto, Guid
     Task<List<LimiteNumeroDto>> ObtenerPorSorteoAsync(Guid sorteoId);
     Task<List<AcumuladoVentaNumeroDto>> ObtenerAcumuladosAsync(Guid sorteoId, DateTime fecha);
     Task<List<AcumuladoVentaNumeroDto>> ObtenerExcedentesAguanteAsync(DateTime fecha);
+    Task<ResultadoLimitesMasivosDto> AsignarLimitesMasivosAsync(AplicarLimitesMasivosDto input);
 }

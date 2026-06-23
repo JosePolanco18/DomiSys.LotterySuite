@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RestService } from '@abp/ng.core';
 import type { PagedAndSortedResultRequestDto, PagedResultDto } from '@abp/ng.core';
-import type { LimiteNumeroDto, CrearActualizarLimiteNumeroDto, AcumuladoVentaNumeroDto } from './models';
+import type { LimiteNumeroDto, CrearActualizarLimiteNumeroDto, AcumuladoVentaNumeroDto, AplicarLimitesMasivosDto, ResultadoLimitesMasivosDto } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class LimiteNumeroService {
@@ -27,6 +27,9 @@ export class LimiteNumeroService {
 
   update = (id: string, input: CrearActualizarLimiteNumeroDto) =>
     this.restService.request<any, LimiteNumeroDto>({ method: 'PUT', url: `/api/app/limite-numero/${id}`, body: input }, { apiName: this.apiName });
+
+  asignarMasivos = (input: AplicarLimitesMasivosDto) =>
+    this.restService.request<any, ResultadoLimitesMasivosDto>({ method: 'POST', url: '/api/app/limite-numero/asignar-limites-masivos', body: input }, { apiName: this.apiName });
 
   delete = (id: string) =>
     this.restService.request<any, void>({ method: 'DELETE', url: `/api/app/limite-numero/${id}` }, { apiName: this.apiName });

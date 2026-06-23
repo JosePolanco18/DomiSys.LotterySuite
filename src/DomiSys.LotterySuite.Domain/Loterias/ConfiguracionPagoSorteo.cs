@@ -13,7 +13,8 @@ public class ConfiguracionPagoSorteo : AuditedEntity<Guid>
     public decimal QuinielaTercera { get; set; } = 20;
 
     // Pale - pago por peso apostado segun combinacion de posiciones
-    public decimal PalePrimeraSegunda { get; set; } = 1000;  // includes 1ra-3ra
+    public decimal PalePrimeraSegunda { get; set; } = 1000;
+    public decimal PalePrimeraTercera { get; set; } = 800;
     public decimal PaleSegundaTercera { get; set; } = 500;
 
     // Tripleta

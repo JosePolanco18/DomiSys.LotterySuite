@@ -30,6 +30,23 @@
       <div class="col-md-6">
         <app-input label="Notas" type="textarea" formControlName="notas" [rows]="2"></app-input>
       </div>
+
+      <div class="col-12 mt-3">
+        <h5 class="text-muted">Límites y Permisos</h5>
+        <hr class="mt-1 mb-3">
+      </div>
+      <div class="col-md-4">
+        <app-input label="Límite Venta Diaria" type="currency" formControlName="limiteVentaDiaria" currency="DOP" placeholder="Ej: 50000" helperText="Vacío = sin límite"></app-input>
+      </div>
+      <div class="col-md-4">
+        <app-input label="Límite de Cuadre" type="currency" formControlName="limiteCuadre" currency="DOP" placeholder="Ej: 100000" helperText="Vacío = sin límite"></app-input>
+      </div>
+      <div class="col-md-4 d-flex align-items-center">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" formControlName="puedePagarGanadores" id="puedePagarSwitch">
+          <label class="form-check-label" for="puedePagarSwitch">Puede pagar tickets ganadores</label>
+        </div>
+      </div>
     </form>
   </div>
 </div>

@@ -11,6 +11,9 @@ export interface TerminalDto extends AuditedEntityDto<string> {
   telefono?: string;
   notas?: string;
   ultimaActividad?: string;
+  limiteVentaDiaria?: number;
+  limiteCuadre?: number;
+  puedePagarGanadores: boolean;
 }
 
 export interface CrearActualizarTerminalDto {
@@ -23,4 +26,7 @@ export interface CrearActualizarTerminalDto {
   ubicacion?: string;
   telefono?: string;
   notas?: string;
+  limiteVentaDiaria?: number;
+  limiteCuadre?: number;
+  puedePagarGanadores: boolean;
 }

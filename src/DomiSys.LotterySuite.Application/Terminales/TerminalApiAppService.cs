@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DomiSys.LotterySuite.Configuracion;
 using DomiSys.LotterySuite.ControlRiesgo;
 using DomiSys.LotterySuite.Cuadres;
 using DomiSys.LotterySuite.Loterias;
@@ -107,10 +108,25 @@ public class TerminalApiAppService : ApplicationService
     public async Task<List<LoteriaDto>> GetLoteriasActivasAsync()
     {
         ValidateTerminalToken();
+        var ahoraRD = ObtenerHoraRD();
         var queryable = await _loteriaRepository.WithDetailsAsync(l => l.Sorteos);
         var loterias = await AsyncExecuter.ToListAsync(
             queryable.Where(l => l.Activa).OrderBy(l => l.Orden));
-        return ObjectMapper.Map<List<Loteria>, List<LoteriaDto>>(loterias);
+        var dtos = ObjectMapper.Map<List<Loteria>, List<LoteriaDto>>(loterias);
+        foreach (var dto in dtos)
+        {
+            var loteria = loterias.First(l => l.Id == dto.Id);
+            if (dto.Sorteos != null)
+            {
+                foreach (var sorteoDto in dto.Sorteos)
+                {
+                    var sorteo = loteria.Sorteos.FirstOrDefault(s => s.Id == sorteoDto.Id);
+                    if (sorteo != null)
+                        sorteoDto.EstaAbierto = sorteo.EstaAbiertoParaVentas(ahoraRD);
+                }
+            }
+        }
+        return dtos;
     }
 
     public async Task<List<SorteoDto>> GetSorteosAbiertosAsync()
@@ -144,6 +160,9 @@ public class TerminalApiAppService : ApplicationService
 
         var ahoraRD = ObtenerHoraRD();
         var fechaHoy = ahoraRD.Date;
+
+        await ValidarLimitesDiarioYCuadreAsync(terminal, fechaHoy);
+
         var detalles = input.Detalles;
 
         if (detalles == null || detalles.Count == 0)
@@ -199,9 +218,25 @@ public class TerminalApiAppService : ApplicationService
     public async Task<TicketDto> GetTicketAsync(Guid id)
     {
         ValidateTerminalToken();
-        var q = await _ticketRepository.WithDetailsAsync(t => t.Detalles, t => t.Terminal);
+        var q = await _ticketRepository.WithDetailsAsync(t => t.Terminal);
         var ticket = await AsyncExecuter.FirstOrDefaultAsync(q.Where(t => t.Id == id))
             ?? throw new UserFriendlyException("Ticket no encontrado.");
+
+        // Load detalles with Sorteo.Loteria for grouping
+        var dq = await _detalleRepository.WithDetailsAsync(d => d.Sorteo, d => d.SegundoSorteo);
+        var detalles = await AsyncExecuter.ToListAsync(dq.Where(d => d.TicketId == id));
+        // Cargar Loteria de cada sorteo
+        var sorteoIds = detalles.Select(d => d.SorteoId).Distinct().ToList();
+        var sorteosQ = await _sorteoRepository.WithDetailsAsync(s => s.Loteria);
+        var sorteosMap = (await AsyncExecuter.ToListAsync(sorteosQ.Where(s => sorteoIds.Contains(s.Id))))
+            .ToDictionary(s => s.Id);
+        foreach (var d in detalles)
+        {
+            if (sorteosMap.TryGetValue(d.SorteoId, out var sorteo))
+                d.Sorteo = sorteo;
+        }
+        ticket.Detalles = detalles;
+
         return ObjectMapper.Map<Ticket, TicketDto>(ticket);
     }
 
@@ -227,6 +262,9 @@ public class TerminalApiAppService : ApplicationService
     public async Task<TicketDto> PagarGanadorAsync(Guid ticketId)
     {
         var terminalId = ValidateTerminalToken();
+        var terminal = await _terminalRepository.GetAsync(terminalId);
+        if (!terminal.PuedePagarGanadores)
+            throw new UserFriendlyException("Esta terminal no tiene permiso para pagar tickets ganadores.");
         var q = await _ticketRepository.WithDetailsAsync(t => t.Detalles);
         var ticket = await AsyncExecuter.FirstOrDefaultAsync(q.Where(t => t.Id == ticketId))
             ?? throw new UserFriendlyException("Ticket no encontrado.");
@@ -239,6 +277,22 @@ public class TerminalApiAppService : ApplicationService
         return ObjectMapper.Map<Ticket, TicketDto>(ticket);
     }
 
+    public async Task<ConfiguracionGeneralDto> GetConfiguracionTicketAsync()
+    {
+        ValidateTerminalToken();
+        var repo = LazyServiceProvider.LazyGetRequiredService<IRepository<Configuracion.ConfiguracionGeneral, Guid>>();
+        var q = await repo.GetQueryableAsync();
+        var config = await AsyncExecuter.FirstOrDefaultAsync(
+            q.Where(c => c.Id == Configuracion.ConfiguracionGeneral.SingletonId));
+        if (config == null) return new ConfiguracionGeneralDto { NombreEmpresa = "DomiSys Lottery", PieTicket = "Conserve este ticket" };
+        return new ConfiguracionGeneralDto
+        {
+            NombreEmpresa = config.NombreEmpresa,
+            TelefonoEmpresa = config.TelefonoEmpresa,
+            PieTicket = config.PieTicket
+        };
+    }
+
     public async Task<List<ResultadoScrapedDto>> GetResultadosGeneralesAsync()
     {
         ValidateTerminalToken();
@@ -246,7 +300,7 @@ public class TerminalApiAppService : ApplicationService
         return await service.ObtenerTodosResultadosAsync();
     }
 
-    public async Task<CuadreTerminalDto> GetResumenAsync()
+    public async Task<ResumenTerminalDto> GetResumenAsync()
     {
         var terminalId = ValidateTerminalToken();
         var terminal = await _terminalRepository.GetAsync(terminalId);
@@ -257,19 +311,24 @@ public class TerminalApiAppService : ApplicationService
 
         var desde = ultimo?.PeriodoFin ?? DateTime.MinValue;
         var tQ = await _ticketRepository.GetQueryableAsync();
+        var ticketsDesde = tQ.Where(t => t.TerminalId == terminalId && t.FechaCreacion > desde);
 
         var ventas = await AsyncExecuter.SumAsync(
-            tQ.Where(t => t.TerminalId == terminalId && t.FechaCreacion > desde && t.Estado != EstadoTicket.Anulado), t => t.MontoTotal);
+            ticketsDesde.Where(t => t.Estado != EstadoTicket.Anulado), t => t.MontoTotal);
         var premios = await AsyncExecuter.SumAsync(
             tQ.Where(t => t.TerminalId == terminalId && t.Estado == EstadoTicket.Pagado && t.FechaPago > desde), t => t.TotalPremios);
+
+        var totalTickets = await AsyncExecuter.CountAsync(ticketsDesde.Where(t => t.Estado != EstadoTicket.Anulado));
+        var totalGanadores = await AsyncExecuter.CountAsync(ticketsDesde.Where(t => t.Estado == EstadoTicket.Ganador || t.Estado == EstadoTicket.Pagado));
+        var totalAnulados = await AsyncExecuter.CountAsync(ticketsDesde.Where(t => t.Estado == EstadoTicket.Anulado));
 
         var cv = terminal.PorcentajeComisionVenta ?? 7m;
         var cg = terminal.PorcentajeComisionVerde ?? 5m;
 
-        return new CuadreTerminalDto
+        return new ResumenTerminalDto
         {
-            TerminalId = terminalId, NombreTerminal = terminal.Nombre, NombreVendedor = terminal.NombreVendedor,
             VentasBrutas = ventas, TotalPremiosPagados = premios,
+            TotalTickets = totalTickets, TotalGanadores = totalGanadores, TotalAnulados = totalAnulados,
             PorcentajeComisionVenta = cv, MontoComisionVenta = ventas * cv / 100,
             QuedoEnVerde = ventas > premios, PorcentajeComisionVerde = cg,
             MontoComisionVerde = ventas > premios ? (ventas - premios) * cg / 100 : 0,
@@ -278,6 +337,41 @@ public class TerminalApiAppService : ApplicationService
     }
 
     // --- helpers ---
+    private async Task ValidarLimitesDiarioYCuadreAsync(Terminal terminal, DateTime fechaHoy)
+    {
+        var tQ = await _ticketRepository.GetQueryableAsync();
+
+        // Limite de venta diaria
+        if (terminal.LimiteVentaDiaria.HasValue)
+        {
+            var ventasHoy = await AsyncExecuter.SumAsync(
+                tQ.Where(t => t.TerminalId == terminal.Id && t.FechaCreacion.Date == fechaHoy && t.Estado != EstadoTicket.Anulado),
+                t => t.MontoTotal);
+            if (ventasHoy >= terminal.LimiteVentaDiaria.Value)
+                throw new UserFriendlyException($"Terminal alcanzó el límite de venta diaria (RD${terminal.LimiteVentaDiaria.Value:N2}).");
+        }
+
+        // Limite de cuadre: balance desde último cuadre
+        if (terminal.LimiteCuadre.HasValue)
+        {
+            var ultimoQ = await _cuadreRepository.GetQueryableAsync();
+            var ultimo = await AsyncExecuter.FirstOrDefaultAsync(
+                ultimoQ.Where(c => c.TerminalId == terminal.Id).OrderByDescending(c => c.FechaCuadre));
+            var desde = ultimo?.PeriodoFin ?? DateTime.MinValue;
+
+            var ventas = await AsyncExecuter.SumAsync(
+                tQ.Where(t => t.TerminalId == terminal.Id && t.FechaCreacion > desde && t.Estado != EstadoTicket.Anulado),
+                t => t.MontoTotal);
+            var premios = await AsyncExecuter.SumAsync(
+                tQ.Where(t => t.TerminalId == terminal.Id && t.Estado == EstadoTicket.Pagado && t.FechaPago > desde),
+                t => t.TotalPremios);
+
+            var balance = ventas - premios;
+            if (balance >= terminal.LimiteCuadre.Value)
+                throw new UserFriendlyException($"Terminal alcanzó el límite de cuadre (RD${terminal.LimiteCuadre.Value:N2}). Debe cuadrar antes de continuar vendiendo.");
+        }
+    }
+
     private static List<int> GetNums(CrearDetalleTicketDto d)
     {
         var nums = new List<int> { d.PrimerNumero };

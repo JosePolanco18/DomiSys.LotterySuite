@@ -228,10 +228,12 @@ public class ResultadoScrapingWorker : AsyncPeriodicBackgroundWorkerBase
                         }
                         if (positions.Count == 2)
                         {
-                            if (positions.Contains(2) && positions.Contains(3) && !positions.Contains(1))
-                                multiplicador = config?.PaleSegundaTercera ?? 500;
-                            else
+                            if (positions.Contains(1) && positions.Contains(2))
                                 multiplicador = config?.PalePrimeraSegunda ?? 1000;
+                            else if (positions.Contains(1) && positions.Contains(3))
+                                multiplicador = config?.PalePrimeraTercera ?? 800;
+                            else
+                                multiplicador = config?.PaleSegundaTercera ?? 500;
                             pago = d.Monto * multiplicador;
                         }
                     }

@@ -1,0 +1,30 @@
+<div id="page-content">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Asignacion Masiva de Limites</h3>
+      <p class="text-muted mb-0">Asigne limites de venta y aguante a todos los numeros (00-99) de los sorteos seleccionados. Deje los filtros vacios para aplicar a todos los sorteos activos.</p>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="form" class="row">
+        <div class="col-md-6">
+          <app-select label="Loteria (opcional)" formControlName="loteriaId" [service]="loteriaService" bindValue="id" bindLabel="nombre" placeholder="Todas las loterias"></app-select>
+        </div>
+        <div class="col-md-6">
+          <app-select label="Sorteo (opcional)" formControlName="sorteoId" [service]="sorteoService" dependentOn="loteriaId" dependentMethod="getPorLoteria" bindValue="id" bindLabel="nombre" placeholder="Todos los sorteos"></app-select>
+        </div>
+        <div class="col-md-6">
+          <app-input label="Limite Venta Maximo" type="currency" formControlName="limiteVentaMaximo" currency="DOP" [required]="true" placeholder="Ej: 10000"></app-input>
+        </div>
+        <div class="col-md-6">
+          <app-input label="Limite Aguante" type="currency" formControlName="limiteAguante" currency="DOP" [required]="true" placeholder="Ej: 1000"></app-input>
+        </div>
+      </form>
+    </div>
+    <div class="card-footer text-end">
+      <button class="btn btn-primary" [disabled]="form.invalid || loading" (click)="aplicar()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+        {{ loading ? 'Procesando...' : 'Aplicar Limites Masivos' }}
+      </button>
+    </div>
+  </div>
+</div>

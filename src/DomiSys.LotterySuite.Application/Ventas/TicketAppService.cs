@@ -199,6 +199,7 @@ public class TicketAppService : ApplicationService, ITicketAppService
         var ticket = await AsyncExecuter.FirstOrDefaultAsync(
             queryable.Where(t => t.CodigoTicket == codigoTicket))
             ?? throw new UserFriendlyException("Ticket no encontrado.");
+        await CargarSorteosEnDetallesAsync(ticket);
         return ObjectMapper.Map<Ticket, TicketDto>(ticket);
     }
 
@@ -207,7 +208,22 @@ public class TicketAppService : ApplicationService, ITicketAppService
         var queryable = await _ticketRepository.WithDetailsAsync(t => t.Detalles, t => t.Terminal);
         var ticket = await AsyncExecuter.FirstOrDefaultAsync(queryable.Where(t => t.Id == id))
             ?? throw new UserFriendlyException("Ticket no encontrado.");
+        await CargarSorteosEnDetallesAsync(ticket);
         return ObjectMapper.Map<Ticket, TicketDto>(ticket);
+    }
+
+    private async Task CargarSorteosEnDetallesAsync(Ticket ticket)
+    {
+        if (ticket.Detalles == null || !ticket.Detalles.Any()) return;
+        var sorteoIds = ticket.Detalles.Select(d => d.SorteoId).Distinct().ToList();
+        var sorteosQ = await _sorteoRepository.WithDetailsAsync(s => s.Loteria);
+        var sorteosMap = (await AsyncExecuter.ToListAsync(sorteosQ.Where(s => sorteoIds.Contains(s.Id))))
+            .ToDictionary(s => s.Id);
+        foreach (var d in ticket.Detalles)
+        {
+            if (sorteosMap.TryGetValue(d.SorteoId, out var sorteo))
+                d.Sorteo = sorteo;
+        }
     }
 
     public async Task<PagedResultDto<TicketDto>> GetListAsync(PagedAndFilteredResultRequestDto input)

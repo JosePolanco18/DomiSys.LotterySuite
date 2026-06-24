@@ -19,6 +19,7 @@ public class TerminalDto : AuditedEntityDto<Guid>
     public decimal? LimiteVentaDiaria { get; set; }
     public decimal? LimiteCuadre { get; set; }
     public bool PuedePagarGanadores { get; set; }
+    public decimal SaldoEfectivo { get; set; }
 }
 
 public class CrearActualizarTerminalDto

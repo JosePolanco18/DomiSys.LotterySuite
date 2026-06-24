@@ -100,7 +100,11 @@ public class ResultadoScrapingWorker : AsyncPeriodicBackgroundWorkerBase
         foreach (var sorteo in sorteosSinResultado)
         {
             var key = BuildScrapingKey(sorteo.Loteria.Nombre, sorteo.Nombre);
-            if (!scraped.TryGetValue(key, out var nums)) continue;
+            if (!scraped.TryGetValue(key, out var nums))
+            {
+                var altKey = NormalizeKey(sorteo.Nombre);
+                if (!scraped.TryGetValue(altKey, out nums)) continue;
+            }
 
             var resultado = new ResultadoSorteo(
                 Guid.NewGuid(), sorteo.Id, hoyRD,
@@ -114,84 +118,83 @@ public class ResultadoScrapingWorker : AsyncPeriodicBackgroundWorkerBase
                 sorteo.Loteria.Nombre, sorteo.Nombre, nums.primera, nums.segunda, nums.tercera);
 
             var configPagoSorteoRepo = workerContext.ServiceProvider.GetRequiredService<IRepository<ConfiguracionPagoSorteo, Guid>>();
-            await CalcularGanadoresAsync(resultado, detalleTicketRepo, ticketRepo, resultadoRepo, configPagoSorteoRepo);
+            var terminalRepo = workerContext.ServiceProvider.GetRequiredService<IRepository<DomiSys.LotterySuite.Terminales.Terminal, Guid>>();
+            var gestionManager = workerContext.ServiceProvider.GetRequiredService<DomiSys.LotterySuite.GestionEfectivo.GestionEfectivoManager>();
+            await CalcularGanadoresAsync(resultado, detalleTicketRepo, ticketRepo, resultadoRepo, configPagoSorteoRepo, terminalRepo, gestionManager);
         }
     }
 
-    private static async Task<Dictionary<string, (int, int, int)>> ScrapeResultadosAsync()
+    // ponytail: each game_id maps to multiple possible normalized keys to match against DB sorteo names
+    public static readonly Dictionary<string, string[]> GameIdMap = new()
     {
-        // ponytail: conectate first (fresher data), fallback to loteriadominicanas
-        var results = await ScrapeConectateAsync();
-        if (results.Count == 0)
-            results = await ScrapeLoteriadominicanaAsync();
-        return results;
+        ["6966a6d1ea7015c3b8a3d453"] = new[] { "quinielaleidsa", "leidsaquinielaleidsa", "leidsaquiniela" },
+        ["6966a6d1ea7015c3b8a3d47c"] = new[] { "loteríanacional", "loteríanacionalquiniela", "nacionalquiniela" },
+        ["6966a6d1ea7015c3b8a3d482"] = new[] { "ganamás", "loteríanacionalganamás", "nacionalganamás" },
+        ["6966a6d2ea7015c3b8a3d4ae"] = new[] { "quinielareal", "loteríarealquinielareal", "loteríarealquiniela", "realquiniela" },
+        ["6966a6d2ea7015c3b8a3d4d7"] = new[] { "quinielaloteka", "lotekaquinielaloteka", "lotekaquiniela" },
+        ["6966a6d2ea7015c3b8a3d48e"] = new[] { "juegapega", "juega+pega+", "leidsajuegapega", "leidsajuega+pega+" },
+        ["6966a6d1ea7015c3b8a3d471"] = new[] { "pega3más", "leidsapega3más", "nacionalpega3más" },
+        ["6966a6d2ea7015c3b8a3d5c0"] = new[] { "laprimeraquinielamediodía", "laprimeradia", "primeradía", "laprimeraquinielondia", "quinielondia", "quinielonmediodía" },
+        ["6966a6d2ea7015c3b8a3d5c6"] = new[] { "laprimeraquinielanoche", "laprimeraquinielonnoche", "primeranoche", "quinielonnoche" },
+        ["6966a6d3ea7015c3b8a3d5e3"] = new[] { "lotedomquiniela", "lotedom" },
+        ["6966a6d2ea7015c3b8a3d509"] = new[] { "newyork330", "newyorkmediodía", "newyork" },
+        ["6966a6d2ea7015c3b8a3d50f"] = new[] { "newyork1130", "newyorknoche" },
+        ["6966a6d2ea7015c3b8a3d515"] = new[] { "kinglotteryquinieladia", "kinglottery1230", "kinglotterydia" },
+        ["6966a6d2ea7015c3b8a3d51b"] = new[] { "kinglotteryquinielanoche", "kinglottery730", "kinglotterynoche" },
+        ["6966a6d3ea7015c3b8a3d5e9"] = new[] { "lasuertedominicana", "lasuerte", "lasuertedominicanaquiniela" },
+        ["6966a6d2ea7015c3b8a3d527"] = new[] { "anguila10am", "anguila1000am", "anguilla10am" },
+        ["6966a6d2ea7015c3b8a3d5cc"] = new[] { "anguila1pm", "anguila100pm", "anguilla1pm", "anguila12pm", "anguilla12pm" },
+        ["6966a6d2ea7015c3b8a3d5d2"] = new[] { "anguila6pm", "anguila600pm", "anguilla5pm", "anguila5pm" },
+        ["6966a6d2ea7015c3b8a3d5d8"] = new[] { "anguila9pm", "anguila900pm", "anguilla9pm" },
+    };
+
+    public static async Task<Dictionary<string, (int, int, int)>> ScrapeResultadosAsync()
+    {
+        return await ScrapeConectateApiAsync();
     }
 
-    private static async Task<Dictionary<string, (int, int, int)>> ScrapeConectateAsync()
+    public static async Task<Dictionary<string, (int, int, int)>> ScrapeConectateApiAsync()
     {
         using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
         http.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
-        var html = await http.GetStringAsync("https://www.conectate.com.do/loterias/");
-
-        var clean = Regex.Replace(html, @"<[^>]+>", "\n");
-        var lines = clean.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).ToList();
-
-        var loteriaNames = new[]
-        {
-            "Juega + Pega +", "Gana Más", "Lotería Nacional", "Pega 3 Más",
-            "Quiniela Leidsa", "Quiniela Real", "Quiniela Loteka",
-            "La Primera Día", "Primera Noche", "LoteDom",
-            "King Lottery 12:30", "King Lottery 7:30",
-            "Anguila 10:00 AM", "Anguila 1:00 PM", "Anguila 6:00 PM", "Anguila 9:00 PM",
-            "La Suerte"
-        };
+        var json = await http.GetStringAsync("https://api.temp.conectate.com.do/conectate/sessions?limit=1");
+        var entries = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(json);
 
         var results = new Dictionary<string, (int, int, int)>(StringComparer.OrdinalIgnoreCase);
-        for (int i = 0; i < lines.Count; i++)
+
+        foreach (var entry in entries.EnumerateArray())
         {
-            var matched = loteriaNames.FirstOrDefault(n => lines[i].Equals(n, StringComparison.OrdinalIgnoreCase));
-            if (matched == null) continue;
+            var gameId = entry.GetProperty("game_id").GetString() ?? "";
+            if (!GameIdMap.TryGetValue(gameId, out var keys)) continue;
 
-            var nums = new List<int>();
-            for (int j = i + 1; j < Math.Min(i + 8, lines.Count); j++)
-            {
-                if (Regex.IsMatch(lines[j], @"^\d{2}$") && int.Parse(lines[j]) <= 99)
-                    nums.Add(int.Parse(lines[j]));
-            }
-            if (nums.Count >= 3)
-                results[NormalizeKey(matched)] = (nums[0], nums[1], nums[2]);
-        }
-        return results;
-    }
+            var sessions = entry.GetProperty("sessions");
+            if (sessions.GetArrayLength() == 0) continue;
 
-    private static async Task<Dictionary<string, (int, int, int)>> ScrapeLoteriadominicanaAsync()
-    {
-        using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
-        var html = await http.GetStringAsync("https://www.loteriadominicanas.com");
+            var session = sessions[0];
+            var score = session.GetProperty("score");
+            if (score.GetArrayLength() == 0) continue;
 
-        var results = new Dictionary<string, (int, int, int)>(StringComparer.OrdinalIgnoreCase);
-        var sections = Regex.Split(html, @"<h3");
+            var nums = score[0];
+            if (nums.GetArrayLength() < 3) continue;
 
-        foreach (var section in sections.Skip(1))
-        {
-            var titleMatch = Regex.Match(section, @">([^<]+)</a>");
-            if (!titleMatch.Success) continue;
-            var nums = Regex.Matches(section[..Math.Min(800, section.Length)], @"(?<![0-9\-/])(\d{2})(?![0-9\-/])")
-                .Cast<Match>().Select(m => int.Parse(m.Groups[1].Value)).Where(n => n <= 99).Take(3).ToList();
-            if (nums.Count < 3) continue;
-            results[NormalizeKey(titleMatch.Groups[1].Value.Trim())] = (nums[0], nums[1], nums[2]);
+            var n1 = int.TryParse(nums[0].GetString(), out var v1) ? v1 : -1;
+            var n2 = int.TryParse(nums[1].GetString(), out var v2) ? v2 : -1;
+            var n3 = int.TryParse(nums[2].GetString(), out var v3) ? v3 : -1;
+
+            if (n1 >= 0 && n1 <= 99 && n2 >= 0 && n2 <= 99 && n3 >= 0 && n3 <= 99)
+                foreach (var k in keys)
+                    results[k] = (n1, n2, n3);
         }
         return results;
     }
 
     // ponytail: brute-force key matching, add mapping table if names diverge too much
-    private static string BuildScrapingKey(string loteriaName, string sorteoName)
+    public static string BuildScrapingKey(string loteriaName, string sorteoName)
     {
         return NormalizeKey($"{loteriaName} {sorteoName}");
     }
 
-    private static string NormalizeKey(string s)
+    public static string NormalizeKey(string s)
     {
         return Regex.Replace(s.ToLowerInvariant(), @"[^a-záéíóúñ0-9]", "");
     }
@@ -201,7 +204,9 @@ public class ResultadoScrapingWorker : AsyncPeriodicBackgroundWorkerBase
         IRepository<DetalleTicket, Guid> detalleRepo,
         IRepository<Ticket, Guid> ticketRepo,
         IRepository<ResultadoSorteo, Guid> resultadoRepo,
-        IRepository<ConfiguracionPagoSorteo, Guid> configPagoSorteoRepo)
+        IRepository<ConfiguracionPagoSorteo, Guid> configPagoSorteoRepo,
+        IRepository<DomiSys.LotterySuite.Terminales.Terminal, Guid> terminalRepo,
+        DomiSys.LotterySuite.GestionEfectivo.GestionEfectivoManager gestionManager)
     {
         // Load position-based payout config for this sorteo
         var configQ = await configPagoSorteoRepo.GetQueryableAsync();
@@ -313,6 +318,12 @@ public class ResultadoScrapingWorker : AsyncPeriodicBackgroundWorkerBase
             {
                 ticket.CalcularPremios();
                 await ticketRepo.UpdateAsync(ticket, autoSave: true);
+
+                var terminal = await terminalRepo.GetAsync(ticket.TerminalId);
+                await gestionManager.RegistrarMovimientoAsync(
+                    terminal, DomiSys.LotterySuite.GestionEfectivo.TipoMovimientoEfectivo.PagoPremio,
+                    -ticket.TotalPremios, ticket.Id, "SISTEMA", "Premio pendiente de pago");
+                await terminalRepo.UpdateAsync(terminal, autoSave: true);
             }
         }
     }

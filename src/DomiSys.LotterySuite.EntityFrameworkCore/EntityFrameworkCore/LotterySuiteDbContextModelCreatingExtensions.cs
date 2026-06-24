@@ -1,6 +1,7 @@
 using DomiSys.LotterySuite.Configuracion;
 using DomiSys.LotterySuite.ControlRiesgo;
 using DomiSys.LotterySuite.Cuadres;
+using DomiSys.LotterySuite.GestionEfectivo;
 using DomiSys.LotterySuite.Loterias;
 using DomiSys.LotterySuite.Terminales;
 using DomiSys.LotterySuite.Ventas;
@@ -25,7 +26,7 @@ public static class LotterySuiteDbContextModelCreatingExtensions
             b.Property(x => x.CodigoCorto).IsRequired().HasMaxLength(10);
             b.Property(x => x.LogoUrl).HasMaxLength(500);
 
-            b.HasIndex(x => x.CodigoCorto).IsUnique();
+            b.HasIndex(x => new { x.TenantId, x.CodigoCorto }).IsUnique();
         });
 
         builder.Entity<Sorteo>(b =>
@@ -98,7 +99,7 @@ public static class LotterySuiteDbContextModelCreatingExtensions
             b.ConfigureByConvention();
             b.HasKey(x => x.Id);
 
-            b.HasIndex(x => x.TipoJugada).IsUnique();
+            b.HasIndex(x => new { x.TenantId, x.TipoJugada }).IsUnique();
         });
 
         // ========== TERMINAL ENTITIES ==========
@@ -120,8 +121,9 @@ public static class LotterySuiteDbContextModelCreatingExtensions
             b.Property(x => x.PorcentajeComisionVerde).HasPrecision(5, 2);
             b.Property(x => x.LimiteVentaDiaria).HasPrecision(18, 2);
             b.Property(x => x.LimiteCuadre).HasPrecision(18, 2);
+            b.Property(x => x.SaldoEfectivo).HasPrecision(18, 2);
 
-            b.HasIndex(x => x.Codigo).IsUnique();
+            b.HasIndex(x => new { x.TenantId, x.Codigo }).IsUnique();
         });
 
         // ========== CONTROL DE RIESGO ENTITIES ==========
@@ -185,7 +187,7 @@ public static class LotterySuiteDbContextModelCreatingExtensions
                 .HasForeignKey(x => x.TerminalPagoId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            b.HasIndex(x => x.CodigoTicket).IsUnique();
+            b.HasIndex(x => new { x.TenantId, x.CodigoTicket }).IsUnique();
             b.HasIndex(x => new { x.TerminalId, x.FechaCreacion });
         });
 
@@ -260,6 +262,28 @@ public static class LotterySuiteDbContextModelCreatingExtensions
                 .OnDelete(DeleteBehavior.Restrict);
 
             b.HasIndex(x => new { x.TerminalId, x.FechaCuadre });
+        });
+
+        // ========== GESTION EFECTIVO ENTITIES ==========
+
+        builder.Entity<MovimientoEfectivo>(b =>
+        {
+            b.ToTable("movimientos_efectivo");
+            b.ConfigureByConvention();
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.Monto).HasPrecision(18, 2);
+            b.Property(x => x.SaldoAnterior).HasPrecision(18, 2);
+            b.Property(x => x.SaldoNuevo).HasPrecision(18, 2);
+            b.Property(x => x.Notas).HasMaxLength(500);
+            b.Property(x => x.RegistradoPor).IsRequired().HasMaxLength(256);
+
+            b.HasOne(x => x.Terminal)
+                .WithMany()
+                .HasForeignKey(x => x.TerminalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasIndex(x => new { x.TerminalId, x.FechaMovimiento });
         });
     }
 }

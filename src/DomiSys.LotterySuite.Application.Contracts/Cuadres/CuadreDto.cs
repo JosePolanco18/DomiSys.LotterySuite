@@ -42,4 +42,5 @@ public class ResumenTerminalDto
     public decimal MontoComisionVerde { get; set; }
     public decimal BalanceNeto { get; set; }
     public bool QuedoEnVerde { get; set; }
+    public decimal SaldoEfectivo { get; set; }
 }

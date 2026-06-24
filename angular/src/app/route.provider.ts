@@ -92,6 +92,15 @@ function configureRoutes() {
       layout: eLayoutType.application,
     },
 
+    // ========== GESTION DE EFECTIVO ==========
+    {
+      path: '/gestion-efectivo',
+      name: '::Gestión de Efectivo',
+      iconClass: 'fas fa-money-bill-wave',
+      order: 45,
+      layout: eLayoutType.application,
+    },
+
     // ========== CONTROL DE RIESGO ==========
     {
       name: '::Control de Riesgo',

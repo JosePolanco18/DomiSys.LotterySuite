@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using DomiSys.LotterySuite.Configuracion;
+using DomiSys.LotterySuite.GestionEfectivo;
 using DomiSys.LotterySuite.Permissions;
 using DomiSys.LotterySuite.Shared;
 using DomiSys.LotterySuite.Terminales;
@@ -25,17 +26,20 @@ public class CuadreAppService : ApplicationService, ICuadreAppService
     private readonly IRepository<Terminal, Guid> _terminalRepository;
     private readonly IRepository<Ticket, Guid> _ticketRepository;
     private readonly IRepository<ConfiguracionGeneral, Guid> _configuracionRepository;
+    private readonly GestionEfectivoManager _gestionManager;
 
     public CuadreAppService(
         IRepository<CuadreTerminal, Guid> cuadreRepository,
         IRepository<Terminal, Guid> terminalRepository,
         IRepository<Ticket, Guid> ticketRepository,
-        IRepository<ConfiguracionGeneral, Guid> configuracionRepository)
+        IRepository<ConfiguracionGeneral, Guid> configuracionRepository,
+        GestionEfectivoManager gestionManager)
     {
         _cuadreRepository = cuadreRepository;
         _terminalRepository = terminalRepository;
         _ticketRepository = ticketRepository;
         _configuracionRepository = configuracionRepository;
+        _gestionManager = gestionManager;
     }
 
     [Authorize(LotterySuitePermissions.Cuadres.Create)]
@@ -88,6 +92,15 @@ public class CuadreAppService : ApplicationService, ICuadreAppService
         cuadre.Notas = input.Notas;
 
         await _cuadreRepository.InsertAsync(cuadre, autoSave: true);
+
+        var totalComisiones = cuadre.MontoComisionVenta + cuadre.MontoComisionVerde;
+        if (totalComisiones > 0)
+        {
+            await _gestionManager.RegistrarMovimientoAsync(
+                terminal, TipoMovimientoEfectivo.AjusteComision, -totalComisiones,
+                cuadre.Id, CurrentUser.UserName ?? "admin", "Comisiones del cuadre");
+            await _terminalRepository.UpdateAsync(terminal, autoSave: true);
+        }
 
         var queryable = await _cuadreRepository.WithDetailsAsync(c => c.Terminal);
         var saved = await AsyncExecuter.FirstOrDefaultAsync(queryable.Where(c => c.Id == cuadre.Id));

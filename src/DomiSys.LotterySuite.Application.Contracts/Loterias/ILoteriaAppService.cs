@@ -25,6 +25,7 @@ public interface IResultadoSorteoAppService : IApplicationService
     Task<PagedResultDto<ResultadoSorteoDto>> ObtenerListaAsync(PagedAndSortedResultRequestDto input);
     Task<List<ResultadoSorteoDto>> ObtenerPorFechaAsync(DateTime fecha);
     Task<List<ResultadoSorteoDto>> ObtenerUltimosAsync(int cantidad = 10);
+    Task<int> EjecutarScrapingAsync();
 }
 
 public interface IConfiguracionPagoAppService : ICrudAppService<ConfiguracionPagoDto, Guid, PagedAndFilteredResultRequestDto, CrearActualizarConfiguracionPagoDto>

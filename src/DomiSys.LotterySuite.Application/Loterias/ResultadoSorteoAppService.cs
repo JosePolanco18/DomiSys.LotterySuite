@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DomiSys.LotterySuite.GestionEfectivo;
 using DomiSys.LotterySuite.Permissions;
+using DomiSys.LotterySuite.Terminales;
 using DomiSys.LotterySuite.Ventas;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp;
@@ -20,17 +22,26 @@ public class ResultadoSorteoAppService : ApplicationService, IResultadoSorteoApp
     private readonly IRepository<DetalleTicket, Guid> _detalleTicketRepository;
     private readonly IRepository<Ticket, Guid> _ticketRepository;
     private readonly IRepository<ConfiguracionPagoSorteo, Guid> _configPagoSorteoRepository;
+    private readonly IRepository<Terminal, Guid> _terminalRepository;
+    private readonly IRepository<Sorteo, Guid> _sorteoRepository;
+    private readonly GestionEfectivoManager _gestionManager;
 
     public ResultadoSorteoAppService(
         IRepository<ResultadoSorteo, Guid> resultadoRepository,
         IRepository<DetalleTicket, Guid> detalleTicketRepository,
         IRepository<Ticket, Guid> ticketRepository,
-        IRepository<ConfiguracionPagoSorteo, Guid> configPagoSorteoRepository)
+        IRepository<ConfiguracionPagoSorteo, Guid> configPagoSorteoRepository,
+        IRepository<Terminal, Guid> terminalRepository,
+        IRepository<Sorteo, Guid> sorteoRepository,
+        GestionEfectivoManager gestionManager)
     {
         _resultadoRepository = resultadoRepository;
         _detalleTicketRepository = detalleTicketRepository;
         _ticketRepository = ticketRepository;
         _configPagoSorteoRepository = configPagoSorteoRepository;
+        _terminalRepository = terminalRepository;
+        _sorteoRepository = sorteoRepository;
+        _gestionManager = gestionManager;
     }
 
     [Authorize(LotterySuitePermissions.Loterias.Resultados.Create)]
@@ -197,6 +208,12 @@ public class ResultadoSorteoAppService : ApplicationService, IResultadoSorteoApp
             {
                 ticket.CalcularPremios();
                 await _ticketRepository.UpdateAsync(ticket, autoSave: true);
+
+                var terminal = await _terminalRepository.GetAsync(ticket.TerminalId);
+                await _gestionManager.RegistrarMovimientoAsync(
+                    terminal, TipoMovimientoEfectivo.PagoPremio, -ticket.TotalPremios,
+                    ticket.Id, "SISTEMA", "Premio pendiente de pago");
+                await _terminalRepository.UpdateAsync(terminal, autoSave: true);
             }
         }
     }
@@ -206,6 +223,42 @@ public class ResultadoSorteoAppService : ApplicationService, IResultadoSorteoApp
         var queryable = await _resultadoRepository.GetQueryableAsync();
         return await AsyncExecuter.FirstOrDefaultAsync(
             queryable.Where(r => r.SorteoId == sorteoId && r.Fecha.Date == fecha.Date));
+    }
+
+    public async Task<int> EjecutarScrapingAsync()
+    {
+        var ahoraRD = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Santo_Domingo"));
+        var hoyRD = ahoraRD.Date;
+
+        var sorteoQ = await _sorteoRepository.WithDetailsAsync(s => s.Loteria);
+        var sorteos = await AsyncExecuter.ToListAsync(sorteoQ.Where(s => s.Activo && s.Loteria.Activa));
+
+        var resultadoQ = await _resultadoRepository.GetQueryableAsync();
+        var resultadosHoy = await AsyncExecuter.ToListAsync(resultadoQ.Where(r => r.Fecha.Date == hoyRD));
+        var sorteosSinResultado = sorteos.Where(s => !resultadosHoy.Any(r => r.SorteoId == s.Id)).ToList();
+
+        if (!sorteosSinResultado.Any()) return 0;
+
+        var scraped = await ResultadoScrapingWorker.ScrapeResultadosAsync();
+        if (scraped == null || !scraped.Any()) return 0;
+
+        var count = 0;
+        foreach (var sorteo in sorteosSinResultado)
+        {
+            var key = ResultadoScrapingWorker.BuildScrapingKey(sorteo.Loteria.Nombre, sorteo.Nombre);
+            if (!scraped.TryGetValue(key, out var nums))
+            {
+                var altKey = ResultadoScrapingWorker.NormalizeKey(sorteo.Nombre);
+                if (!scraped.TryGetValue(altKey, out nums)) continue;
+            }
+
+            var resultado = new ResultadoSorteo(Guid.NewGuid(), sorteo.Id, hoyRD, nums.Item1, nums.Item2, nums.Item3, FuenteResultado.Scraping);
+            resultado.RegistradoPor = CurrentUser.UserName ?? "admin";
+            await _resultadoRepository.InsertAsync(resultado, autoSave: true);
+            await CalcularGanadoresAsync(resultado);
+            count++;
+        }
+        return count;
     }
 
     private static bool EsTripletaGanadora(DetalleTicket detalle, ResultadoSorteo resultado)

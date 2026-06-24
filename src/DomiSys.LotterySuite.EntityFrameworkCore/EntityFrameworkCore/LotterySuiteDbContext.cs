@@ -1,6 +1,7 @@
 using DomiSys.LotterySuite.Configuracion;
 using DomiSys.LotterySuite.ControlRiesgo;
 using DomiSys.LotterySuite.Cuadres;
+using DomiSys.LotterySuite.GestionEfectivo;
 using DomiSys.LotterySuite.Loterias;
 using DomiSys.LotterySuite.Terminales;
 using DomiSys.LotterySuite.Ventas;
@@ -74,6 +75,12 @@ public class LotterySuiteDbContext :
     #region Configuracion
 
     public DbSet<ConfiguracionGeneral> ConfiguracionGeneral { get; set; }
+
+    #endregion
+
+    #region GestionEfectivo
+
+    public DbSet<MovimientoEfectivo> MovimientosEfectivo { get; set; }
 
     #endregion
 

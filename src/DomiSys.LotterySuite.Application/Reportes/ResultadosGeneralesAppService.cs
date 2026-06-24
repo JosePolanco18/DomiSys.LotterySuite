@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text.RegularExpressions;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Logging;
 using Volo.Abp.Application.Services;
 
 namespace DomiSys.LotterySuite.Reportes;
@@ -13,121 +12,80 @@ namespace DomiSys.LotterySuite.Reportes;
 [Authorize]
 public class ResultadosGeneralesAppService : ApplicationService
 {
+    private static readonly Dictionary<string, string> GameNames = new()
+    {
+        ["6966a6d1ea7015c3b8a3d453"] = "Quiniela LEIDSA",
+        ["6966a6d1ea7015c3b8a3d47c"] = "Lotería Nacional Quiniela",
+        ["6966a6d1ea7015c3b8a3d482"] = "Gana Más",
+        ["6966a6d2ea7015c3b8a3d4ae"] = "Quiniela Real",
+        ["6966a6d2ea7015c3b8a3d4d7"] = "Quiniela Loteka",
+        ["6966a6d2ea7015c3b8a3d48e"] = "Juega + Pega +",
+        ["6966a6d1ea7015c3b8a3d471"] = "Pega 3 Más",
+        ["6966a6d1ea7015c3b8a3d44d"] = "Loto Más",
+        ["6966a6d1ea7015c3b8a3d459"] = "Super Kino TV",
+        ["6966a6d1ea7015c3b8a3d45f"] = "Loto Pool",
+        ["6966a6d2ea7015c3b8a3d4a8"] = "Loto Real",
+        ["6966a6d2ea7015c3b8a3d4dd"] = "Mega Chances",
+        ["6966a6d2ea7015c3b8a3d509"] = "New York Tarde",
+        ["6966a6d2ea7015c3b8a3d50f"] = "New York Noche",
+        ["6966a6d2ea7015c3b8a3d4fd"] = "Mega Millions",
+        ["6966a6d2ea7015c3b8a3d503"] = "Powerball",
+        ["6966a6d2ea7015c3b8a3d5c0"] = "La Primera",
+        ["6966a6d2ea7015c3b8a3d5c6"] = "La Primera Noche",
+        ["6966a6d3ea7015c3b8a3d5e3"] = "Quiniela",
+        ["6966a6d3ea7015c3b8a3d5e9"] = "La Suerte Dominicana",
+        ["6966a6d2ea7015c3b8a3d527"] = "Florida Día",
+        ["69fd98465e76585b602695be"] = "Chance Real",
+        ["6966a6d2ea7015c3b8a3d4c6"] = "Loto Pool",
+        ["6966a6d2ea7015c3b8a3d4cc"] = "Nueva Yol Real",
+        ["6966a6d2ea7015c3b8a3d521"] = "Cash 4 Life",
+        ["6966a6d2ea7015c3b8a3d4c0"] = "Agarra 4",
+        ["6966a6d2ea7015c3b8a3d5cc"] = "Anguila 1:00 PM",
+        ["6966a6d2ea7015c3b8a3d5d2"] = "Anguila 6:00 PM",
+        ["6966a6d2ea7015c3b8a3d5d8"] = "Anguila 9:00 PM",
+        ["6966a6d2ea7015c3b8a3d527b"] = "Anguila 10:00 AM",
+    };
+
     public async Task<List<ResultadoScrapedDto>> ObtenerTodosResultadosAsync()
     {
-        // ponytail: try conectate first (more up-to-date), fallback to loteriadominicanas
-        var resultados = await ScrapeConectateAsync();
-        if (resultados.Count == 0)
-        {
-            Logger.LogWarning("Conectate falló, usando loteriadominicanas como fallback");
-            resultados = await ScrapeLoteriadominicanaAsync();
-        }
-        return resultados;
-    }
-
-    private static async Task<List<ResultadoScrapedDto>> ScrapeConectateAsync()
-    {
         try
         {
             using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
             http.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
-            var html = await http.GetStringAsync("https://www.conectate.com.do/loterias/");
-
-            var clean = Regex.Replace(html, @"<[^>]+>", "\n");
-            var lines = clean.Split('\n')
-                .Select(l => l.Trim())
-                .Where(l => !string.IsNullOrEmpty(l))
-                .ToList();
+            var json = await http.GetStringAsync("https://api.temp.conectate.com.do/conectate/sessions?limit=1");
+            var entries = JsonSerializer.Deserialize<JsonElement>(json);
 
             var results = new List<ResultadoScrapedDto>();
-            // ponytail: names that signal a quiniela result (3 numbers)
-            var loteriaNames = new[]
+
+            foreach (var entry in entries.EnumerateArray())
             {
-                "Juega + Pega +", "Gana Más", "Lotería Nacional", "Pega 3 Más",
-                "Quiniela Leidsa", "Quiniela Real", "Quiniela Loteka",
-                "La Primera Día", "Primera Noche", "LoteDom",
-                "King Lottery 12:30", "King Lottery 7:30",
-                "Anguila 10:00 AM", "Anguila 1:00 PM", "Anguila 6:00 PM", "Anguila 9:00 PM",
-                "La Suerte"
-            };
+                var gameId = entry.GetProperty("game_id").GetString() ?? "";
+                if (!GameNames.TryGetValue(gameId, out var name)) continue;
 
-            // ponytail: conectate shows latest results, date badges are unreliable — track last seen date
-            var lastSeenDate = "";
-            for (int i = 0; i < lines.Count; i++)
-            {
-                // Capture date badges (format: dd-mm) that appear before lottery names
-                var dateMatch = Regex.Match(lines[i], @"^(\d{2}-\d{2})$");
-                if (dateMatch.Success) { lastSeenDate = dateMatch.Groups[1].Value; continue; }
+                var sessions = entry.GetProperty("sessions");
+                if (sessions.GetArrayLength() == 0) continue;
 
-                var matchedName = loteriaNames.FirstOrDefault(n =>
-                    lines[i].Equals(n, StringComparison.OrdinalIgnoreCase));
+                var session = sessions[0];
+                var score = session.GetProperty("score");
+                if (score.GetArrayLength() == 0) continue;
 
-                if (matchedName == null) continue;
+                var nums = score[0];
+                if (nums.GetArrayLength() < 3) continue;
 
-                var nums = new List<int>();
-                for (int j = i + 1; j < Math.Min(i + 6, lines.Count); j++)
-                {
-                    if (Regex.IsMatch(lines[j], @"^\d{2}$") && int.Parse(lines[j]) <= 99)
-                        nums.Add(int.Parse(lines[j]));
-                    // Stop if we hit another date or lottery name
-                    if (Regex.IsMatch(lines[j], @"^\d{2}-\d{2}$") || loteriaNames.Any(n => lines[j].Equals(n, StringComparison.OrdinalIgnoreCase)))
-                        break;
-                }
+                if (!int.TryParse(nums[0].GetString(), out var n1) ||
+                    !int.TryParse(nums[1].GetString(), out var n2) ||
+                    !int.TryParse(nums[2].GetString(), out var n3)) continue;
 
-                if (nums.Count >= 3)
-                {
-                    results.Add(new ResultadoScrapedDto
-                    {
-                        Loteria = matchedName,
-                        Primera = nums[0],
-                        Segunda = nums[1],
-                        Tercera = nums[2],
-                        Fecha = lastSeenDate
-                    });
-                }
-            }
-            return results;
-        }
-        catch
-        {
-            return new List<ResultadoScrapedDto>();
-        }
-    }
-
-    private static async Task<List<ResultadoScrapedDto>> ScrapeLoteriadominicanaAsync()
-    {
-        try
-        {
-            using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-            http.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
-            var html = await http.GetStringAsync("https://www.loteriadominicanas.com");
-
-            var results = new List<ResultadoScrapedDto>();
-            var sections = Regex.Split(html, @"<h3");
-
-            foreach (var section in sections.Skip(1))
-            {
-                var titleMatch = Regex.Match(section, @">([^<]+)</a>");
-                var fechaMatch = Regex.Match(section, @"(\d{2}-\d{2}-\d{4})");
-                var nums = Regex.Matches(section[..Math.Min(800, section.Length)], @"(?<![0-9\-/])(\d{2})(?![0-9\-/])");
-
-                if (!titleMatch.Success || !fechaMatch.Success) continue;
-
-                var cleanNums = nums.Cast<Match>()
-                    .Select(m => int.Parse(m.Groups[1].Value))
-                    .Where(n => n <= 99)
-                    .Take(3)
-                    .ToList();
-
-                if (cleanNums.Count < 3) continue;
+                var date = session.GetProperty("date").GetString() ?? "";
+                var fecha = DateTime.TryParse(date, out var dt) ? dt.ToString("dd-MM-yyyy") : "";
 
                 results.Add(new ResultadoScrapedDto
                 {
-                    Loteria = titleMatch.Groups[1].Value.Trim(),
-                    Primera = cleanNums[0],
-                    Segunda = cleanNums[1],
-                    Tercera = cleanNums[2],
-                    Fecha = fechaMatch.Groups[1].Value
+                    Loteria = name,
+                    Primera = n1,
+                    Segunda = n2,
+                    Tercera = n3,
+                    Fecha = fecha
                 });
             }
             return results;

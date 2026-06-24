@@ -75,6 +75,9 @@ export class ResultadoSorteoService {
   registrar = (input: CrearResultadoSorteoDto) =>
     this.restService.request<any, ResultadoSorteoDto>({ method: 'POST', url: '/api/app/resultado-sorteo/registrar', body: input }, { apiName: this.apiName });
 
+  ejecutarScraping = () =>
+    this.restService.request<any, number>({ method: 'POST', url: '/api/app/resultado-sorteo/ejecutar-scraping', body: {} }, { apiName: this.apiName });
+
   constructor(private restService: RestService) {}
 }
 

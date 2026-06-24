@@ -65,9 +65,23 @@ export class ResultadoSorteoListComponent extends BaseListComponent<ResultadoSor
 
   cargarResultadosGenerales(): void {
     this.loadingGenerales = true;
-    this.resultadosGeneralesService.obtenerTodos().subscribe({
-      next: (data) => { this.resultadosGenerales = data; this.loadingGenerales = false; },
-      error: () => this.loadingGenerales = false
+    this.resultadoService.ejecutarScraping().subscribe({
+      next: (count) => {
+        if (count > 0) {
+          this.toasterService.success(`${count} resultado(s) actualizado(s)`);
+          this.list.get();
+        }
+        this.resultadosGeneralesService.obtenerTodos().subscribe({
+          next: (data) => { this.resultadosGenerales = data; this.loadingGenerales = false; },
+          error: () => this.loadingGenerales = false
+        });
+      },
+      error: () => {
+        this.resultadosGeneralesService.obtenerTodos().subscribe({
+          next: (data) => { this.resultadosGenerales = data; this.loadingGenerales = false; },
+          error: () => this.loadingGenerales = false
+        });
+      }
     });
   }
 

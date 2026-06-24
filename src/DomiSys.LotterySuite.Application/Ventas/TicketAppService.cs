@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DomiSys.LotterySuite.Configuracion;
 using DomiSys.LotterySuite.ControlRiesgo;
+using DomiSys.LotterySuite.GestionEfectivo;
 using DomiSys.LotterySuite.Loterias;
 using DomiSys.LotterySuite.Permissions;
 using DomiSys.LotterySuite.Shared;
@@ -33,6 +34,7 @@ public class TicketAppService : ApplicationService, ITicketAppService
     private readonly IRepository<LimiteNumero, Guid> _limiteNumeroRepository;
     private readonly IRepository<AcumuladoVentaNumero, Guid> _acumuladoRepository;
     private readonly IRepository<ConfiguracionGeneral, Guid> _configuracionGeneralRepository;
+    private readonly GestionEfectivoManager _gestionManager;
 
     public TicketAppService(
         IRepository<Ticket, Guid> ticketRepository,
@@ -42,7 +44,8 @@ public class TicketAppService : ApplicationService, ITicketAppService
         IRepository<ConfiguracionMontoJugada, Guid> configuracionMontoRepository,
         IRepository<LimiteNumero, Guid> limiteNumeroRepository,
         IRepository<AcumuladoVentaNumero, Guid> acumuladoRepository,
-        IRepository<ConfiguracionGeneral, Guid> configuracionGeneralRepository)
+        IRepository<ConfiguracionGeneral, Guid> configuracionGeneralRepository,
+        GestionEfectivoManager gestionManager)
     {
         _ticketRepository = ticketRepository;
         _terminalRepository = terminalRepository;
@@ -52,6 +55,7 @@ public class TicketAppService : ApplicationService, ITicketAppService
         _limiteNumeroRepository = limiteNumeroRepository;
         _acumuladoRepository = acumuladoRepository;
         _configuracionGeneralRepository = configuracionGeneralRepository;
+        _gestionManager = gestionManager;
     }
 
     [Authorize(LotterySuitePermissions.Ventas.PuntoDeVenta.Default)]
@@ -163,6 +167,12 @@ public class TicketAppService : ApplicationService, ITicketAppService
                 $"El tiempo para anular este ticket ha expirado. La ventana de anulación es de {ventanaMinutos} minutos.");
 
         ticket.Anular(CurrentUser.UserName ?? "admin", input.MotivoAnulacion);
+
+        var terminal = await _terminalRepository.GetAsync(ticket.TerminalId);
+        await _gestionManager.RegistrarMovimientoAsync(
+            terminal, TipoMovimientoEfectivo.AnulacionVenta, -ticket.MontoTotal,
+            ticket.Id, CurrentUser.UserName ?? "admin", input.MotivoAnulacion);
+        await _terminalRepository.UpdateAsync(terminal, autoSave: true);
         await _ticketRepository.UpdateAsync(ticket, autoSave: true);
 
         return ObjectMapper.Map<Ticket, TicketDto>(ticket);

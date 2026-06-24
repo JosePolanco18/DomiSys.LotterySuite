@@ -24,6 +24,7 @@ public class Terminal : AuditedEntity<Guid>, IMultiTenant
     public decimal? LimiteVentaDiaria { get; set; }
     public decimal? LimiteCuadre { get; set; }
     public bool PuedePagarGanadores { get; set; }
+    public decimal SaldoEfectivo { get; set; }
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
@@ -48,4 +49,5 @@ public class Terminal : AuditedEntity<Guid>, IMultiTenant
     public bool EstaActiva() => Estado == EstadoTerminal.Activa;
 
     public void RegistrarActividad() => UltimaActividad = DateTime.UtcNow;
+    public void ActualizarSaldo(decimal monto) => SaldoEfectivo += monto;
 }

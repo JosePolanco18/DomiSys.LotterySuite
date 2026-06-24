@@ -52,6 +52,11 @@ const routes: Routes = [
     loadChildren: () => import('./cuadres/cuadres.routes').then(m => m.CUADRES_ROUTES)
   },
   {
+    path: 'gestion-efectivo',
+    data: { breadcrumb: 'Gestión de Efectivo' },
+    loadChildren: () => import('./gestion-efectivo/gestion-efectivo.routes').then(m => m.GESTION_EFECTIVO_ROUTES)
+  },
+  {
     path: 'control-riesgo',
     data: { breadcrumb: 'Control de Riesgo' },
     loadChildren: () => import('./control-riesgo/control-riesgo.routes').then(m => m.CONTROL_RIESGO_ROUTES)

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DomiSys.LotterySuite.Configuracion;
 using DomiSys.LotterySuite.ControlRiesgo;
 using DomiSys.LotterySuite.Cuadres;
+using DomiSys.LotterySuite.GestionEfectivo;
 using DomiSys.LotterySuite.Loterias;
 using DomiSys.LotterySuite.Reportes;
 using DomiSys.LotterySuite.Ventas;
@@ -35,6 +36,7 @@ public class TerminalApiAppService : ApplicationService
     private readonly IRepository<ConfiguracionMontoJugada, Guid> _configMontoRepository;
     private readonly IRepository<LimiteNumero, Guid> _limiteRepository;
     private readonly IRepository<AcumuladoVentaNumero, Guid> _acumuladoRepository;
+    private readonly GestionEfectivoManager _gestionManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IConfiguration _configuration;
 
@@ -52,6 +54,7 @@ public class TerminalApiAppService : ApplicationService
         IRepository<ConfiguracionMontoJugada, Guid> configMontoRepository,
         IRepository<LimiteNumero, Guid> limiteRepository,
         IRepository<AcumuladoVentaNumero, Guid> acumuladoRepository,
+        GestionEfectivoManager gestionManager,
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration)
     {
@@ -66,6 +69,7 @@ public class TerminalApiAppService : ApplicationService
         _configMontoRepository = configMontoRepository;
         _limiteRepository = limiteRepository;
         _acumuladoRepository = acumuladoRepository;
+        _gestionManager = gestionManager;
         _httpContextAccessor = httpContextAccessor;
         _configuration = configuration;
     }
@@ -216,6 +220,8 @@ public class TerminalApiAppService : ApplicationService
                 Encoding.UTF8.GetBytes($"{ticket.Id}{ticket.CodigoTicket}{ticket.TerminalId}{ticket.MontoTotal}")));
 
         await _ticketRepository.InsertAsync(ticket, autoSave: true);
+        await _gestionManager.RegistrarMovimientoAsync(
+            terminal, TipoMovimientoEfectivo.Venta, ticket.MontoTotal, ticket.Id, "SISTEMA");
         terminal.RegistrarActividad();
         await _terminalRepository.UpdateAsync(terminal, autoSave: true);
 
@@ -342,8 +348,73 @@ public class TerminalApiAppService : ApplicationService
             PorcentajeComisionVenta = cv, MontoComisionVenta = ventas * cv / 100,
             QuedoEnVerde = ventas > premios, PorcentajeComisionVerde = cg,
             MontoComisionVerde = ventas > premios ? (ventas - premios) * cg / 100 : 0,
-            BalanceNeto = ventas - premios - (ventas * cv / 100) - (ventas > premios ? (ventas - premios) * cg / 100 : 0)
+            BalanceNeto = ventas - premios - (ventas * cv / 100) - (ventas > premios ? (ventas - premios) * cg / 100 : 0),
+            SaldoEfectivo = terminal.SaldoEfectivo
         };
+    }
+
+    public async Task<decimal> GetSaldoEfectivoAsync()
+    {
+        var terminalId = ValidateTerminalToken();
+        var terminal = await _terminalRepository.GetAsync(terminalId);
+        return terminal.SaldoEfectivo;
+    }
+
+    public async Task<PreviewLiquidacionDto> GetPreviewLiquidacionAsync()
+    {
+        var terminalId = ValidateTerminalToken();
+        var terminal = await _terminalRepository.GetAsync(terminalId);
+
+        var ultimoQ = await _cuadreRepository.GetQueryableAsync();
+        var ultimo = await AsyncExecuter.FirstOrDefaultAsync(
+            ultimoQ.Where(c => c.TerminalId == terminalId).OrderByDescending(c => c.FechaCuadre));
+
+        var desde = ultimo?.PeriodoFin ?? DateTime.MinValue;
+        var tQ = await _ticketRepository.GetQueryableAsync();
+
+        var ventas = await AsyncExecuter.SumAsync(
+            tQ.Where(t => t.TerminalId == terminalId && t.FechaCreacion > desde && t.Estado != EstadoTicket.Anulado),
+            t => t.MontoTotal);
+        var premios = await AsyncExecuter.SumAsync(
+            tQ.Where(t => t.TerminalId == terminalId && t.Estado == EstadoTicket.Pagado && t.FechaPago > desde),
+            t => t.TotalPremios);
+
+        var cv = terminal.PorcentajeComisionVenta ?? 7m;
+        var cg = terminal.PorcentajeComisionVerde ?? 5m;
+        var montoComisionVenta = ventas * cv / 100;
+        var montoComisionVerde = ventas > premios ? (ventas - premios) * cg / 100 : 0;
+        var totalComisiones = montoComisionVenta + montoComisionVerde;
+
+        return new PreviewLiquidacionDto
+        {
+            SaldoEfectivo = terminal.SaldoEfectivo,
+            VentasBrutas = ventas,
+            TotalPremiosPagados = premios,
+            PorcentajeComisionVenta = cv,
+            MontoComisionVenta = montoComisionVenta,
+            PorcentajeComisionVerde = cg,
+            MontoComisionVerde = montoComisionVerde,
+            TotalComisiones = totalComisiones,
+            MontoSugeridoEntrega = Math.Max(0, terminal.SaldoEfectivo - totalComisiones)
+        };
+    }
+
+    public async Task<List<MovimientoEfectivoDto>> GetMisMovimientosAsync(int skipCount = 0, int maxResultCount = 20)
+    {
+        var terminalId = ValidateTerminalToken();
+        var terminal = await _terminalRepository.GetAsync(terminalId);
+        var q = await LazyServiceProvider.LazyGetRequiredService<IRepository<MovimientoEfectivo, Guid>>().GetQueryableAsync();
+        var items = await AsyncExecuter.ToListAsync(
+            q.Where(m => m.TerminalId == terminalId)
+             .OrderByDescending(m => m.FechaMovimiento)
+             .Skip(skipCount).Take(maxResultCount));
+        return items.Select(m => new MovimientoEfectivoDto
+        {
+            Id = m.Id, TerminalId = m.TerminalId, NombreTerminal = terminal.Nombre,
+            Tipo = m.Tipo, Monto = m.Monto, SaldoAnterior = m.SaldoAnterior,
+            SaldoNuevo = m.SaldoNuevo, ReferenciaId = m.ReferenciaId, Notas = m.Notas,
+            RegistradoPor = m.RegistradoPor, FechaMovimiento = m.FechaMovimiento
+        }).ToList();
     }
 
     // --- helpers ---

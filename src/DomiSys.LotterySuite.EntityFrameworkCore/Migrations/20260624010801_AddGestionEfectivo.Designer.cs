@@ -3,6 +3,7 @@ using System;
 using DomiSys.LotterySuite.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace DomiSys.LotterySuite.Migrations
 {
     [DbContext(typeof(LotterySuiteDbContext))]
-    partial class LotterySuiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260624010801_AddGestionEfectivo")]
+    partial class AddGestionEfectivo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,7 +377,7 @@ namespace DomiSys.LotterySuite.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantId", "TipoJugada")
+                    b.HasIndex("TipoJugada")
                         .IsUnique();
 
                     b.ToTable("configuraciones_monto_jugada", (string)null);
@@ -540,7 +543,7 @@ namespace DomiSys.LotterySuite.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantId", "CodigoCorto")
+                    b.HasIndex("CodigoCorto")
                         .IsUnique();
 
                     b.ToTable("loterias", (string)null);
@@ -755,7 +758,7 @@ namespace DomiSys.LotterySuite.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantId", "Codigo")
+                    b.HasIndex("Codigo")
                         .IsUnique();
 
                     b.ToTable("terminales", (string)null);
@@ -891,10 +894,10 @@ namespace DomiSys.LotterySuite.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TerminalPagoId");
-
-                    b.HasIndex("TenantId", "CodigoTicket")
+                    b.HasIndex("CodigoTicket")
                         .IsUnique();
+
+                    b.HasIndex("TerminalPagoId");
 
                     b.HasIndex("TerminalId", "FechaCreacion");
 

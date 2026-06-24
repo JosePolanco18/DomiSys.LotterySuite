@@ -13,7 +13,8 @@ namespace DomiSys.LotterySuite;
     typeof(AbpSettingManagementApplicationContractsModule),
     typeof(AbpIdentityApplicationContractsModule),
     typeof(AbpAccountApplicationContractsModule),
-    typeof(AbpPermissionManagementApplicationContractsModule)
+    typeof(AbpPermissionManagementApplicationContractsModule),
+    typeof(Volo.Abp.TenantManagement.AbpTenantManagementApplicationContractsModule)
 )]
 public class LotterySuiteApplicationContractsModule : AbpModule
 {

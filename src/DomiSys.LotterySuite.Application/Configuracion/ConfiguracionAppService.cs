@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Services;
@@ -11,45 +10,64 @@ namespace DomiSys.LotterySuite.Configuracion;
 public class ConfiguracionAppService : ApplicationService, IConfiguracionAppService
 {
     private readonly IRepository<ConfiguracionGeneral, Guid> _repository;
+    private readonly IConfiguracionGeneralManager _manager;
 
-    public ConfiguracionAppService(IRepository<ConfiguracionGeneral, Guid> repository)
+    public ConfiguracionAppService(
+        IRepository<ConfiguracionGeneral, Guid> repository,
+        IConfiguracionGeneralManager manager)
     {
         _repository = repository;
+        _manager = manager;
     }
 
     public async Task<ConfiguracionGeneralDto> ObtenerAsync()
     {
-        var config = await ObtenerOCrearAsync();
+        var config = await _manager.GetCurrentAsync();
+        if (config == null)
+        {
+            return new ConfiguracionGeneralDto
+            {
+                ComisionVentaPorDefecto = 7m,
+                ComisionVerdePorDefecto = 5m,
+                MinutosVentanaAnulacion = 5,
+                VendedorPuedeAnular = true,
+                NombreEmpresa = "DomiSys Lottery",
+                PieTicket = "Conserve este ticket"
+            };
+        }
         return MapToDto(config);
     }
 
     public async Task<ConfiguracionGeneralDto> ActualizarAsync(ConfiguracionGeneralDto input)
     {
-        var config = await ObtenerOCrearAsync();
-        config.ComisionVentaPorDefecto = input.ComisionVentaPorDefecto;
-        config.ComisionVerdePorDefecto = input.ComisionVerdePorDefecto;
-        config.MinutosVentanaAnulacion = input.MinutosVentanaAnulacion;
-        config.VendedorPuedeAnular = input.VendedorPuedeAnular;
-        config.NombreEmpresa = input.NombreEmpresa;
-        config.TelefonoEmpresa = input.TelefonoEmpresa;
-        config.PieTicket = input.PieTicket;
-        await _repository.UpdateAsync(config, autoSave: true);
-        return MapToDto(config);
-    }
-
-    private async Task<ConfiguracionGeneral> ObtenerOCrearAsync()
-    {
-        var queryable = await _repository.GetQueryableAsync();
-        var config = await AsyncExecuter.FirstOrDefaultAsync(
-            queryable.Where(c => c.Id == ConfiguracionGeneral.SingletonId));
+        var config = await _manager.GetCurrentAsync();
 
         if (config == null)
         {
-            config = new ConfiguracionGeneral(ConfiguracionGeneral.SingletonId);
-            await _repository.InsertAsync(config, autoSave: true);
+            var nueva = new ConfiguracionGeneral(
+                input.ComisionVentaPorDefecto,
+                input.ComisionVerdePorDefecto,
+                input.MinutosVentanaAnulacion,
+                input.VendedorPuedeAnular,
+                input.NombreEmpresa,
+                input.TelefonoEmpresa,
+                input.PieTicket);
+            config = await _manager.CreateAsync(nueva);
+        }
+        else
+        {
+            config.Update(
+                input.ComisionVentaPorDefecto,
+                input.ComisionVerdePorDefecto,
+                input.MinutosVentanaAnulacion,
+                input.VendedorPuedeAnular,
+                input.NombreEmpresa,
+                input.TelefonoEmpresa,
+                input.PieTicket);
+            await _repository.UpdateAsync(config);
         }
 
-        return config;
+        return MapToDto(config);
     }
 
     private static ConfiguracionGeneralDto MapToDto(ConfiguracionGeneral entity)

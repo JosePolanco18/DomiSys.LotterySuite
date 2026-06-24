@@ -78,40 +78,40 @@ public class SeedAppService : ApplicationService
         // Sorteos
         var sorteos = new Sorteo[]
         {
-            new(Guid.NewGuid(), ln.Id, "Gana Más", dias, ts("09:00"), ts("14:25"), ts("14:30"), 15),
-            new(Guid.NewGuid(), ln.Id, "Lotería Nacional", dias, ts("09:00"), ts("20:50"), ts("21:00"), 15),
-            new(Guid.NewGuid(), ln.Id, "Juega + Pega +", dias, ts("09:00"), ts("20:50"), ts("21:00"), 15),
+            new(Guid.NewGuid(), ln.Id, "Gana Más", dias, ts("08:00"), ts("14:25"), ts("14:30"), 15),
+            new(Guid.NewGuid(), ln.Id, "Lotería Nacional", dias, ts("08:00"), ts("20:50"), ts("21:00"), 15),
+            new(Guid.NewGuid(), ln.Id, "Juega + Pega +", dias, ts("08:00"), ts("20:50"), ts("21:00"), 15),
 
-            new(Guid.NewGuid(), le.Id, "Quiniela Leidsa", dias, ts("09:00"), ts("20:50"), ts("20:55"), 15),
-            new(Guid.NewGuid(), le.Id, "Pega 3 Más", dias, ts("09:00"), ts("20:50"), ts("20:55"), 15),
-            new(Guid.NewGuid(), le.Id, "Loto Pool", dias, ts("09:00"), ts("20:50"), ts("20:55"), 15),
-            new(Guid.NewGuid(), le.Id, "Super Kino TV", dias, ts("09:00"), ts("20:50"), ts("20:55"), 15),
+            new(Guid.NewGuid(), le.Id, "Quiniela Leidsa", dias, ts("08:00"), ts("20:50"), ts("20:55"), 15),
+            new(Guid.NewGuid(), le.Id, "Pega 3 Más", dias, ts("08:00"), ts("20:50"), ts("20:55"), 15),
+            new(Guid.NewGuid(), le.Id, "Loto Pool", dias, ts("08:00"), ts("20:50"), ts("20:55"), 15),
+            new(Guid.NewGuid(), le.Id, "Super Kino TV", dias, ts("08:00"), ts("20:50"), ts("20:55"), 15),
 
-            new(Guid.NewGuid(), lr.Id, "Quiniela Real", dias, ts("09:00"), ts("12:50"), ts("12:55"), 15),
+            new(Guid.NewGuid(), lr.Id, "Quiniela Real", dias, ts("08:00"), ts("12:50"), ts("12:55"), 15),
 
-            new(Guid.NewGuid(), lk.Id, "Quiniela Loteka", dias, ts("09:00"), ts("19:50"), ts("19:55"), 15),
-            new(Guid.NewGuid(), lk.Id, "Mega Chances", dias, ts("09:00"), ts("19:50"), ts("19:55"), 15),
+            new(Guid.NewGuid(), lk.Id, "Quiniela Loteka", dias, ts("08:00"), ts("19:50"), ts("19:55"), 15),
+            new(Guid.NewGuid(), lk.Id, "Mega Chances", dias, ts("08:00"), ts("19:50"), ts("19:55"), 15),
 
-            new(Guid.NewGuid(), lp.Id, "La Primera Día", dias, ts("09:00"), ts("11:55"), ts("12:00"), 15),
-            new(Guid.NewGuid(), lp.Id, "Primera Noche", dias, ts("12:30"), ts("19:55"), ts("20:00"), 15),
+            new(Guid.NewGuid(), lp.Id, "La Primera Día", dias, ts("08:00"), ts("11:55"), ts("12:00"), 15),
+            new(Guid.NewGuid(), lp.Id, "Primera Noche", dias, ts("08:00"), ts("19:55"), ts("20:00"), 15),
 
-            new(Guid.NewGuid(), ls.Id, "La Suerte", dias, ts("09:00"), ts("12:25"), ts("12:30"), 15),
+            new(Guid.NewGuid(), ls.Id, "La Suerte", dias, ts("08:00"), ts("12:25"), ts("12:30"), 15),
 
-            new(Guid.NewGuid(), ld.Id, "LoteDom", dias, ts("09:00"), ts("13:50"), ts("13:55"), 15),
+            new(Guid.NewGuid(), ld.Id, "LoteDom", dias, ts("08:00"), ts("13:50"), ts("13:55"), 15),
 
             new(Guid.NewGuid(), an.Id, "Anguila 10:00 AM", dias, ts("08:00"), ts("09:55"), ts("10:00"), 15),
-            new(Guid.NewGuid(), an.Id, "Anguila 1:00 PM", dias, ts("10:30"), ts("12:55"), ts("13:00"), 15),
-            new(Guid.NewGuid(), an.Id, "Anguila 6:00 PM", dias, ts("13:30"), ts("17:55"), ts("18:00"), 15),
-            new(Guid.NewGuid(), an.Id, "Anguila 9:00 PM", dias, ts("18:30"), ts("20:55"), ts("21:00"), 15),
+            new(Guid.NewGuid(), an.Id, "Anguila 1:00 PM", dias, ts("08:00"), ts("12:55"), ts("13:00"), 15),
+            new(Guid.NewGuid(), an.Id, "Anguila 6:00 PM", dias, ts("08:00"), ts("17:55"), ts("18:00"), 15),
+            new(Guid.NewGuid(), an.Id, "Anguila 9:00 PM", dias, ts("08:00"), ts("20:55"), ts("21:00"), 15),
 
             new(Guid.NewGuid(), kl.Id, "King Lottery 12:30", dias, ts("08:00"), ts("12:25"), ts("12:30"), 15),
-            new(Guid.NewGuid(), kl.Id, "King Lottery 7:30", dias, ts("13:00"), ts("19:25"), ts("19:30"), 15),
+            new(Guid.NewGuid(), kl.Id, "King Lottery 7:30", dias, ts("08:00"), ts("19:25"), ts("19:30"), 15),
 
-            new(Guid.NewGuid(), ny.Id, "New York Tarde", dias, ts("09:00"), ts("14:25"), ts("14:30"), 20),
-            new(Guid.NewGuid(), ny.Id, "New York Noche", dias, ts("15:00"), ts("22:25"), ts("22:30"), 20),
+            new(Guid.NewGuid(), ny.Id, "New York Tarde", dias, ts("08:00"), ts("14:25"), ts("14:30"), 20),
+            new(Guid.NewGuid(), ny.Id, "New York Noche", dias, ts("08:00"), ts("22:25"), ts("22:30"), 20),
 
-            new(Guid.NewGuid(), fl.Id, "Florida Día", dias, ts("09:00"), ts("13:25"), ts("13:30"), 20),
-            new(Guid.NewGuid(), fl.Id, "Florida Noche", dias, ts("14:00"), ts("21:45"), ts("21:50"), 20),
+            new(Guid.NewGuid(), fl.Id, "Florida Día", dias, ts("08:00"), ts("13:25"), ts("13:30"), 20),
+            new(Guid.NewGuid(), fl.Id, "Florida Noche", dias, ts("08:00"), ts("21:45"), ts("21:50"), 20),
         };
         await _sorteoRepo.InsertManyAsync(sorteos, autoSave: true);
 

@@ -33,6 +33,7 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { esLocale } from 'ngx-bootstrap/locale';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorHandlerInterceptor } from './shared/interceptors/error-handler.interceptor';
+import { TenantInterceptor } from './shared/interceptors/tenant.interceptor';
 
 import("@angular/common/locales/es-DO.mjs").then((m) => storeLocaleData(m.default, "es-DO"));
 
@@ -91,6 +92,11 @@ defineLocale('es', esLocale);
       }
     },
 
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TenantInterceptor,
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorHandlerInterceptor,

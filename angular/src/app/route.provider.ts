@@ -140,5 +140,15 @@ function configureRoutes() {
       order: 90,
       layout: eLayoutType.application,
     },
+
+    // ========== TENANTS (HOST ADMIN) ==========
+    {
+      path: '/tenants',
+      name: '::Gestión de Bancas',
+      iconClass: 'fas fa-building',
+      order: 100,
+      layout: eLayoutType.application,
+      requiredPolicy: 'AbpTenantManagement.Tenants',
+    },
   ]);
 }

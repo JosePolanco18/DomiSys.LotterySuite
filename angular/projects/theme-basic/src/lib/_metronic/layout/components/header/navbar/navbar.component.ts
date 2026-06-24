@@ -25,9 +25,13 @@ export class NavbarComponent implements OnInit, AfterViewInit {
 	btnIconClass: string = 'fs-2 fs-md-1';
 
 	currentUser$: Observable<CurrentUserDto>;
+	tenantName: string = '';
 
 	constructor(private configState: ConfigStateService) {
 		this.currentUser$ = this.configState.getOne$('currentUser');
+		this.configState.getOne$('currentTenant').subscribe((tenant: any) => {
+			this.tenantName = tenant?.name || '';
+		});
 	}
 
 	ngAfterViewInit(): void {

@@ -155,7 +155,7 @@ public class TicketAppService : ApplicationService, ITicketAppService
         if (!ticket.EsAnulable())
             throw new UserFriendlyException("Este ticket no puede ser anulado.");
 
-        var config = await _configuracionGeneralRepository.FindAsync(ConfiguracionGeneral.SingletonId);
+        var config = await AsyncExecuter.FirstOrDefaultAsync(await _configuracionGeneralRepository.GetQueryableAsync());
         var ventanaMinutos = config?.MinutosVentanaAnulacion ?? 5;
 
         if ((DateTime.UtcNow - ticket.FechaCreacion).TotalMinutes > ventanaMinutos)

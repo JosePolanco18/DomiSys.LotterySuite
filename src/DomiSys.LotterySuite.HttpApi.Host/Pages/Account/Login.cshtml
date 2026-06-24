@@ -1,6 +1,9 @@
 @page
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Volo.Abp.Account.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Widgets
+@addTagHelper *, Volo.Abp.AspNetCore.Mvc.UI.Bootstrap
+@addTagHelper *, Volo.Abp.AspNetCore.Mvc.UI.Bundling
 @model DomiSys.LotterySuite.Pages.Account.LoginModel
 @inject IHtmlLocalizer<AccountResource> L
 @{
@@ -20,18 +23,7 @@
             @if (Model.EnableLocalLogin)
             {
                 <!-- Alerts Section -->
-                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-                {
-                    <div class="alert alert-danger" role="alert">
-                        @Model.ErrorMessage
-                    </div>
-                }
-                @if (!string.IsNullOrEmpty(Model.WarningMessage))
-                {
-                    <div class="alert alert-warning" role="alert">
-                        @Model.WarningMessage
-                    </div>
-                }
+                <abp-page-alerts />
 
                 <form method="post" id="loginForm">
                     <!-- Validation Summary -->
@@ -49,6 +41,20 @@
                             </ul>
                         </div>
                     }
+
+                    <!-- Tenant Field -->
+                    <div class="form-group">
+                        <label for="TenantName" class="form-label">
+                            Tenant <small class="text-muted">(dejar vacio para administrador del sistema)</small>
+                        </label>
+                        <input id="TenantName"
+                               class="form-control"
+                               type="text"
+                               maxlength="15"
+                               autocomplete="off"
+                               style="text-transform: uppercase"
+                               placeholder="Ej: BK1 (opcional)" />
+                    </div>
 
                     <!-- Username Field -->
                     <div class="form-group">

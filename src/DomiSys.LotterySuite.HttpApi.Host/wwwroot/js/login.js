@@ -31,13 +31,40 @@
             addInputValidation(passwordInput);
         }
 
-        // Handle form submission
+        // Tenant-aware form submission
+        var tenantReady = false;
         form.addEventListener('submit', function(e) {
-            // Check if form is valid
-            const isValid = validateForm();
-
+            var isValid = validateForm();
             if (!isValid) {
                 e.preventDefault();
+                return false;
+            }
+
+            var tenantInput = document.getElementById('TenantName');
+            var tenantName = tenantInput ? tenantInput.value.trim().toUpperCase() : '';
+
+            // Leer cookie actual
+            var currentCookie = '';
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var c = cookies[i].trim();
+                if (c.indexOf('__tenant=') === 0) {
+                    currentCookie = decodeURIComponent(c.substring(9));
+                    break;
+                }
+            }
+
+            // Si el tenant cambió, setear cookie y re-submitear
+            if (!tenantReady && tenantName !== currentCookie) {
+                e.preventDefault();
+                if (tenantName) {
+                    document.cookie = '__tenant=' + encodeURIComponent(tenantName) + '; path=/; max-age=' + (30 * 24 * 60 * 60);
+                } else {
+                    document.cookie = '__tenant=; path=/; max-age=0';
+                }
+                tenantReady = true;
+                // Re-submit en el siguiente tick para que el browser envíe la cookie nueva
+                setTimeout(function() { form.submit(); }, 50);
                 return false;
             }
 
@@ -45,16 +72,6 @@
             if (loginButton) {
                 setButtonLoading(loginButton, true);
             }
-        });
-
-        // Prevent multiple submissions
-        let isSubmitting = false;
-        form.addEventListener('submit', function(e) {
-            if (isSubmitting) {
-                e.preventDefault();
-                return false;
-            }
-            isSubmitting = true;
         });
     }
 

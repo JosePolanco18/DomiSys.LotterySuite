@@ -1,11 +1,13 @@
 using System;
 using DomiSys.LotterySuite.Terminales;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace DomiSys.LotterySuite.Cuadres;
 
-public class CuadreTerminal : AuditedEntity<Guid>
+public class CuadreTerminal : AuditedEntity<Guid>, IMultiTenant
 {
+    public Guid? TenantId { get; set; }
     public Guid TerminalId { get; set; }
     public DateTime FechaCuadre { get; set; }
     public DateTime PeriodoInicio { get; set; }

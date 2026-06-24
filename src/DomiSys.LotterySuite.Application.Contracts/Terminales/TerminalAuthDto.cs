@@ -4,6 +4,7 @@ namespace DomiSys.LotterySuite.Terminales;
 
 public class TerminalLoginDto
 {
+    public string TenantName { get; set; } = string.Empty;
     public string Codigo { get; set; } = string.Empty;
     public string Pin { get; set; } = string.Empty;
 }

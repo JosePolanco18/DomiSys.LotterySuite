@@ -19,7 +19,8 @@ namespace DomiSys.LotterySuite;
     typeof(AbpFeatureManagementApplicationModule),
     typeof(AbpIdentityApplicationModule),
     typeof(AbpAccountApplicationModule),
-    typeof(AbpSettingManagementApplicationModule)
+    typeof(AbpSettingManagementApplicationModule),
+    typeof(Volo.Abp.TenantManagement.AbpTenantManagementApplicationModule)
     )]
 public class LotterySuiteApplicationModule : AbpModule
 {

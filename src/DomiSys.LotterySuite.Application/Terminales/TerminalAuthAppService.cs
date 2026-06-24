@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.MultiTenancy;
 
 namespace DomiSys.LotterySuite.Terminales;
 
@@ -20,49 +21,67 @@ public class TerminalAuthAppService : ApplicationService
 {
     private readonly IRepository<Terminal, Guid> _terminalRepository;
     private readonly IConfiguration _configuration;
+    private readonly ITenantStore _tenantStore;
 
     public TerminalAuthAppService(
         IRepository<Terminal, Guid> terminalRepository,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ITenantStore tenantStore)
     {
         _terminalRepository = terminalRepository;
         _configuration = configuration;
+        _tenantStore = tenantStore;
     }
 
-    // ponytail: no [Authorize] — this is the login endpoint
     public async Task<TerminalLoginResultDto> LoginAsync(TerminalLoginDto input)
     {
-        var queryable = await _terminalRepository.GetQueryableAsync();
-        var terminal = await AsyncExecuter.FirstOrDefaultAsync(
-            queryable.Where(t => t.Codigo == input.Codigo));
+        if (string.IsNullOrWhiteSpace(input.TenantName))
+            throw new UserFriendlyException("Nombre de tenant requerido.");
 
-        if (terminal == null)
-            throw new UserFriendlyException("Terminal no encontrada.");
+        var tenantId = await ResolverTenantPorCodigoAsync(input.TenantName);
 
-        if (terminal.PinVendedor != input.Pin)
-            throw new UserFriendlyException("PIN incorrecto.");
-
-        if (!terminal.EstaActiva())
-            throw new UserFriendlyException("La terminal está suspendida o bloqueada.");
-
-        terminal.RegistrarActividad();
-        await _terminalRepository.UpdateAsync(terminal, autoSave: true);
-
-        var token = GenerateJwt(terminal);
-
-        return new TerminalLoginResultDto
+        using (CurrentTenant.Change(tenantId))
         {
-            Token = token,
-            TerminalId = terminal.Id,
-            Codigo = terminal.Codigo,
-            Nombre = terminal.Nombre,
-            NombreVendedor = terminal.NombreVendedor
-        };
+            var queryable = await _terminalRepository.GetQueryableAsync();
+            var terminal = await AsyncExecuter.FirstOrDefaultAsync(
+                queryable.Where(t => t.Codigo == input.Codigo));
+
+            if (terminal == null)
+                throw new UserFriendlyException("Terminal no encontrada.");
+
+            if (terminal.PinVendedor != input.Pin)
+                throw new UserFriendlyException("PIN incorrecto.");
+
+            if (!terminal.EstaActiva())
+                throw new UserFriendlyException("La terminal está suspendida o bloqueada.");
+
+            terminal.RegistrarActividad();
+            await _terminalRepository.UpdateAsync(terminal, autoSave: true);
+
+            var token = GenerateJwt(terminal, tenantId);
+
+            return new TerminalLoginResultDto
+            {
+                Token = token,
+                TerminalId = terminal.Id,
+                Codigo = terminal.Codigo,
+                Nombre = terminal.Nombre,
+                NombreVendedor = terminal.NombreVendedor
+            };
+        }
     }
 
-    private string GenerateJwt(Terminal terminal)
+    private async Task<Guid> ResolverTenantPorCodigoAsync(string codigoBanca)
     {
-        // ponytail: simple HMAC JWT, upgrade to RSA if security matters more
+        // ponytail: tenant Name IS the código de banca (e.g. "BK1")
+        var tenant = await _tenantStore.FindAsync(codigoBanca);
+        if (tenant == null)
+            throw new UserFriendlyException($"Banca '{codigoBanca}' no encontrada.");
+        return tenant.Id;
+    }
+
+    private string GenerateJwt(Terminal terminal, Guid tenantId)
+    {
         var key = _configuration["TerminalAuth:SecretKey"] ?? "LotterySuiteTerminalSecretKey2026!@#$%";
         var issuer = _configuration["TerminalAuth:Issuer"] ?? "LotterySuite";
         var expHours = int.Parse(_configuration["TerminalAuth:ExpirationHours"] ?? "24");
@@ -74,6 +93,7 @@ public class TerminalAuthAppService : ApplicationService
         {
             new(ClaimTypes.NameIdentifier, terminal.Id.ToString()),
             new("terminal_id", terminal.Id.ToString()),
+            new("tenant_id", tenantId.ToString()),
             new("terminal_code", terminal.Codigo),
             new("terminal_name", terminal.Nombre),
             new("vendor_name", terminal.NombreVendedor),

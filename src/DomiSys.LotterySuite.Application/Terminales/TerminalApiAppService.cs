@@ -70,6 +70,9 @@ public class TerminalApiAppService : ApplicationService
         _configuration = configuration;
     }
 
+    // ponytail: stores the tenant scope at request level so it stays alive
+    private IDisposable? _tenantScope;
+
     private Guid ValidateTerminalToken()
     {
         var auth = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
@@ -96,6 +99,10 @@ public class TerminalApiAppService : ApplicationService
             var terminalId = result.FindFirst("terminal_id")?.Value;
             if (string.IsNullOrEmpty(terminalId))
                 throw new UserFriendlyException("Token inválido.");
+
+            var tenantIdStr = result.FindFirst("tenant_id")?.Value;
+            Guid? tenantId = !string.IsNullOrEmpty(tenantIdStr) ? Guid.Parse(tenantIdStr) : null;
+            _tenantScope = CurrentTenant.Change(tenantId);
 
             return Guid.Parse(terminalId);
         }
@@ -283,7 +290,7 @@ public class TerminalApiAppService : ApplicationService
         var repo = LazyServiceProvider.LazyGetRequiredService<IRepository<Configuracion.ConfiguracionGeneral, Guid>>();
         var q = await repo.GetQueryableAsync();
         var config = await AsyncExecuter.FirstOrDefaultAsync(
-            q.Where(c => c.Id == Configuracion.ConfiguracionGeneral.SingletonId));
+            q);
         if (config == null) return new ConfiguracionGeneralDto { NombreEmpresa = "DomiSys Lottery", PieTicket = "Conserve este ticket" };
         return new ConfiguracionGeneralDto
         {

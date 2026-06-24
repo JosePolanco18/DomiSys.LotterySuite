@@ -1,11 +1,13 @@
 using System;
 using DomiSys.LotterySuite.Loterias;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.MultiTenancy;
 
 namespace DomiSys.LotterySuite.Ventas;
 
-public class DetalleTicket : Entity<Guid>
+public class DetalleTicket : Entity<Guid>, IMultiTenant
 {
+    public Guid? TenantId { get; set; }
     public Guid TicketId { get; set; }
     public Guid SorteoId { get; set; }
     public DateTime FechaSorteo { get; set; }

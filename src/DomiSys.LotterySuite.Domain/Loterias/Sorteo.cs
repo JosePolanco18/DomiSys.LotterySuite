@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace DomiSys.LotterySuite.Loterias;
 
-public class Sorteo : AuditedEntity<Guid>
+public class Sorteo : AuditedEntity<Guid>, IMultiTenant
 {
+    public Guid? TenantId { get; set; }
     public Guid LoteriaId { get; set; }
     public string Nombre { get; set; } = string.Empty;
     public string DiasActivos { get; set; } = string.Empty; // "L,M,Mi,J,V,S,D"

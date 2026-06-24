@@ -27,7 +27,8 @@ namespace DomiSys.LotterySuite;
     typeof(AbpEmailingModule),
     typeof(AbpIdentityDomainModule),
     typeof(AbpOpenIddictDomainModule),
-    typeof(BlobStoringDatabaseDomainModule)
+    typeof(BlobStoringDatabaseDomainModule),
+    typeof(Volo.Abp.TenantManagement.AbpTenantManagementDomainModule)
     )]
 public class LotterySuiteDomainModule : AbpModule
 {

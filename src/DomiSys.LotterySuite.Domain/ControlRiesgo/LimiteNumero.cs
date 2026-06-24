@@ -1,11 +1,13 @@
 using System;
 using DomiSys.LotterySuite.Loterias;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace DomiSys.LotterySuite.ControlRiesgo;
 
-public class LimiteNumero : AuditedEntity<Guid>
+public class LimiteNumero : AuditedEntity<Guid>, IMultiTenant
 {
+    public Guid? TenantId { get; set; }
     public Guid LoteriaId { get; set; }
     public Guid SorteoId { get; set; }
     public int Numero { get; set; }

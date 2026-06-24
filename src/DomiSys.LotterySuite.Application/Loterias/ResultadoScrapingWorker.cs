@@ -9,7 +9,9 @@ using DomiSys.LotterySuite.Ventas;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Volo.Abp.BackgroundWorkers;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.MultiTenancy;
 using Volo.Abp.Threading;
 using Volo.Abp.Uow;
 
@@ -29,11 +31,36 @@ public class ResultadoScrapingWorker : AsyncPeriodicBackgroundWorkerBase
     [UnitOfWork]
     protected override async Task DoWorkAsync(PeriodicBackgroundWorkerContext workerContext)
     {
+        var currentTenant = workerContext.ServiceProvider.GetRequiredService<ICurrentTenant>();
+        var dataFilter = workerContext.ServiceProvider.GetRequiredService<IDataFilter>();
+        var logger = workerContext.ServiceProvider.GetRequiredService<ILogger<ResultadoScrapingWorker>>();
+
+        // Get all distinct TenantIds from sorteos (cross-tenant)
+        var sorteoRepo = workerContext.ServiceProvider.GetRequiredService<IRepository<Sorteo, Guid>>();
+        List<Guid?> tenantIds;
+        using (dataFilter.Disable<IMultiTenant>())
+        {
+            var allSorteos = await sorteoRepo.GetQueryableAsync();
+            tenantIds = (await sorteoRepo.AsyncExecuter.ToListAsync(
+                allSorteos.Select(s => s.TenantId).Distinct())).ToList();
+        }
+
+        foreach (var tenantId in tenantIds)
+        {
+            using (currentTenant.Change(tenantId))
+            {
+                try { await DoWorkForTenantAsync(workerContext, logger); }
+                catch (Exception ex) { logger.LogError(ex, "Error scraping para tenant {TenantId}", tenantId); }
+            }
+        }
+    }
+
+    private async Task DoWorkForTenantAsync(PeriodicBackgroundWorkerContext workerContext, ILogger<ResultadoScrapingWorker> logger)
+    {
         var sorteoRepo = workerContext.ServiceProvider.GetRequiredService<IRepository<Sorteo, Guid>>();
         var resultadoRepo = workerContext.ServiceProvider.GetRequiredService<IRepository<ResultadoSorteo, Guid>>();
         var detalleTicketRepo = workerContext.ServiceProvider.GetRequiredService<IRepository<DetalleTicket, Guid>>();
         var ticketRepo = workerContext.ServiceProvider.GetRequiredService<IRepository<Ticket, Guid>>();
-        var logger = workerContext.ServiceProvider.GetRequiredService<ILogger<ResultadoScrapingWorker>>();
 
         var ahoraRD = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, ZonaRd);
         var hoyRD = ahoraRD.Date;

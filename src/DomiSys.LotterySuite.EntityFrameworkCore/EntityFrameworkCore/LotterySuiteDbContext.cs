@@ -17,15 +17,23 @@ using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
+using Volo.Abp.TenantManagement;
+using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace DomiSys.LotterySuite.EntityFrameworkCore;
 
 [ReplaceDbContext(typeof(IIdentityDbContext))]
+[ReplaceDbContext(typeof(ITenantManagementDbContext))]
 [ConnectionStringName("Default")]
 public class LotterySuiteDbContext :
     AbpDbContext<LotterySuiteDbContext>,
-    IIdentityDbContext
+    IIdentityDbContext,
+    ITenantManagementDbContext
 {
+    // TenantManagement
+    public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
+
     #region Loterias
 
     public DbSet<Loteria> Loterias { get; set; }
@@ -98,6 +106,7 @@ public class LotterySuiteDbContext :
         builder.ConfigureIdentity();
         builder.ConfigureOpenIddict();
         builder.ConfigureBlobStoring();
+        builder.ConfigureTenantManagement();
         builder.ConfigureLotterySuite();
     }
 }

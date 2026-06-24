@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using DomiSys.LotterySuite.Loterias;
 using DomiSys.LotterySuite.Ventas;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace DomiSys.LotterySuite.Terminales;
 
-public class Terminal : AuditedEntity<Guid>
+public class Terminal : AuditedEntity<Guid>, IMultiTenant
 {
+    public Guid? TenantId { get; set; }
     public string Codigo { get; set; } = string.Empty;
     public string Nombre { get; set; } = string.Empty;
     public string NombreVendedor { get; set; } = string.Empty;

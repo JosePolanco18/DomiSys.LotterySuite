@@ -1,10 +1,12 @@
 using System;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace DomiSys.LotterySuite.Loterias;
 
-public class ResultadoSorteo : AuditedEntity<Guid>
+public class ResultadoSorteo : AuditedEntity<Guid>, IMultiTenant
 {
+    public Guid? TenantId { get; set; }
     public Guid SorteoId { get; set; }
     public DateTime Fecha { get; set; }
     public int Primera { get; set; }

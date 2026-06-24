@@ -61,6 +61,11 @@ const routes: Routes = [
     data: { breadcrumb: 'Configuracion' },
     loadComponent: () => import('./configuracion/configuracion-general.component').then(c => c.ConfiguracionGeneralComponent)
   },
+  {
+    path: 'tenants',
+    data: { breadcrumb: 'Bancas' },
+    loadChildren: () => import('./tenants/tenants.routes').then(m => m.TENANTS_ROUTES)
+  },
 ];
 
 @NgModule({

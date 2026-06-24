@@ -70,7 +70,7 @@ public class CuadreAppService : ApplicationService, ICuadreAppService
                 t.FechaPago <= periodoFin),
             t => t.TotalPremios);
 
-        var config = await _configuracionRepository.FindAsync(ConfiguracionGeneral.SingletonId);
+        var config = await AsyncExecuter.FirstOrDefaultAsync(await _configuracionRepository.GetQueryableAsync());
         var comisionVenta = terminal.PorcentajeComisionVenta ?? config?.ComisionVentaPorDefecto ?? 7m;
         var comisionVerde = terminal.PorcentajeComisionVerde ?? config?.ComisionVerdePorDefecto ?? 5m;
 
@@ -166,7 +166,7 @@ public class CuadreAppService : ApplicationService, ICuadreAppService
                 t.FechaPago > desde),
             t => t.TotalPremios);
 
-        var config = await _configuracionRepository.FindAsync(ConfiguracionGeneral.SingletonId);
+        var config = await AsyncExecuter.FirstOrDefaultAsync(await _configuracionRepository.GetQueryableAsync());
         var comisionVenta = terminal.PorcentajeComisionVenta ?? config?.ComisionVentaPorDefecto ?? 7m;
         var comisionVerde = terminal.PorcentajeComisionVerde ?? config?.ComisionVerdePorDefecto ?? 5m;
 

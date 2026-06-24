@@ -32,7 +32,11 @@ public class ConfiguracionAppService : ApplicationService, IConfiguracionAppServ
                 MinutosVentanaAnulacion = 5,
                 VendedorPuedeAnular = true,
                 NombreEmpresa = "DomiSys Lottery",
-                PieTicket = "Conserve este ticket"
+                PieTicket = "Conserve este ticket",
+                LimiteQuiniela = null,
+                LimitePale = null,
+                LimiteTripleta = null,
+                LimiteSuperPale = null
             };
         }
         return MapToDto(config);
@@ -51,7 +55,11 @@ public class ConfiguracionAppService : ApplicationService, IConfiguracionAppServ
                 input.VendedorPuedeAnular,
                 input.NombreEmpresa,
                 input.TelefonoEmpresa,
-                input.PieTicket);
+                input.PieTicket,
+                input.LimiteQuiniela,
+                input.LimitePale,
+                input.LimiteTripleta,
+                input.LimiteSuperPale);
             config = await _manager.CreateAsync(nueva);
         }
         else
@@ -63,7 +71,11 @@ public class ConfiguracionAppService : ApplicationService, IConfiguracionAppServ
                 input.VendedorPuedeAnular,
                 input.NombreEmpresa,
                 input.TelefonoEmpresa,
-                input.PieTicket);
+                input.PieTicket,
+                input.LimiteQuiniela,
+                input.LimitePale,
+                input.LimiteTripleta,
+                input.LimiteSuperPale);
             await _repository.UpdateAsync(config);
         }
 
@@ -80,7 +92,11 @@ public class ConfiguracionAppService : ApplicationService, IConfiguracionAppServ
             VendedorPuedeAnular = entity.VendedorPuedeAnular,
             NombreEmpresa = entity.NombreEmpresa,
             TelefonoEmpresa = entity.TelefonoEmpresa,
-            PieTicket = entity.PieTicket
+            PieTicket = entity.PieTicket,
+            LimiteQuiniela = entity.LimiteQuiniela,
+            LimitePale = entity.LimitePale,
+            LimiteTripleta = entity.LimiteTripleta,
+            LimiteSuperPale = entity.LimiteSuperPale
         };
     }
 }

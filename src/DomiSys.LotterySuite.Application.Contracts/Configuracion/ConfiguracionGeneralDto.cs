@@ -9,4 +9,9 @@ public class ConfiguracionGeneralDto
     public string NombreEmpresa { get; set; } = string.Empty;
     public string? TelefonoEmpresa { get; set; }
     public string? PieTicket { get; set; }
+
+    public decimal? LimiteQuiniela { get; set; }
+    public decimal? LimitePale { get; set; }
+    public decimal? LimiteTripleta { get; set; }
+    public decimal? LimiteSuperPale { get; set; }
 }

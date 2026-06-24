@@ -16,6 +16,11 @@ public class ConfiguracionGeneral : AuditedEntity<Guid>, IMultiTenant
     public string? TelefonoEmpresa { get; set; }
     public string? PieTicket { get; set; }
 
+    public decimal? LimiteQuiniela { get; set; }
+    public decimal? LimitePale { get; set; }
+    public decimal? LimiteTripleta { get; set; }
+    public decimal? LimiteSuperPale { get; set; }
+
     protected ConfiguracionGeneral() { }
 
     public ConfiguracionGeneral(
@@ -25,7 +30,11 @@ public class ConfiguracionGeneral : AuditedEntity<Guid>, IMultiTenant
         bool vendedorAnula,
         string nombreEmpresa,
         string? telefono = null,
-        string? pie = null)
+        string? pie = null,
+        decimal? limiteQuiniela = null,
+        decimal? limitePale = null,
+        decimal? limiteTripleta = null,
+        decimal? limiteSuperPale = null)
     {
         ComisionVentaPorDefecto = comisionVenta;
         ComisionVerdePorDefecto = comisionVerde;
@@ -34,6 +43,10 @@ public class ConfiguracionGeneral : AuditedEntity<Guid>, IMultiTenant
         NombreEmpresa = nombreEmpresa;
         TelefonoEmpresa = telefono;
         PieTicket = pie;
+        LimiteQuiniela = limiteQuiniela;
+        LimitePale = limitePale;
+        LimiteTripleta = limiteTripleta;
+        LimiteSuperPale = limiteSuperPale;
     }
 
     public void Update(
@@ -43,7 +56,11 @@ public class ConfiguracionGeneral : AuditedEntity<Guid>, IMultiTenant
         bool vendedorAnula,
         string nombreEmpresa,
         string? telefono,
-        string? pie)
+        string? pie,
+        decimal? limiteQuiniela,
+        decimal? limitePale,
+        decimal? limiteTripleta,
+        decimal? limiteSuperPale)
     {
         ComisionVentaPorDefecto = comisionVenta;
         ComisionVerdePorDefecto = comisionVerde;
@@ -52,5 +69,9 @@ public class ConfiguracionGeneral : AuditedEntity<Guid>, IMultiTenant
         NombreEmpresa = nombreEmpresa;
         TelefonoEmpresa = telefono;
         PieTicket = pie;
+        LimiteQuiniela = limiteQuiniela;
+        LimitePale = limitePale;
+        LimiteTripleta = limiteTripleta;
+        LimiteSuperPale = limiteSuperPale;
     }
 }

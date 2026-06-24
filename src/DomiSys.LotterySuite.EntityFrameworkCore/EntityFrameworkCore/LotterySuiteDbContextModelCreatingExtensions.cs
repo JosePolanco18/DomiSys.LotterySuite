@@ -230,6 +230,10 @@ public static class LotterySuiteDbContextModelCreatingExtensions
             b.Property(x => x.NombreEmpresa).HasMaxLength(100);
             b.Property(x => x.TelefonoEmpresa).HasMaxLength(30);
             b.Property(x => x.PieTicket).HasMaxLength(200);
+            b.Property(x => x.LimiteQuiniela).HasPrecision(18, 2);
+            b.Property(x => x.LimitePale).HasPrecision(18, 2);
+            b.Property(x => x.LimiteTripleta).HasPrecision(18, 2);
+            b.Property(x => x.LimiteSuperPale).HasPrecision(18, 2);
         });
 
         // ========== CUADRE ENTITIES ==========

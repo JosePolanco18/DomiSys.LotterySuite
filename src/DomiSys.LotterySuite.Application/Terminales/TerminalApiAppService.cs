@@ -247,12 +247,15 @@ public class TerminalApiAppService : ApplicationService
         return ObjectMapper.Map<Ticket, TicketDto>(ticket);
     }
 
-    public async Task<List<TicketDto>> GetMisTicketsAsync()
+    public async Task<List<TicketDto>> GetMisTicketsAsync(string? filter = null)
     {
         var terminalId = ValidateTerminalToken();
         var q = await _ticketRepository.WithDetailsAsync(t => t.Terminal);
+        var query = q.Where(t => t.TerminalId == terminalId);
+        if (!string.IsNullOrWhiteSpace(filter))
+            query = query.Where(t => t.CodigoTicket.Contains(filter));
         var tickets = await AsyncExecuter.ToListAsync(
-            q.Where(t => t.TerminalId == terminalId).OrderByDescending(t => t.FechaCreacion).Take(50));
+            query.OrderByDescending(t => t.FechaCreacion).Take(50));
         return ObjectMapper.Map<List<Ticket>, List<TicketDto>>(tickets);
     }
 

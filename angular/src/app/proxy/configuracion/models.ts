@@ -6,4 +6,8 @@ export interface ConfiguracionGeneralDto {
   nombreEmpresa: string;
   telefonoEmpresa?: string;
   pieTicket?: string;
+  limiteQuiniela?: number;
+  limitePale?: number;
+  limiteTripleta?: number;
+  limiteSuperPale?: number;
 }

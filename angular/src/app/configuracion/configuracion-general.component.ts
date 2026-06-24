@@ -56,6 +56,22 @@ import { ConfiguracionService, ConfiguracionGeneralDto } from 'src/app/proxy/con
                 </div>
               </div>
               <div class="separator my-5"></div>
+              <h5 class="text-gray-600 fw-bold mb-4">Limites por Tipo de Jugada</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <app-input label="Limite Quiniela (RD$)" type="number" formControlName="limiteQuiniela" [min]="0" placeholder="Sin limite"></app-input>
+                </div>
+                <div class="col-md-6">
+                  <app-input label="Limite Pale (RD$)" type="number" formControlName="limitePale" [min]="0" placeholder="Sin limite"></app-input>
+                </div>
+                <div class="col-md-6">
+                  <app-input label="Limite Tripleta (RD$)" type="number" formControlName="limiteTripleta" [min]="0" placeholder="Sin limite"></app-input>
+                </div>
+                <div class="col-md-6">
+                  <app-input label="Limite Super Pale (RD$)" type="number" formControlName="limiteSuperPale" [min]="0" placeholder="Sin limite"></app-input>
+                </div>
+              </div>
+              <div class="separator my-5"></div>
               <button class="btn btn-primary" (click)="guardar()" [disabled]="isSaving || !form.valid">
                 <i class="fas fa-save me-2"></i>{{ isSaving ? 'Guardando...' : 'Guardar' }}
               </button>
@@ -93,7 +109,11 @@ export class ConfiguracionGeneralComponent implements OnInit {
       vendedorPuedeAnular: [true],
       nombreEmpresa: ['DomiSys Lottery', Validators.required],
       telefonoEmpresa: [''],
-      pieTicket: ['Conserve este ticket']
+      pieTicket: ['Conserve este ticket'],
+      limiteQuiniela: [null],
+      limitePale: [null],
+      limiteTripleta: [null],
+      limiteSuperPale: [null]
     });
 
     this.configuracionService.obtener().subscribe(config => {
